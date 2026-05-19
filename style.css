@@ -49,24 +49,42 @@ ul { list-style: none; }
 
 /* Quick Bar */
 .quick-bar {
-  background: #0f2040;
+  background: #ffffff;
   display: flex;
   justify-content: center;
-  gap: 32px;
-  padding: 8px 24px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  gap: 0;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
 }
 .quick-bar a {
-  color: rgba(255,255,255,0.85);
-  font-size: 12px;
-  font-weight: 500;
+  color: #1a1a2e;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 32px;
+  border-right: 1px solid #e5e7eb;
+  transition: background 0.2s;
+  min-width: 130px;
+  text-align: center;
+}
+.quick-bar a:last-child { border-right: none; }
+.quick-bar a:hover { background: #f0f4ff; color: var(--navy); }
+.qicon {
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: color 0.2s;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
-.quick-bar a:hover { color: var(--yellow); }
-.qicon { font-size: 14px; }
+.qicon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
 
 /* ===================== HERO CAROUSEL ===================== */
 .hero-carousel {
@@ -157,7 +175,7 @@ ul { list-style: none; }
 /* ===================== PROMO GRID ===================== */
 .promo-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0;
   max-width: 100%;
 }
