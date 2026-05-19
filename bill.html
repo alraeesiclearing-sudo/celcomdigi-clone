@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CelcomDigi | Fast and Secure Bill Payment</title>
+  <link rel="icon" href="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/637c596725cb8b7f82fe3630_CelcomDigi_Favicon.png" type="image/png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(135deg, #0a1f6e 0%, #1a3aad 50%, #0a1f6e 100%);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-shop {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.8);
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-shop:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .btn-shop img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-lang {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.8);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-lang:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .btn-lang img {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      background: linear-gradient(135deg, #0a1f6e 0%, #1565c0 40%, #1976d2 70%, #0a1f6e 100%);
+      padding: 60px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Gold/Blue wave decoration like original */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 220'%3E%3Cpath fill='none' stroke='%23f5c518' stroke-width='4' opacity='0.5' d='M-100,140 C100,60 300,180 600,80 C800,20 1000,160 1200,100 C1350,60 1450,120 1540,90'/%3E%3Cpath fill='none' stroke='%23FFD700' stroke-width='10' opacity='0.2' d='M-100,150 C100,70 300,190 600,90 C800,30 1000,170 1200,110 C1350,70 1450,130 1540,100'/%3E%3Cpath fill='none' stroke='%230066ff' stroke-width='3' opacity='0.4' d='M-100,50 C200,120 400,20 700,100 C900,160 1100,40 1540,120'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse 50% 40% at 15% 60%, rgba(255, 200, 0, 0.2) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 35% at 85% 40%, rgba(0, 80, 255, 0.25) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-title {
+      color: #ffffff;
+      font-size: 32px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      flex: 1;
+      background: #f5f7fa;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0 16px 60px;
+      margin-top: -30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 40px 40px 36px;
+      width: 100%;
+      max-width: 580px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .card-subtitle {
+      font-size: 14px;
+      color: #666666;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    /* ===== TABS ===== */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+
+    .tab-btn.active {
+      color: #1565c0;
+      border-bottom-color: #1565c0;
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: #444;
+    }
+
+    /* ===== FORM ===== */
+    .form-group {
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+    }
+
+    .form-input::placeholder {
+      color: #aaaaaa;
+    }
+
+    .form-input:focus {
+      border-color: #1565c0;
+      box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+    }
+
+    .form-input.error {
+      border-color: #e53935;
+      box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+    }
+
+    .error-msg {
+      color: #e53935;
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    /* ===== TOGGLE LINK ===== */
+    .toggle-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #1565c0;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: color 0.2s;
+    }
+
+    .toggle-link:hover {
+      color: #0d47a1;
+    }
+
+    .toggle-link svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ===== BILL INFO BOX ===== */
+    .bill-info {
+      background: #f0f4ff;
+      border: 1px solid #c5d8ff;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .bill-info.show {
+      display: block;
+    }
+
+    .bill-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+
+    .bill-info-row:not(:last-child) {
+      border-bottom: 1px solid #dde8ff;
+    }
+
+    .bill-info-label {
+      color: #666;
+    }
+
+    .bill-info-value {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .bill-info-amount {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1565c0;
+    }
+
+    /* ===== SUBMIT BUTTON ===== */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: #1565c0;
+      color: #ffffff;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-submit:hover {
+      background: #0d47a1;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(21, 101, 192, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      background: #b0bec5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ===== SUCCESS STATE ===== */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .success-state.show {
+      display: block;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .success-icon svg {
+      width: 32px;
+      height: 32px;
+      color: #2e7d32;
+    }
+
+    .success-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .success-msg {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .btn-back {
+      display: inline-block;
+      padding: 12px 32px;
+      background: #1565c0;
+      color: #ffffff;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #0d47a1;
+    }
+
+    /* ===== LOADING SPINNER ===== */
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: #0a1f6e;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 18px 24px;
+      font-size: 12px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .hero {
+        padding: 50px 20px 70px;
+        min-height: 180px;
+      }
+
+      .hero-title {
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 28px 20px 24px;
+        border-radius: 12px;
+      }
+
+      .header-logo {
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="/">
+      <img class="header-logo" src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi">
+    </a>
+    <div class="header-right">
+      <a class="btn-shop" href="https://shop.celcomdigi.com/home" target="_blank">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/654a4e80f12b65ce3fede2d7_Shop_Icon.svg" alt="Shop">
+        SHOP
+      </a>
+      <a class="btn-lang" href="#">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/655395f97d6aae191889c80c_Globe_Blue_Icon.svg" alt="Language">
+        EN
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 4L6 8L10 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1 class="hero-title">Fast and Secure Bill Payment</h1>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="card">
+      <div id="form-state">
+        <h2 class="card-title">Pay Bill</h2>
+        <p class="card-subtitle">Pay for yourself or anyone securely.</p>
+
+        <form id="bill-form" onsubmit="handleSubmit(event)">
+          <!-- Input mode: mobile or account -->
+          <div class="form-group" id="mobile-group">
+            <input
+              class="form-input"
+              id="mobile_number_input"
+              type="tel"
+              placeholder="Mobile number"
+              autocomplete="tel"
+              inputmode="numeric"
+              maxlength="15"
+              oninput="handleMobileInput(this)"
+            >
+            <p class="error-msg" id="mobile-error">
+              Please enter a valid Celcom or Digi mobile number.
+            </p>
+          </div>
+
+          <div class="form-group" id="account-group" style="display:none;">
+            <input
+              class="form-input"
+              id="account_number_input"
+              type="text"
+              placeholder="Account number"
+              autocomplete="off"
+              maxlength="20"
+              oninput="handleAccountInput(this)"
+            >
+            <p class="error-msg" id="account-error">
+              Please enter a valid account number.
+            </p>
+          </div>
+
+          <!-- Toggle between mobile/account -->
+          <a class="toggle-link" id="toggle-link" onclick="toggleInputMode()">
+            <span id="toggle-text">Use account number instead</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+
+          <!-- Bill info preview -->
+          <div class="bill-info" id="bill-info">
+            <div class="bill-info-row">
+              <span class="bill-info-label">Account</span>
+              <span class="bill-info-value" id="info-account">-</span>
+            </div>
+            <div class="bill-info-row">
+              <span class="bill-info-label">Name</span>
+              <span class="bill-info-value" id="info-name">-</span>
+            </div>
+            <div class="bill-info-row">
+              <span class="bill-info-label">Outstanding Amount</span>
+              <span class="bill-info-amount" id="info-amount">-</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="submit_button">
+            <span id="btn-text">Submit</span>
+            <div class="spinner" id="spinner"></div>
+          </button>
+        </form>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="success-state">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h3 class="success-title">Payment Successful!</h3>
+        <p class="success-msg" id="success-details">Your bill payment has been processed successfully.</p>
+        <a href="/bill" class="btn-back">Pay Another Bill</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.
+  </footer>
+
+  <script>
+    let useAccountMode = false;
+    let billInfoShown = false;
+
+    function toggleInputMode() {
+      useAccountMode = !useAccountMode;
+      const mobileGroup = document.getElementById('mobile-group');
+      const accountGroup = document.getElementById('account-group');
+      const toggleText = document.getElementById('toggle-text');
+      const billInfo = document.getElementById('bill-info');
+
+      if (useAccountMode) {
+        mobileGroup.style.display = 'none';
+        accountGroup.style.display = 'block';
+        toggleText.textContent = 'Use mobile number instead';
+        document.getElementById('mobile_number_input').value = '';
+        document.getElementById('mobile-error').classList.remove('show');
+      } else {
+        mobileGroup.style.display = 'block';
+        accountGroup.style.display = 'none';
+        toggleText.textContent = 'Use account number instead';
+        document.getElementById('account_number_input').value = '';
+        document.getElementById('account-error').classList.remove('show');
+      }
+
+      billInfo.classList.remove('show');
+      billInfoShown = false;
+    }
+
+    function isValidMalaysianNumber(num) {
+      return /^(60|0)?1[0-9]{8,9}$/.test(num);
+    }
+
+    function handleMobileInput(input) {
+      const val = input.value.replace(/\D/g, '');
+      input.value = val;
+      const errorEl = document.getElementById('mobile-error');
+      const billInfo = document.getElementById('bill-info');
+
+      if (val.length >= 10 && isValidMalaysianNumber(val)) {
+        input.classList.remove('error');
+        errorEl.classList.remove('show');
+        // Show mock bill info
+        showBillInfo(val, null);
+      } else {
+        billInfo.classList.remove('show');
+        billInfoShown = false;
+      }
+    }
+
+    function handleAccountInput(input) {
+      const val = input.value.trim();
+      const errorEl = document.getElementById('account-error');
+      const billInfo = document.getElementById('bill-info');
+
+      if (val.length >= 8) {
+        input.classList.remove('error');
+        errorEl.classList.remove('show');
+        showBillInfo(null, val);
+      } else {
+        billInfo.classList.remove('show');
+        billInfoShown = false;
+      }
+    }
+
+    function showBillInfo(mobile, account) {
+      const billInfo = document.getElementById('bill-info');
+      const infoAccount = document.getElementById('info-account');
+      const infoName = document.getElementById('info-name');
+      const infoAmount = document.getElementById('info-amount');
+
+      if (mobile) {
+        const displayNum = mobile.startsWith('60') ? '+' + mobile : '+60' + mobile.replace(/^0/, '');
+        infoAccount.textContent = displayNum;
+      } else {
+        infoAccount.textContent = account;
+      }
+
+      infoName.textContent = 'CelcomDigi Customer';
+      infoAmount.textContent = 'RM' + (Math.floor(Math.random() * 150) + 30) + '.00';
+
+      billInfo.classList.add('show');
+      billInfoShown = true;
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+
+      let val = '';
+      let isValid = false;
+
+      if (!useAccountMode) {
+        val = document.getElementById('mobile_number_input').value.replace(/\D/g, '');
+        if (!val || !isValidMalaysianNumber(val)) {
+          document.getElementById('mobile_number_input').classList.add('error');
+          document.getElementById('mobile-error').classList.add('show');
+          return;
+        }
+        isValid = true;
+      } else {
+        val = document.getElementById('account_number_input').value.trim();
+        if (!val || val.length < 8) {
+          document.getElementById('account_number_input').classList.add('error');
+          document.getElementById('account-error').classList.add('show');
+          return;
+        }
+        isValid = true;
+      }
+
+      if (!isValid) return;
+
+      // Show loading
+      const btnText = document.getElementById('btn-text');
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submit_button');
+      btnText.style.display = 'none';
+      spinner.style.display = 'block';
+      submitBtn.disabled = true;
+
+      // Simulate processing
+      setTimeout(() => {
+        document.getElementById('form-state').style.display = 'none';
+        const successDetails = document.getElementById('success-details');
+        const amount = document.getElementById('info-amount').textContent;
+        if (!useAccountMode) {
+          const displayNum = val.startsWith('60') ? '+' + val : '+60' + val.replace(/^0/, '');
+          successDetails.textContent = `Bill payment of ${amount} for ${displayNum} has been processed successfully. A confirmation SMS will be sent shortly.`;
+        } else {
+          successDetails.textContent = `Bill payment of ${amount} for account ${val} has been processed successfully. A confirmation will be sent shortly.`;
+        }
+        document.getElementById('success-state').classList.add('show');
+      }, 1800);
+    }
+  </script>
+
+</body>
+</html>

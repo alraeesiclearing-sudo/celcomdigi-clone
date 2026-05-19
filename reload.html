@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CelcomDigi | Quick and Easy Reloads</title>
+  <link rel="icon" href="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/637c596725cb8b7f82fe3630_CelcomDigi_Favicon.png" type="image/png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(135deg, #0a1f6e 0%, #1a3aad 50%, #0a1f6e 100%);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg') no-repeat;
+      background-size: cover;
+      opacity: 0.03;
+    }
+
+    .header-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-shop {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.8);
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-shop:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .btn-shop img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-lang {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.8);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-lang:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .btn-lang img {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      background: linear-gradient(135deg, #0a1f6e 0%, #1565c0 40%, #1976d2 70%, #0a1f6e 100%);
+      padding: 60px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -10%;
+      width: 120%;
+      height: 140%;
+      background: 
+        radial-gradient(ellipse 60% 40% at 20% 50%, rgba(255, 200, 0, 0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 35% at 80% 50%, rgba(0, 100, 255, 0.3) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Gold/Yellow wave decoration */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 220'%3E%3Cpath fill='none' stroke='%23f5c518' stroke-width='3' opacity='0.6' d='M-100,80 C200,20 400,160 700,60 C900,0 1100,120 1540,80'/%3E%3Cpath fill='none' stroke='%23f5c518' stroke-width='8' opacity='0.3' d='M-100,90 C200,30 400,170 700,70 C900,10 1100,130 1540,90'/%3E%3Cpath fill='none' stroke='%23FFD700' stroke-width='2' opacity='0.5' d='M-100,100 C200,40 400,180 700,80 C900,20 1100,140 1540,100'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      pointer-events: none;
+    }
+
+    .hero-title {
+      color: #ffffff;
+      font-size: 32px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      flex: 1;
+      background: #f5f7fa;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0 16px 60px;
+      margin-top: -30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 40px 40px 36px;
+      width: 100%;
+      max-width: 580px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin-top: 0;
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .card-subtitle {
+      font-size: 14px;
+      color: #666666;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    /* ===== FORM ===== */
+    .form-group {
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+    }
+
+    .form-input::placeholder {
+      color: #aaaaaa;
+    }
+
+    .form-input:focus {
+      border-color: #1565c0;
+      box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+    }
+
+    .form-input.error {
+      border-color: #e53935;
+      box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+    }
+
+    .form-label {
+      position: absolute;
+      top: -10px;
+      left: 14px;
+      background: #ffffff;
+      padding: 0 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1565c0;
+      display: none;
+    }
+
+    .form-input:not(:placeholder-shown) + .form-label,
+    .form-input:focus + .form-label {
+      display: block;
+    }
+
+    .error-msg {
+      color: #e53935;
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    /* ===== AMOUNT SELECTION ===== */
+    .amount-section {
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .amount-section.show {
+      display: block;
+    }
+
+    .amount-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .amount-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .amount-btn {
+      padding: 12px 8px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      background: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .amount-btn:hover {
+      border-color: #1565c0;
+      color: #1565c0;
+      background: #f0f4ff;
+    }
+
+    .amount-btn.selected {
+      border-color: #1565c0;
+      background: #1565c0;
+      color: #ffffff;
+    }
+
+    /* ===== SUBMIT BUTTON ===== */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: #1565c0;
+      color: #ffffff;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-submit:hover {
+      background: #0d47a1;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(21, 101, 192, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      background: #b0bec5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ===== SUCCESS STATE ===== */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .success-state.show {
+      display: block;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .success-icon svg {
+      width: 32px;
+      height: 32px;
+      color: #2e7d32;
+    }
+
+    .success-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .success-msg {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .btn-back {
+      display: inline-block;
+      padding: 12px 32px;
+      background: #1565c0;
+      color: #ffffff;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #0d47a1;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: #0a1f6e;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 18px 24px;
+      font-size: 12px;
+    }
+
+    /* ===== LOADING SPINNER ===== */
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .hero {
+        padding: 50px 20px 70px;
+        min-height: 180px;
+      }
+
+      .hero-title {
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 28px 20px 24px;
+        border-radius: 12px;
+      }
+
+      .amount-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .header-logo {
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="/">
+      <img class="header-logo" src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi">
+    </a>
+    <div class="header-right">
+      <a class="btn-shop" href="https://shop.celcomdigi.com/home" target="_blank">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/654a4e80f12b65ce3fede2d7_Shop_Icon.svg" alt="Shop">
+        SHOP
+      </a>
+      <a class="btn-lang" href="#">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/655395f97d6aae191889c80c_Globe_Blue_Icon.svg" alt="Language">
+        EN
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 4L6 8L10 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1 class="hero-title">Quick and Easy Reloads</h1>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="card">
+      <div id="form-state">
+        <h2 class="card-title">Prepaid Reload</h2>
+        <p class="card-subtitle">Reload for yourself or anyone securely.</p>
+
+        <form id="reload-form" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <input
+              class="form-input"
+              id="mobile_number_input"
+              type="tel"
+              placeholder="Mobile number"
+              autocomplete="tel"
+              inputmode="numeric"
+              maxlength="15"
+              oninput="handleInput(this)"
+            >
+            <label class="form-label" for="mobile_number_input">Mobile number</label>
+            <p class="error-msg" id="mobile-error">
+              Please enter a valid/ active Celcom or Digi prepaid mobile number. For Digi Broadband users, please reload through our mobile app.
+            </p>
+          </div>
+
+          <!-- Amount Selection (shown after valid number) -->
+          <div class="amount-section" id="amount-section">
+            <p class="amount-label">Select reload amount (RM)</p>
+            <div class="amount-grid">
+              <button type="button" class="amount-btn" onclick="selectAmount(this, 5)">RM5</button>
+              <button type="button" class="amount-btn" onclick="selectAmount(this, 10)">RM10</button>
+              <button type="button" class="amount-btn" onclick="selectAmount(this, 20)">RM20</button>
+              <button type="button" class="amount-btn" onclick="selectAmount(this, 30)">RM30</button>
+              <button type="button" class="amount-btn" onclick="selectAmount(this, 50)">RM50</button>
+              <button type="button" class="amount-btn" onclick="selectAmount(this, 100)">RM100</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="submit_button">
+            <span id="btn-text">Submit</span>
+            <div class="spinner" id="spinner"></div>
+          </button>
+        </form>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="success-state">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h3 class="success-title">Reload Successful!</h3>
+        <p class="success-msg" id="success-details">Your prepaid reload has been processed successfully.</p>
+        <a href="/reload" class="btn-back">Reload Again</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.
+  </footer>
+
+  <script>
+    let selectedAmount = null;
+
+    function handleInput(input) {
+      const val = input.value.replace(/\D/g, '');
+      input.value = val;
+      const errorEl = document.getElementById('mobile-error');
+      const amountSection = document.getElementById('amount-section');
+
+      if (val.length >= 10 && isValidMalaysianNumber(val)) {
+        input.classList.remove('error');
+        errorEl.classList.remove('show');
+        amountSection.classList.add('show');
+      } else {
+        amountSection.classList.remove('show');
+        selectedAmount = null;
+        document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+      }
+    }
+
+    function isValidMalaysianNumber(num) {
+      // Malaysian mobile: 01X-XXXXXXXX (starts with 01, 601)
+      return /^(60|0)?1[0-9]{8,9}$/.test(num);
+    }
+
+    function selectAmount(btn, amount) {
+      document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedAmount = amount;
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('mobile_number_input');
+      const val = input.value.replace(/\D/g, '');
+      const errorEl = document.getElementById('mobile-error');
+
+      if (!val || !isValidMalaysianNumber(val)) {
+        input.classList.add('error');
+        errorEl.classList.add('show');
+        return;
+      }
+
+      if (!selectedAmount) {
+        // If no amount selected, show amount section
+        document.getElementById('amount-section').classList.add('show');
+        return;
+      }
+
+      // Show loading
+      const btnText = document.getElementById('btn-text');
+      const spinner = document.getElementById('spinner');
+      const submitBtn = document.getElementById('submit_button');
+      btnText.style.display = 'none';
+      spinner.style.display = 'block';
+      submitBtn.disabled = true;
+
+      // Simulate processing
+      setTimeout(() => {
+        document.getElementById('form-state').style.display = 'none';
+        const successDetails = document.getElementById('success-details');
+        const displayNum = val.startsWith('60') ? '+' + val : '+60' + val.replace(/^0/, '');
+        successDetails.textContent = `RM${selectedAmount} has been reloaded to ${displayNum} successfully.`;
+        document.getElementById('success-state').classList.add('show');
+      }, 1800);
+    }
+  </script>
+
+</body>
+</html>
