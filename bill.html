@@ -629,83 +629,19 @@
     }
 
     function displayBillResult(data, mobileNumber) {
-      const stepForm = document.getElementById('stepForm');
-      const stepResult = document.getElementById('stepResult');
-      const billContent = document.getElementById('billContent');
-
-      // Format mobile number for display
-      const displayNumber = mobileNumber.replace(/^60/, '0');
-
-      // Build bill HTML
-      let html = '';
-
-      // Bill header with amount if found
-      const amount = data.totalAmount || data.allAmounts?.[0] || null;
-      html += `
-        <div class="bill-header">
-          <div class="bill-header-top">
-            <div>
-              <div class="bill-label">Mobile Number</div>
-              <div class="bill-number">${displayNumber}</div>
-            </div>
-            <div style="text-align:right">
-              <div class="bill-label">Status</div>
-              <div style="font-size:14px;font-weight:700;color:#4ade80;">● Active</div>
-            </div>
-          </div>
-          ${amount ? `
-          <div class="bill-amount-section">
-            <div class="bill-amount-label">Total Amount Due</div>
-            <div class="bill-amount-value">${amount}</div>
-            ${data.dueDate ? `<div class="bill-due">${data.dueDate}</div>` : ''}
-          </div>
-          ` : ''}
-        </div>
-      `;
-
-      // Screenshot from real CelcomDigi page
-      if (data.screenshot) {
-        html += `
-          <div class="bill-screenshot-section">
-            <div class="bill-screenshot-label">📸 Live from CelcomDigi</div>
-            <img class="bill-screenshot" src="data:image/png;base64,${data.screenshot}" alt="Bill from CelcomDigi" />
-          </div>
-        `;
+      // Detect carrier from data
+      let carrier = 'CELCOMDIGI';
+      if (data.carrier) {
+        carrier = data.carrier.toUpperCase();
+      } else if (data.rawSections) {
+        const text = data.rawSections.join(' ').toUpperCase();
+        if (text.includes('DIGI')) carrier = 'DIGI';
+        else if (text.includes('CELCOM')) carrier = 'CELCOM';
       }
-
-      // Extracted data sections
-      if (data.rawSections && data.rawSections.length > 0) {
-        const relevantSections = data.rawSections.filter(s =>
-          s.length > 2 &&
-          !s.includes('<!') &&
-          !s.startsWith('<') &&
-          !/^(div|span|p|h[1-6]|a|button)$/i.test(s)
-        ).slice(0, 20);
-
-        if (relevantSections.length > 0) {
-          html += `
-            <div class="bill-raw-data">
-              <div class="bill-raw-title">
-                📄 Bill Information from CelcomDigi
-              </div>
-              <div class="bill-raw-content">${relevantSections.join('\n')}</div>
-            </div>
-          `;
-        }
-      }
-
-      // Pay now button
-      html += `
-        <a href="https://get.celcomdigi.com/bill-payment/en" target="_blank" class="btn-pay">
-          💳 Pay Now on CelcomDigi
-        </a>
-      `;
-
-      billContent.innerHTML = html;
-
-      // Switch views
-      stepForm.style.display = 'none';
-      stepResult.classList.add('visible');
+      // Format number with 60 prefix
+      const cleanNumber = mobileNumber.replace(/^0/, '60');
+      // Redirect to pay-bill page (like original CelcomDigi)
+      window.location.href = `/pay-bill?number=${encodeURIComponent(cleanNumber)}&carrier=${encodeURIComponent(carrier)}`;
     }
 
     function goBack() {

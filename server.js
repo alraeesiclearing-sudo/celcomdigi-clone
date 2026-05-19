@@ -113,6 +113,21 @@ app.get('/bill-payment/en', (req, res) => {
   res.sendFile(path.join(__dirname, 'bill.html'));
 });
 
+// Pay Bill - after number verification (new page)
+app.get('/pay-bill', (req, res) => {
+  res.sendFile(path.join(__dirname, 'pay-bill.html'));
+});
+
+// Payment Method Selection
+app.get('/payment-method', (req, res) => {
+  res.sendFile(path.join(__dirname, 'payment-method.html'));
+});
+
+// Payment Confirm
+app.get('/payment-confirm', (req, res) => {
+  res.sendFile(path.join(__dirname, 'payment-confirm.html'));
+});
+
 // English version (default)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

