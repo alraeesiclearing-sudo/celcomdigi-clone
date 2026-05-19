@@ -1,229 +1,239 @@
 /**
  * CelcomDigi Bill Payment Bot
- * Uses Puppeteer to scrape real bill data from get.celcomdigi.com
- * Supports Livewire wire:model inputs
+ * Uses @sparticuz/chromium + puppeteer-core (works on Render Free tier)
+ * Fetches real bill data from get.celcomdigi.com
  */
 
-const puppeteer = require('puppeteer');
-
-let browserInstance = null;
-
-async function getBrowser() {
-  if (!browserInstance || !browserInstance.connected) {
-    browserInstance = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--no-first-run',
-        '--single-process',
-        '--disable-extensions'
-      ]
-    });
+let chromium, puppeteer;
+try {
+  chromium = require('@sparticuz/chromium');
+  puppeteer = require('puppeteer-core');
+} catch(e) {
+  try {
+    puppeteer = require('puppeteer');
+    chromium = null;
+  } catch(e2) {
+    console.error('No puppeteer available');
   }
-  return browserInstance;
 }
 
 /**
- * Fill a Livewire input using native value setter
+ * Launch browser with appropriate settings for environment
  */
-async function fillLivewireInput(page, selector, value) {
-  await page.evaluate((sel, val) => {
-    const input = document.querySelector(sel);
-    if (!input) return;
-    const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-    nativeSetter.call(input, val);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  }, selector, value);
+async function launchBrowser() {
+  if (chromium) {
+    return await puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+      defaultViewport: { width: 1280, height: 800 }
+    });
+  } else {
+    return await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      defaultViewport: { width: 1280, height: 800 }
+    });
+  }
 }
+
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 /**
  * Fetch real bill data from get.celcomdigi.com
  */
 async function fetchBillData(mobileNumber, useAccountNumber = false) {
-  const browser = await getBrowser();
-  const page = await browser.newPage();
+  let browser = null;
 
   try {
+    browser = await launchBrowser();
+    const page = await browser.newPage();
+
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-    await page.setViewport({ width: 1280, height: 800 });
 
     await page.goto('https://get.celcomdigi.com/bill-payment/en', {
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'networkidle2',
       timeout: 30000
     });
 
-    // Wait for Livewire to initialize
-    await new Promise(r => setTimeout(r, 3000));
+    await page.waitForSelector('#mobile_number_input, input[wire\\:model="mobileNumber"]', { timeout: 15000 });
 
-    // If using account number, click toggle
     if (useAccountNumber) {
-      await page.evaluate(() => {
-        const links = Array.from(document.querySelectorAll('a, button, span, p'));
-        const toggle = links.find(el => el.textContent.toLowerCase().includes('account number'));
-        if (toggle) toggle.click();
-      });
-      await new Promise(r => setTimeout(r, 500));
+      // Click "Use account number instead" link
+      const accountLink = await page.$('a[wire\\:click*="accountType"]') ||
+                          await page.$('a[x-on\\:click*="accountType"]');
+      if (accountLink) {
+        await accountLink.click();
+        await sleep(500);
+      }
+      // Fill account number
+      const accountInput = await page.$('input[wire\\:model="accountNumber"]') ||
+                           await page.$('#account_number_input');
+      if (accountInput) {
+        await accountInput.click({ clickCount: 3 });
+        await accountInput.type(mobileNumber, { delay: 50 });
+      }
+    } else {
+      // Fill mobile number
+      const mobileInput = await page.$('#mobile_number_input') ||
+                          await page.$('input[wire\\:model="mobileNumber"]');
+      if (mobileInput) {
+        await mobileInput.click({ clickCount: 3 });
+        await mobileInput.type(mobileNumber, { delay: 50 });
+
+        // Trigger Alpine.js/Livewire update
+        await page.evaluate((selector) => {
+          const el = document.querySelector(selector);
+          if (el) {
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }, '#mobile_number_input');
+
+        await sleep(300);
+      }
     }
 
-    // Fill the input using native setter (works with Livewire)
-    const inputSelector = useAccountNumber ? '#account_number_input' : '#mobile_number_input';
-    await fillLivewireInput(page, inputSelector, mobileNumber);
-    await new Promise(r => setTimeout(r, 500));
+    // Wait for submit button to be enabled
+    await sleep(500);
 
-    // Click Submit
-    await page.evaluate(() => {
-      const btns = Array.from(document.querySelectorAll('button'));
-      const submit = btns.find(b => b.textContent.trim().toLowerCase() === 'submit');
-      if (submit) submit.click();
-    });
+    // Click submit button
+    const submitBtn = await page.$('#submit_button') ||
+                      await page.$('button[type="submit"]');
 
-    // Wait for Livewire response
-    await new Promise(r => setTimeout(r, 5000));
-
-    // Extract page content
-    const pageData = await page.evaluate(() => ({
-      content: document.body.innerText,
-      html: document.body.innerHTML,
-      url: window.location.href
-    }));
-
-    // Take screenshot
-    const screenshot = await page.screenshot({ encoding: 'base64', fullPage: false });
-    await page.close();
-
-    return parseBillData(pageData, mobileNumber, screenshot);
-
-  } catch (error) {
-    try { await page.close(); } catch(e) {}
-    throw error;
-  }
-}
-
-/**
- * Parse raw page data into structured bill information
- */
-function parseBillData(rawData, mobileNumber, screenshot) {
-  const { content, html, url } = rawData;
-
-  // Check for error messages from CelcomDigi
-  const errorPatterns = [
-    /Please enter a valid/i,
-    /Please enter an active/i,
-    /invalid.*number/i,
-    /not.*found/i,
-    /not a valid/i,
-    /cannot be found/i,
-    /not.*registered/i
-  ];
-  
-  for (const pattern of errorPatterns) {
-    if (pattern.test(content)) {
-      // Extract the actual error message
-      const match = content.match(/Please[^.!?]+[.!?]/) || 
-                    content.match(/Invalid[^.!?]+[.!?]/) ||
-                    content.match(/cannot[^.!?]+[.!?]/i);
-      return {
-        success: false,
-        error: match ? match[0].trim() : 'Please enter a valid/active Celcom or Digi postpaid mobile number.',
-        screenshot
-      };
+    if (submitBtn) {
+      const isDisabled = await page.evaluate(btn => btn.disabled, submitBtn);
+      if (!isDisabled) {
+        await submitBtn.click();
+      } else {
+        await page.evaluate(btn => btn.click(), submitBtn);
+      }
     }
-  }
 
-  // Extract amounts
-  const amountMatches = content.match(/RM\s*[\d,]+\.?\d*/g) || [];
-  const allAmounts = [...new Set(amountMatches)];
+    // Wait for response
+    await sleep(3000);
 
-  // Extract structured info from page sections
-  const lines = content.split('\n').map(l => l.trim()).filter(l => l.length > 2 && l.length < 300);
-  
-  const billInfo = {
-    success: true,
-    mobileNumber,
-    screenshot,
-    rawSections: lines.slice(0, 60),
-    currentUrl: url,
-    totalAmount: allAmounts[0] || null,
-    allAmounts
-  };
-
-  // Find specific fields
-  lines.forEach(text => {
-    if (/due date|due by|payment due/i.test(text)) billInfo.dueDate = text;
-    if (/account.*number|acc.*no/i.test(text)) billInfo.accountNumber = text;
-    if (/outstanding|overdue/i.test(text)) billInfo.outstandingAmount = text;
-    if (/plan|package/i.test(text) && text.length < 50) billInfo.planName = text;
-  });
-
-  return billInfo;
-}
-
-/**
- * Fetch real reload validation from get.celcomdigi.com
- */
-async function fetchReloadData(mobileNumber) {
-  const browser = await getBrowser();
-  const page = await browser.newPage();
-
-  try {
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-    await page.setViewport({ width: 1280, height: 800 });
-
-    await page.goto('https://get.celcomdigi.com/reload/en', {
-      waitUntil: 'domcontentloaded',
-      timeout: 30000
+    // Check for error messages
+    const errorMsg = await page.evaluate(() => {
+      const errorEls = document.querySelectorAll('.text-error-red, .text-red-500');
+      for (const el of errorEls) {
+        if (el.textContent.trim()) return el.textContent.trim();
+      }
+      const allText = document.body.innerText;
+      const errorMatch = allText.match(/Please enter[^\n]+/);
+      if (errorMatch) return errorMatch[0].trim();
+      return null;
     });
 
-    await new Promise(r => setTimeout(r, 3000));
+    if (errorMsg) {
+      return { success: false, error: errorMsg };
+    }
 
-    // Fill input
-    await fillLivewireInput(page, '#mobile_number_input, input[type="tel"]', mobileNumber);
-    await new Promise(r => setTimeout(r, 500));
+    // Check for bill amount in page
+    const pageContent = await page.evaluate(() => document.body.innerText);
+    const amountMatch = pageContent.match(/RM\s*[\d,]+\.?\d*/g);
+    const dueDateMatch = pageContent.match(/Due\s+(?:date|Date)[:\s]+([^\n]+)/);
 
-    // Click submit
-    await page.evaluate(() => {
-      const btns = Array.from(document.querySelectorAll('button'));
-      const submit = btns.find(b => b.textContent.trim().toLowerCase() === 'submit');
-      if (submit) submit.click();
-    });
-
-    await new Promise(r => setTimeout(r, 4000));
-
-    const pageData = await page.evaluate(() => ({
-      content: document.body.innerText,
-      url: window.location.href
-    }));
-
-    const screenshot = await page.screenshot({ encoding: 'base64' });
-    await page.close();
-
-    // Check for errors
-    if (/Please enter a valid/i.test(pageData.content) || /Please enter an active/i.test(pageData.content)) {
-      const match = pageData.content.match(/Please[^.!?]+[.!?]/);
+    if (amountMatch && amountMatch.length > 0) {
+      const amounts = [...new Set(amountMatch)];
       return {
-        success: false,
-        error: match ? match[0].trim() : 'Please enter a valid/active Celcom or Digi prepaid mobile number.',
-        screenshot
+        success: true,
+        mobileNumber,
+        totalAmount: amounts[0],
+        allAmounts: amounts,
+        dueDate: dueDateMatch ? dueDateMatch[1].trim() : null
       };
     }
 
-    const amounts = pageData.content.match(/RM\s*[\d]+/g) || [];
-    
+    if (pageContent.includes('Amount') || pageContent.includes('payment')) {
+      return {
+        success: true,
+        mobileNumber,
+        message: 'Bill information retrieved',
+        pageContent: pageContent.substring(0, 300)
+      };
+    }
+
     return {
-      success: true,
-      mobileNumber,
-      availableAmounts: [...new Set(amounts)],
-      screenshot,
-      pageUrl: pageData.url
+      success: false,
+      error: 'Unable to retrieve bill information. Please check your mobile number and try again.'
     };
 
   } catch (error) {
-    try { await page.close(); } catch(e) {}
+    console.error('[Bill Bot] Error:', error.message);
     throw error;
+  } finally {
+    if (browser) {
+      try { await browser.close(); } catch(e) {}
+    }
+  }
+}
+
+/**
+ * Validate prepaid mobile number for reload
+ */
+async function fetchReloadData(mobileNumber) {
+  let browser = null;
+
+  try {
+    browser = await launchBrowser();
+    const page = await browser.newPage();
+
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+    await page.goto('https://get.celcomdigi.com/reload/en', {
+      waitUntil: 'networkidle2',
+      timeout: 30000
+    });
+
+    await page.waitForSelector('input[wire\\:model="mobileNumber"], #mobile_number_input', { timeout: 15000 });
+
+    const mobileInput = await page.$('input[wire\\:model="mobileNumber"]') ||
+                        await page.$('#mobile_number_input');
+
+    if (mobileInput) {
+      await mobileInput.click({ clickCount: 3 });
+      await mobileInput.type(mobileNumber, { delay: 50 });
+      await page.evaluate((el) => {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      }, mobileInput);
+      await sleep(300);
+    }
+
+    const submitBtn = await page.$('#submit_button') || await page.$('button[type="submit"]');
+    if (submitBtn) {
+      await page.evaluate(btn => btn.click(), submitBtn);
+    }
+
+    await sleep(3000);
+
+    const pageContent = await page.evaluate(() => document.body.innerText);
+
+    const errorMatch = pageContent.match(/Please enter[^\n]+/);
+    if (errorMatch) {
+      return { success: false, error: errorMatch[0].trim() };
+    }
+
+    if (pageContent.includes('RM') || pageContent.includes('Select') || pageContent.includes('amount')) {
+      return {
+        success: true,
+        mobileNumber,
+        message: 'Mobile number validated. Proceed to amount selection.'
+      };
+    }
+
+    return {
+      success: false,
+      error: 'Please enter a valid/active Celcom or Digi prepaid mobile number.'
+    };
+
+  } catch (error) {
+    throw error;
+  } finally {
+    if (browser) {
+      try { await browser.close(); } catch(e) {}
+    }
   }
 }
 
