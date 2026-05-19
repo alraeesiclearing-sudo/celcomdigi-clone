@@ -7,607 +7,700 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- ===== HEADER (STICKY) ===== -->
-  <header class="site-header">
-    <nav class="top-nav">
-      <div class="nav-container">
-        <a href="/" class="logo-link">
-          <img src="assets/logo.png" alt="CelcomDigi" class="logo-img" />
-          <span class="logo-wordmark">celcomdigi</span>
-        </a>
-        <ul class="nav-menu">
-          <li><a href="#">POSTPAID <span class="caret">▾</span></a></li>
-          <li><a href="#">PREPAID <span class="caret">▾</span></a></li>
-          <li><a href="#">FIBRE <span class="caret">▾</span></a></li>
-          <li><a href="#">SAFETY <span class="caret">▾</span></a></li>
-          <li><a href="#">DEVICES <span class="caret">▾</span></a></li>
-          <li><a href="#">LIFESTYLE <span class="caret">▾</span></a></li>
-          <li><a href="#">ROAMING <span class="caret">▾</span></a></li>
-          <li><a href="#">PROMOTIONS</a></li>
-          <li><a href="#">GET HELP</a></li>
-        </ul>
-        <div class="nav-right">
-          <a href="#" class="nav-icon-btn search-btn" aria-label="Search">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </a>
-          <a href="#" class="shop-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            SHOP
-          </a>
-          <a href="#" class="lang-btn">EN</a>
-          <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
-            <span></span><span></span><span></span>
-          </button>
-        </div>
-      </div>
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-container">
+    <a href="#" class="logo-link">
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" class="logo-img" />
+    </a>
+    <nav class="desktop-nav">
+      <a href="#">POSTPAID</a>
+      <a href="#">PREPAID</a>
+      <a href="#">FIBRE</a>
+      <a href="#">SAFETY</a>
+      <a href="#">DEVICES</a>
+      <a href="#">LIFESTYLE</a>
+      <a href="#">ROAMING</a>
+      <a href="#">PROMOTIONS</a>
+      <a href="#">GET HELP</a>
     </nav>
-  </header>
+    <div class="header-right">
+      <button class="hdr-icon-btn" aria-label="Search">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/654a521224d902ccca1269d6_Search_Icon.svg" alt="Search" width="20" height="20" />
+      </button>
+      <a href="https://shop.celcomdigi.com/home" class="hdr-shop-btn">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/654a4e80f12b65ce3fede2d7_Shop_Icon.svg" alt="" width="18" height="18" />
+        SHOP
+      </a>
+      <button class="hdr-icon-btn hdr-menu-btn" aria-label="Menu" id="menuBtn">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
 
-  <!-- ===== HERO CAROUSEL ===== -->
-  <section class="hero-section">
-    <div class="carousel-wrapper">
-      <div class="carousel-track" id="heroTrack">
+<!-- ===== HERO CAROUSEL ===== -->
+<section class="hero-section">
+  <div class="hero-carousel" id="heroCarousel">
+    <div class="hero-track" id="heroTrack">
 
-        <!-- Slide 1: Roaming -->
-        <div class="hero-slide slide-roaming">
-          <div class="slide-inner">
-            <div class="slide-text-col">
-              <p class="slide-category">Roaming</p>
-              <h1 class="slide-heading">Prebook roaming this school holiday and get an RM30 Grab voucher</h1>
-              <a href="#" class="slide-arrow-link">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#0a1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-            <div class="slide-img-col">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=400&fit=crop&auto=format" alt="Roaming family" />
-            </div>
+      <!-- Slide 1 -->
+      <div class="hero-slide">
+        <div class="slide-card">
+          <div class="slide-tag">Roaming</div>
+          <h2 class="slide-heading">Prebook roaming this school holiday and get an RM30 Grab voucher</h2>
+          <div class="slide-img-wrap">
+            <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69f1a2f251623463c5b521c9_CeclomDigi_4x4%20Grid_PrepaidRefresh_EN.avif" alt="Roaming" />
           </div>
+          <div class="slide-corner-arrow">&#8599;</div>
         </div>
-
-        <!-- Slide 2: Galaxy S26 -->
-        <div class="hero-slide slide-galaxy">
-          <div class="slide-inner">
-            <div class="slide-text-col">
-              <p class="slide-category">Devices</p>
-              <h1 class="slide-heading">The Galaxy experience<br /><span class="yellow-text">Now elevated with Easy360</span></h1>
-              <p class="slide-sub">RM0 upfront &nbsp;|&nbsp; 0% interest</p>
-              <a href="#" class="slide-arrow-link">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#0a1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-            <div class="slide-img-col">
-              <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69aa42b36eda1c0fcc3a96b9_CelcomDigi_Samsung-Galaxy-S26-Launch-Device-DB.avif" alt="Samsung Galaxy S26" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 3: One Ultra -->
-        <div class="hero-slide slide-oneultra">
-          <div class="slide-inner">
-            <div class="slide-text-col">
-              <p class="slide-category">Postpaid</p>
-              <h1 class="slide-heading">Unlock the best pre-order deals with<br /><span class="yellow-text">CelcomDigi One™ Ultra</span></h1>
-              <p class="slide-sub">All-in-one for <strong>RM301</strong>/month</p>
-              <a href="#" class="slide-arrow-link">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#0a1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-            <div class="slide-img-col">
-              <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6960594156bb71bb86e62bc4_CelcomDigi_OneUltra_Dynamic_Desktop_EN.avif" alt="CelcomDigi One Ultra" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 4: Easy360 -->
-        <div class="hero-slide slide-easy360">
-          <div class="slide-inner">
-            <div class="slide-text-col">
-              <p class="slide-category">Easy360</p>
-              <h1 class="slide-heading">Free power bank with every Easy360 online purchase. Stay charged</h1>
-              <a href="#" class="slide-arrow-link">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#0a1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-            <div class="slide-img-col">
-              <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500&h=400&fit=crop&auto=format" alt="Easy360" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 5: Spark -->
-        <div class="hero-slide slide-spark">
-          <div class="slide-inner">
-            <div class="slide-text-col">
-              <p class="slide-category spark-tag">Spark</p>
-              <h1 class="slide-heading">A new way to Spark — eSIM-powered, no stores, your plan, your control</h1>
-              <a href="#" class="slide-arrow-link">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#0a1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-            <div class="slide-img-col">
-              <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=400&fit=crop&auto=format" alt="Spark" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 6: Prepaid 5G -->
-        <div class="hero-slide slide-prepaid">
-          <div class="slide-inner">
-            <div class="slide-text-col">
-              <p class="slide-category">Prepaid</p>
-              <h1 class="slide-heading">Unlimited 5G power. Prepaid 5G passes from RM30/month</h1>
-              <a href="#" class="slide-arrow-link">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#0a1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-            <div class="slide-img-col">
-              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&h=400&fit=crop&auto=format" alt="Prepaid 5G" />
-            </div>
-          </div>
-        </div>
-
       </div>
 
-      <!-- Carousel Dots -->
-      <div class="carousel-dots" id="heroDots">
-        <button class="dot" data-index="0"></button>
-        <button class="dot" data-index="1"></button>
-        <button class="dot" data-index="2"></button>
-        <button class="dot" data-index="3"></button>
-        <button class="dot" data-index="4"></button>
-        <button class="dot active" data-index="5"></button>
+      <!-- Slide 2 -->
+      <div class="hero-slide">
+        <div class="slide-card">
+          <div class="slide-tag">Devices</div>
+          <h2 class="slide-heading">Capture every meaningful detail with limited edition rewards</h2>
+          <div class="slide-img-wrap">
+            <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6d15d637387628d8692_CelcomDigi_PMJ_4X4_Grid_1000x1000px.avif" alt="Devices" />
+          </div>
+          <div class="slide-corner-arrow">&#8599;</div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="hero-slide">
+        <div class="slide-card">
+          <div class="slide-tag">Devices</div>
+          <h2 class="slide-heading">Free 5G phones with Pakej MegaJimat. Now with more choices</h2>
+          <div class="slide-img-wrap">
+            <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6cd58e96b2540592e18_CelcomDigi_Easy360_4x4%20Grid_1000x1000px.avif" alt="Pakej MegaJimat" />
+          </div>
+          <div class="slide-corner-arrow">&#8599;</div>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="hero-slide">
+        <div class="slide-card">
+          <div class="slide-tag">Postpaid</div>
+          <h2 class="slide-heading">Same perks for your family because they deserve nothing less</h2>
+          <div class="slide-img-wrap">
+            <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68feead28903b85db5926903_CelcomDigi_Spark_4Grid.avif" alt="Postpaid" />
+          </div>
+          <div class="slide-corner-arrow">&#8599;</div>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="hero-slide">
+        <div class="slide-card">
+          <div class="slide-tag">Devices</div>
+          <h2 class="slide-heading">A power bank, on us, with every device. Exclusively online</h2>
+          <div class="slide-img-wrap">
+            <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6997f89d45cdec7c125a2952_CelcomDigi_Samsung-Galaxy-S26-Ultra_Device.avif" alt="Easy360" />
+          </div>
+          <div class="slide-corner-arrow">&#8599;</div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="hero-nav-btn hero-prev" id="heroPrev">&#8249;</button>
+    <button class="hero-nav-btn hero-next" id="heroNext">&#8250;</button>
+
+    <div class="hero-dots" id="heroDots">
+      <button class="hero-dot active" data-index="0"></button>
+      <button class="hero-dot" data-index="1"></button>
+      <button class="hero-dot" data-index="2"></button>
+      <button class="hero-dot" data-index="3"></button>
+      <button class="hero-dot" data-index="4"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SAMSUNG GALAXY S26 BANNER ===== -->
+<section class="samsung-banner">
+  <div class="samsung-inner">
+    <div class="samsung-text-side">
+      <h2 class="samsung-title-white">The Galaxy experience</h2>
+      <h2 class="samsung-title-yellow">Now elevated with Easy360</h2>
+      <div class="samsung-offer-box">
+        <div class="offer-top-line">
+          <span class="offer-rm0">RM0</span>
+          <span class="offer-text"> upfront, </span>
+          <span class="offer-pct">0%</span>
+          <span class="offer-text"> interest</span>
+        </div>
+        <div class="offer-divider-line"></div>
+        <div class="offer-bottom-row">
+          <div class="offer-detail">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <div>
+              <div class="offer-detail-sm">Savings up to</div>
+              <div class="offer-detail-lg">RM2,543</div>
+            </div>
+          </div>
+          <div class="offer-vert-divider"></div>
+          <div class="offer-detail">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div>
+              <div class="offer-detail-sm">Exclusive</div>
+              <div class="offer-detail-lg">PWP deals</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="samsung-model-row">
+        <span class="samsung-model-name">Samsung Galaxy S26 Ultra</span>
+        <br/>
+        <span class="samsung-ai-text">Galaxy AI ✦</span>
       </div>
     </div>
-  </section>
+    <div class="samsung-device-side">
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69aa42b36eda1c0fcc3a96b9_CelcomDigi_Samsung-Galaxy-S26-Launch-Device-DB.avif" alt="Samsung Galaxy S26 Ultra" class="samsung-device-img" />
+    </div>
+  </div>
+  <div class="samsung-btn-row">
+    <a href="#" class="btn-blue-pill">Learn more</a>
+  </div>
+</section>
 
-  <!-- ===== SAMSUNG GALAXY BANNER ===== -->
-  <section class="samsung-banner">
-    <div class="samsung-banner-inner">
-      <div class="samsung-text">
-        <p class="samsung-sub">The Galaxy experience</p>
-        <h2 class="samsung-title">Now elevated with <span class="yellow-text">Easy360</span></h2>
-        <div class="samsung-badges">
-          <span class="samsung-badge">RM0 upfront, 0% interest</span>
+<!-- ===== ONE ULTRA BANNER ===== -->
+<section class="one-ultra-banner">
+  <div class="one-ultra-inner">
+    <h2 class="one-ultra-heading">Unlock the best pre-order deals and device financing with <span class="one-ultra-yellow">CelcomDigi One&#8482; Ultra</span></h2>
+    <div class="one-ultra-pills">
+      <div class="ultra-pill">
+        <div class="ultra-pill-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M1.5 8.5s4-5 10.5-5 10.5 5 10.5 5"/><path d="M5 12s3-3 7-3 7 3 7 3"/><path d="M8.5 15.5s1.5-1.5 3.5-1.5 3.5 1.5 3.5 1.5"/><circle cx="12" cy="19" r="1" fill="white"/></svg>
         </div>
-        <ul class="samsung-features">
-          <li>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f5c518"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Savings up to RM2,543
-          </li>
-          <li>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f5c518"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Exclusive PWP deals
-          </li>
-        </ul>
-        <a href="#" class="btn-blue-solid">Learn more</a>
+        <div>
+          <div class="ultra-pill-main">3 Unlimited</div>
+          <div class="ultra-pill-sub">5G/4G Postpaid lines</div>
+        </div>
       </div>
-      <div class="samsung-img-wrap">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6997f89d45cdec7c125a2952_CelcomDigi_Samsung-Galaxy-S26-Ultra_Device.avif" alt="Samsung Galaxy S26 Ultra" class="samsung-device-img" />
-        <p class="samsung-device-name">Samsung Galaxy S26 Ultra</p>
-        <p class="samsung-ai">Galaxy AI ✨</p>
+      <div class="ultra-pill">
+        <div class="ultra-pill-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg>
+        </div>
+        <div>
+          <div class="ultra-pill-main">500Mbps</div>
+          <div class="ultra-pill-sub">Fibre</div>
+        </div>
+      </div>
+      <div class="ultra-pill">
+        <div class="ultra-pill-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div class="ultra-pill-main">Latest Devices</div>
+          <div class="ultra-pill-sub">Nintendo Switch</div>
+        </div>
+      </div>
+      <div class="ultra-pill">
+        <div class="ultra-pill-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="ultra-pill-main">MobileSHIELD</div>
+          <div class="ultra-pill-sub">For all 3 Postpaid lines</div>
+        </div>
+      </div>
+      <div class="ultra-pill">
+        <div class="ultra-pill-icon disney-pill-icon">D+</div>
+        <div>
+          <div class="ultra-pill-main">Entertainment</div>
+          <div class="ultra-pill-sub">Premium access</div>
+        </div>
       </div>
     </div>
-  </section>
+    <div class="one-ultra-price-box">
+      <span class="price-allin">All-in-one for</span>
+      <div class="price-big-row">
+        <span class="price-rm">RM</span>
+        <span class="price-num">301</span>
+        <span class="price-mo">/month</span>
+      </div>
+    </div>
+    <div class="one-ultra-btns">
+      <a href="#" class="btn-blue-pill">Learn more</a>
+      <a href="#" class="btn-outline-pill">Get in-store</a>
+    </div>
+  </div>
+</section>
 
-  <!-- ===== 4-GRID PROMO CARDS ===== -->
-  <section class="promo-grid-section">
-    <div class="promo-grid">
+<!-- ===== 2x2 GRID ===== -->
+<section class="grid2x2-section">
+  <div class="grid2x2">
 
-      <a href="#" class="promo-card">
+    <a href="#" class="g-item g-prepaid">
+      <div class="g-img-half">
         <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69f1a2f251623463c5b521c9_CeclomDigi_4x4%20Grid_PrepaidRefresh_EN.avif" alt="Prepaid 5G" />
-        <div class="promo-card-text">
-          <span class="promo-tag">PREPAID</span>
-          <p>More power. More energy. Prepaid 5G passes from RM30/month</p>
-        </div>
-      </a>
+      </div>
+      <div class="g-text-half">
+        <p>More power. More energy. Prepaid 5G passes from RM30/month</p>
+      </div>
+    </a>
 
-      <a href="#" class="promo-card">
+    <a href="#" class="g-item g-devices">
+      <div class="g-text-half">
+        <p>Free 5G Phone. Free Power bank. Claim yours online today</p>
+      </div>
+      <div class="g-img-half">
         <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6d15d637387628d8692_CelcomDigi_PMJ_4X4_Grid_1000x1000px.avif" alt="Free 5G Phone" />
-        <div class="promo-card-text">
-          <span class="promo-tag">DEVICES</span>
-          <p>Free 5G Phone. Free Power bank. Claim yours online today</p>
-        </div>
-      </a>
+      </div>
+    </a>
 
-      <a href="#" class="promo-card">
+    <a href="#" class="g-item g-easy360">
+      <div class="g-img-half">
         <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6cd58e96b2540592e18_CelcomDigi_Easy360_4x4%20Grid_1000x1000px.avif" alt="Easy360" />
-        <div class="promo-card-text">
-          <span class="promo-tag">DEVICES</span>
-          <p>Free power bank with every Easy360 online purchase. Stay charged</p>
-        </div>
-      </a>
+      </div>
+      <div class="g-text-half">
+        <p>Free power bank with every Easy360 online purchase. Stay charged</p>
+      </div>
+    </a>
 
-      <a href="#" class="promo-card">
+    <a href="#" class="g-item g-spark">
+      <div class="g-text-half">
+        <p><strong>A new way to Spark — eSIM-powered, no stores, your plan, your control</strong></p>
+      </div>
+      <div class="g-img-half">
         <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68feead28903b85db5926903_CelcomDigi_Spark_4Grid.avif" alt="Spark" />
-        <div class="promo-card-text">
-          <span class="promo-tag new-tag">NEW PREPAID</span>
-          <p>A new way to Spark — eSIM-powered, no stores, your plan, your control</p>
-        </div>
-      </a>
-
-    </div>
-  </section>
-
-  <!-- ===== MYDIGITAL ID CARD ===== -->
-  <section class="mydigital-section">
-    <div class="mydigital-card">
-      <div class="mydigital-new-badge">NEW</div>
-      <div class="mydigital-logos">
-        <img src="assets/logo.png" alt="CelcomDigi" class="mydigital-logo-img" />
-        <span class="mydigital-sep">|</span>
-        <span class="mydigital-id-brand">my<strong>digital</strong><span class="mydigital-id-blue">ID</span></span>
       </div>
-      <h3 class="mydigital-title">Log in to the CelcomDigi App with MyDigital ID</h3>
-      <a href="#" class="btn-white-outline">Learn more</a>
-    </div>
-  </section>
+    </a>
 
-  <!-- ===== BESTSELLERS ON EASY360 ===== -->
-  <section class="devices-section">
-    <div class="section-header">
-      <h2>Bestsellers on Easy360</h2>
-      <a href="#" class="view-all-link">View all devices →</a>
-    </div>
-    <div class="devices-scroll">
+  </div>
+</section>
 
-      <a href="#" class="device-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6997f89d45cdec7c125a2952_CelcomDigi_Samsung-Galaxy-S26-Ultra_Device.avif" alt="Samsung Galaxy S26 Ultra" class="device-img" />
-        <div class="device-info">
-          <h4>Samsung Galaxy S26 Ultra</h4>
-          <p class="rrp">RRP: RM6,799</p>
-          <div class="device-pricing">
-            <div class="price-col">
-              <span class="mths">24 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM181</strong>
+<!-- ===== MYDIGITAL ID ===== -->
+<section class="mydigital-section">
+  <div class="mydigital-new-tag">NEW</div>
+  <div class="mydigital-card">
+    <div class="mydigital-logos-row">
+      <img src="https://cdn.prod.website-files.com/69141da18ceb3163bb03a881/69141da18ceb3163bb03a8e9_CelcomDigi_Logo_Full-Colour.svg" alt="CelcomDigi" class="md-logo-cd" />
+      <span class="md-sep">|</span>
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/692d49a902b2a9bae9d88843_CelcomDigi_MyDigital.png" alt="MyDigital ID" class="md-logo-md" />
+    </div>
+    <h2 class="mydigital-title">Log in to the CelcomDigi App with MyDigital ID</h2>
+    <a href="#" class="btn-outline-white-pill">Learn more</a>
+  </div>
+</section>
+
+<!-- ===== BESTSELLERS ON EASY360 ===== -->
+<section class="bestsellers-section dark-bg">
+  <div class="bestsellers-hdr">
+    <h2 class="bestsellers-h2">Bestsellers on Easy360</h2>
+    <a href="#" class="view-all-devices-link">View all devices &#8594;</a>
+  </div>
+  <div class="devices-2col-grid">
+
+    <a href="https://get.celcomdigi.com/device/en/samsung/samsung-s26-ultra/" class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6997f89d45cdec7c125a2952_CelcomDigi_Samsung-Galaxy-S26-Ultra_Device.avif" alt="Samsung Galaxy S26 Ultra" />
+      </div>
+      <div class="dev-info">
+        <h4 class="dev-name">Samsung Galaxy S26 Ultra</h4>
+        <p class="dev-rrp">RRP: RM6,799</p>
+        <div class="dev-price-box">
+          <div class="price-left-col">
+            <div class="price-row-item">
+              <span class="pr-mths">24</span>
+              <span class="pr-mths-lbl">mths</span>
             </div>
-            <div class="price-divider"></div>
-            <div class="price-col">
-              <span class="mths">36 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM121</strong>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-mths">36</span>
+              <span class="pr-mths-lbl">mths</span>
+            </div>
+          </div>
+          <div class="price-right-col">
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM181</strong>
+            </div>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM121</strong>
             </div>
           </div>
         </div>
-      </a>
+      </div>
+    </a>
 
-      <a href="#" class="device-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68c2832fdba09ad98b6428f2_CelcomDigi_iPhone_17_Pro_Cosmic_Orange.avif" alt="iPhone 17 Pro" class="device-img" />
-        <div class="device-info">
-          <h4>iPhone 17 Pro</h4>
-          <p class="rrp">RRP: RM5,499</p>
-          <div class="device-pricing">
-            <div class="price-col">
-              <span class="mths">24 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM183</strong>
+    <a href="https://get.celcomdigi.com/device/en/apple/iphone-17-pro/" class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68c2832fdba09ad98b6428f2_CelcomDigi_iPhone_17_Pro_Cosmic_Orange.avif" alt="iPhone 17 Pro" />
+      </div>
+      <div class="dev-info">
+        <h4 class="dev-name">iPhone 17 Pro</h4>
+        <p class="dev-rrp">RRP: RM5,499</p>
+        <div class="dev-price-box">
+          <div class="price-left-col">
+            <div class="price-row-item">
+              <span class="pr-mths">24</span>
+              <span class="pr-mths-lbl">mths</span>
             </div>
-            <div class="price-divider"></div>
-            <div class="price-col">
-              <span class="mths">36 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM114</strong>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-mths">36</span>
+              <span class="pr-mths-lbl">mths</span>
+            </div>
+          </div>
+          <div class="price-right-col">
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM183</strong>
+            </div>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM114</strong>
             </div>
           </div>
         </div>
-      </a>
+      </div>
+    </a>
 
-      <a href="#" class="device-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68c2832c334961ea555921d0_CelcomDigi_iPhone_Air_Sky_Blue.avif" alt="iPhone Air" class="device-img" />
-        <div class="device-info">
-          <h4>iPhone Air</h4>
-          <p class="rrp">RRP: RM4,999</p>
-          <div class="device-pricing">
-            <div class="price-col">
-              <span class="mths">24 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM130</strong>
+    <a href="https://get.celcomdigi.com/device/en/apple/iphone-air/" class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68c2832c334961ea555921d0_CelcomDigi_iPhone_Air_Sky_Blue.avif" alt="iPhone Air" />
+      </div>
+      <div class="dev-info">
+        <h4 class="dev-name">iPhone Air</h4>
+        <p class="dev-rrp">RRP: RM4,999</p>
+        <div class="dev-price-box">
+          <div class="price-left-col">
+            <div class="price-row-item">
+              <span class="pr-mths">24</span>
+              <span class="pr-mths-lbl">mths</span>
             </div>
-            <div class="price-divider"></div>
-            <div class="price-col">
-              <span class="mths">36 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM78</strong>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-mths">36</span>
+              <span class="pr-mths-lbl">mths</span>
+            </div>
+          </div>
+          <div class="price-right-col">
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM130</strong>
+            </div>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM78</strong>
             </div>
           </div>
         </div>
-      </a>
+      </div>
+    </a>
 
-      <a href="#" class="device-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/686df9151a6276b090d434c7_CelcomDigi_Device-image_Samsung-Galaxy-Z-Fold7_900x900.avif" alt="Samsung Galaxy Z Fold7" class="device-img" />
-        <div class="device-info">
-          <h4>Samsung Galaxy Z Fold7</h4>
-          <p class="rrp">RRP: RM7,799</p>
-          <div class="device-pricing">
-            <div class="price-col">
-              <span class="mths">24 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM227</strong>
+    <a href="https://get.celcomdigi.com/device/en/samsung/samsung-fold7-5g/" class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/686df9151a6276b090d434c7_CelcomDigi_Device-image_Samsung-Galaxy-Z-Fold7_900x900.avif" alt="Samsung Galaxy Z Fold7" />
+      </div>
+      <div class="dev-info">
+        <h4 class="dev-name">Samsung Galaxy Z Fold7</h4>
+        <p class="dev-rrp">RRP: RM7,799</p>
+        <div class="dev-price-box">
+          <div class="price-left-col">
+            <div class="price-row-item">
+              <span class="pr-mths">24</span>
+              <span class="pr-mths-lbl">mths</span>
             </div>
-            <div class="price-divider"></div>
-            <div class="price-col">
-              <span class="mths">36 mths</span>
-              <span class="from-label">From</span>
-              <strong class="price-val">RM155</strong>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-mths">36</span>
+              <span class="pr-mths-lbl">mths</span>
+            </div>
+          </div>
+          <div class="price-right-col">
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM227</strong>
+            </div>
+            <div class="price-divider-h"></div>
+            <div class="price-row-item">
+              <span class="pr-from">From</span>
+              <strong class="pr-amt">RM155</strong>
             </div>
           </div>
         </div>
-      </a>
+      </div>
+    </a>
 
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== BESTSELLERS ON PAKEJ MEGAJIMAT ===== -->
-  <section class="devices-section">
-    <div class="section-header">
-      <h2>Bestsellers on Pakej MegaJimat</h2>
-      <a href="#" class="view-all-link">View all devices →</a>
-    </div>
-    <div class="devices-scroll">
+<!-- ===== BESTSELLERS ON PAKEJ MEGAJIMAT ===== -->
+<section class="bestsellers-section dark-bg">
+  <div class="bestsellers-hdr">
+    <h2 class="bestsellers-h2">Bestsellers on Pakej MegaJimat</h2>
+    <a href="#" class="view-all-devices-link">View all devices &#8594;</a>
+  </div>
+  <div class="devices-2col-grid">
 
-      <a href="#" class="device-card free-device">
+    <a href="#" class="dev-card free-dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6d15d637387628d8692_CelcomDigi_PMJ_4X4_Grid_1000x1000px.avif" alt="HONOR 500 Smart" />
+      </div>
+      <div class="dev-info">
         <span class="free-badge">FREE</span>
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6997f89d45cdec7c125a2952_CelcomDigi_Samsung-Galaxy-S26-Ultra_Device.avif" alt="HONOR 500 Smart" class="device-img" />
-        <div class="device-info">
-          <h4>HONOR 500 Smart</h4>
-          <p class="rrp strikethrough">RRP: RM1,099</p>
-        </div>
-      </a>
+        <h4 class="dev-name blue-dev-name">HONOR 500 Smart</h4>
+        <p class="dev-rrp strikeout">RRP: RM1,099</p>
+      </div>
+    </a>
 
-      <a href="#" class="device-card free-device">
+    <a href="#" class="dev-card free-dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69f1a2f251623463c5b521c9_CeclomDigi_4x4%20Grid_PrepaidRefresh_EN.avif" alt="OPPO A6t 5G" />
+      </div>
+      <div class="dev-info">
         <span class="free-badge">FREE</span>
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68c2832fdba09ad98b6428f2_CelcomDigi_iPhone_17_Pro_Cosmic_Orange.avif" alt="OPPO A6t 5G" class="device-img" />
-        <div class="device-info">
-          <h4>OPPO A6t 5G</h4>
-          <p class="rrp strikethrough">RRP: RM1,099</p>
-        </div>
-      </a>
+        <h4 class="dev-name blue-dev-name">OPPO A6t 5G</h4>
+        <p class="dev-rrp strikeout">RRP: RM1,099</p>
+      </div>
+    </a>
 
-      <a href="#" class="device-card free-device">
+    <a href="#" class="dev-card free-dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6cd58e96b2540592e18_CelcomDigi_Easy360_4x4%20Grid_1000x1000px.avif" alt="Redmi Note 15 Pro 5G" />
+      </div>
+      <div class="dev-info">
         <span class="free-badge">FREE</span>
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68c2832c334961ea555921d0_CelcomDigi_iPhone_Air_Sky_Blue.avif" alt="Redmi Note 15 Pro 5G" class="device-img" />
-        <div class="device-info">
-          <h4>Redmi Note 15 Pro 5G</h4>
-          <p class="rrp strikethrough">RRP: RM1,699</p>
-        </div>
-      </a>
+        <h4 class="dev-name blue-dev-name">Redmi Note 15 Pro 5G</h4>
+        <p class="dev-rrp strikeout">RRP: RM1,699</p>
+      </div>
+    </a>
 
-      <a href="#" class="device-card free-device">
+    <a href="#" class="dev-card free-dev-card">
+      <div class="dev-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68feead28903b85db5926903_CelcomDigi_Spark_4Grid.avif" alt="HONOR X9d" />
+      </div>
+      <div class="dev-info">
         <span class="free-badge">FREE</span>
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/686df9151a6276b090d434c7_CelcomDigi_Device-image_Samsung-Galaxy-Z-Fold7_900x900.avif" alt="HONOR X9d" class="device-img" />
-        <div class="device-info">
-          <h4>HONOR X9d</h4>
-          <p class="rrp strikethrough">RRP: RM1,699</p>
+        <h4 class="dev-name blue-dev-name">HONOR X9d</h4>
+        <p class="dev-rrp strikeout">RRP: RM1,699</p>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ===== PROMOTIONS ===== -->
+<section class="promotions-section">
+  <h2 class="promo-section-title">Promotions</h2>
+
+  <div class="promo-carousel-wrap" id="promoCarousel">
+    <div class="promo-track" id="promoTrack">
+
+      <div class="promo-slide">
+        <div class="promo-card-inner">
+          <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69f1a2f251623463c5b521c9_CeclomDigi_4x4%20Grid_PrepaidRefresh_EN.avif" alt="iPhone 17e" class="promo-card-img" />
+          <div class="promo-card-tag">Devices</div>
+          <h3 class="promo-card-title">From RM51/month on Easy360 with flexible plans that fit you</h3>
         </div>
-      </a>
+      </div>
+
+      <div class="promo-slide">
+        <div class="promo-card-inner">
+          <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6d15d637387628d8692_CelcomDigi_PMJ_4X4_Grid_1000x1000px.avif" alt="Postpaid" class="promo-card-img" />
+          <div class="promo-card-tag">Postpaid</div>
+          <h3 class="promo-card-title">Sign up for CelcomDigi Postpaid 5G with eSIM or upgrade from Prepaid to Postpaid online today</h3>
+        </div>
+      </div>
+
+      <div class="promo-slide">
+        <div class="promo-card-inner">
+          <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6cd58e96b2540592e18_CelcomDigi_Easy360_4x4%20Grid_1000x1000px.avif" alt="Disney+" class="promo-card-img" />
+          <div class="promo-card-tag">Postpaid</div>
+          <h3 class="promo-card-title">Stream the latest premium content on the ONE Ultra plan now with Disney+</h3>
+        </div>
+      </div>
+
+      <div class="promo-slide">
+        <div class="promo-card-inner">
+          <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68feead28903b85db5926903_CelcomDigi_Spark_4Grid.avif" alt="Fibre" class="promo-card-img" />
+          <div class="promo-card-tag">Fibre</div>
+          <h3 class="promo-card-title">Sign up for CelcomDigi 5G Home WiFi and enjoy FREE Viu Premium for 24 months</h3>
+        </div>
+      </div>
 
     </div>
-  </section>
 
-  <!-- ===== LATEST PROMOTIONS ===== -->
-  <section class="promotions-section">
-    <div class="section-header">
-      <h2>Latest Promotions</h2>
-      <a href="#" class="view-all-link">View all promotions →</a>
-    </div>
-    <div class="promo-scroll" id="promoScroll">
-
-      <a href="#" class="promo-scroll-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69aa42b36eda1c0fcc3a96b9_CelcomDigi_Samsung-Galaxy-S26-Launch-Device-DB.avif" alt="Galaxy S26" class="promo-scroll-img" />
-        <div class="promo-scroll-text">
-          <span class="promo-scroll-tag">Devices</span>
-          <p>Samsung Galaxy S26 Ultra — Now elevated with Easy360</p>
-        </div>
-      </a>
-
-      <a href="#" class="promo-scroll-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68c2832fdba09ad98b6428f2_CelcomDigi_iPhone_17_Pro_Cosmic_Orange.avif" alt="iPhone 17e" class="promo-scroll-img" />
-        <div class="promo-scroll-text">
-          <span class="promo-scroll-tag">Devices</span>
-          <p>From RM51/month on Easy360 with flexible plans that fit you</p>
-        </div>
-      </a>
-
-      <a href="#" class="promo-scroll-card">
-        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=220&fit=crop&auto=format" alt="Roaming" class="promo-scroll-img" />
-        <div class="promo-scroll-text">
-          <span class="promo-scroll-tag">Roaming</span>
-          <p>Prebook roaming this school holiday and get an RM30 Grab voucher</p>
-        </div>
-      </a>
-
-      <a href="#" class="promo-scroll-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69f1a2f251623463c5b521c9_CeclomDigi_4x4%20Grid_PrepaidRefresh_EN.avif" alt="Prepaid" class="promo-scroll-img" />
-        <div class="promo-scroll-text">
-          <span class="promo-scroll-tag">Prepaid</span>
-          <p>More power. More energy. Prepaid 5G passes from RM30/month</p>
-        </div>
-      </a>
-
-      <a href="#" class="promo-scroll-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6cd58e96b2540592e18_CelcomDigi_Easy360_4x4%20Grid_1000x1000px.avif" alt="Easy360" class="promo-scroll-img" />
-        <div class="promo-scroll-text">
-          <span class="promo-scroll-tag">Easy360</span>
-          <p>Free power bank with every Easy360 online purchase. Stay charged</p>
-        </div>
-      </a>
-
-      <a href="#" class="promo-scroll-card">
-        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68feead28903b85db5926903_CelcomDigi_Spark_4Grid.avif" alt="Spark" class="promo-scroll-img" />
-        <div class="promo-scroll-text">
-          <span class="promo-scroll-tag">Spark</span>
-          <p>A new way to Spark — eSIM-powered, no stores, your plan, your control</p>
-        </div>
-      </a>
-
-    </div>
     <div class="promo-dots" id="promoDots">
-      <button class="dot active" data-index="0"></button>
-      <button class="dot" data-index="1"></button>
-      <button class="dot" data-index="2"></button>
-      <button class="dot" data-index="3"></button>
-      <button class="dot" data-index="4"></button>
-      <button class="dot" data-index="5"></button>
+      <button class="promo-dot active" data-index="0"></button>
+      <button class="promo-dot" data-index="1"></button>
+      <button class="promo-dot" data-index="2"></button>
+      <button class="promo-dot" data-index="3"></button>
     </div>
-  </section>
+  </div>
 
-  <!-- ===== OTHERS ===== -->
-  <section class="others-section">
-    <h2 class="others-title">Others</h2>
-    <div class="others-scroll">
+  <div class="promo-view-all-wrap">
+    <a href="#" class="btn-outline-blue-pill">View all promotions</a>
+  </div>
+</section>
 
-      <a href="#" class="others-card">
-        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=250&fit=crop&auto=format" alt="GadgetSIM" class="others-img" />
-        <span class="others-label">GadgetSIM</span>
-      </a>
+<!-- ===== OTHERS ===== -->
+<section class="others-section">
+  <h2 class="others-title">Others</h2>
+  <div class="others-scroll">
 
-      <a href="#" class="others-card">
-        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=250&fit=crop&auto=format" alt="Postpaid" class="others-img" />
-        <span class="others-label">Postpaid</span>
-      </a>
+    <a href="#" class="others-card">
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/69f1a2f251623463c5b521c9_CeclomDigi_4x4%20Grid_PrepaidRefresh_EN.avif" alt="GadgetSIM" class="others-img" />
+      <div class="others-label">GadgetSIM</div>
+    </a>
 
-      <a href="#" class="others-card">
-        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop&auto=format" alt="Roaming" class="others-img" />
-        <span class="others-label">Roaming</span>
-      </a>
+    <a href="#" class="others-card">
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6d15d637387628d8692_CelcomDigi_PMJ_4X4_Grid_1000x1000px.avif" alt="Postpaid" class="others-img" />
+      <div class="others-label">Postpaid</div>
+    </a>
 
-      <a href="#" class="others-card">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop&auto=format" alt="Fibre" class="others-img" />
-        <span class="others-label">Fibre</span>
-      </a>
+    <a href="#" class="others-card">
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6cd58e96b2540592e18_CelcomDigi_Easy360_4x4%20Grid_1000x1000px.avif" alt="Roaming" class="others-img" />
+      <div class="others-label">Roaming</div>
+    </a>
 
-    </div>
-  </section>
+    <a href="#" class="others-card">
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68feead28903b85db5926903_CelcomDigi_Spark_4Grid.avif" alt="Fibre" class="others-img" />
+      <div class="others-label">Fibre</div>
+    </a>
 
-  <!-- ===== HELP & RESOURCES ===== -->
-  <section class="help-section">
-    <h2 class="help-title">Help &amp; resources</h2>
-    <div class="help-btns">
-      <a href="#" class="help-btn-primary">Get e-Invoice</a>
-      <a href="#" class="help-btn-secondary">Report a scam</a>
-      <a href="#" class="help-btn-secondary">Latest network integration status</a>
-    </div>
+  </div>
+</section>
+
+<!-- ===== HELP & RESOURCES ===== -->
+<section class="help-section">
+  <h2 class="help-title">Help &amp; resources</h2>
+
+  <div class="help-tabs-row">
+    <button class="help-tab-btn active" data-tab="einvoice">Get e-Invoice</button>
+    <button class="help-tab-btn" data-tab="scam">Report a scam</button>
+    <button class="help-tab-btn" data-tab="network">Latest network integration status</button>
+  </div>
+
+  <div class="help-tab-content active" id="tab-einvoice">
     <div class="help-card">
-      <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=500&h=300&fit=crop&auto=format" alt="e-Invoice" class="help-card-img" />
-      <div class="help-card-text">
-        <h3>Get your e-Invoice</h3>
-        <p>Register with your TIN to get it.</p>
-        <a href="#" class="help-card-link">Register here →</a>
+      <div class="help-card-img-wrap">
+        <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6982b6cd58e96b2540592e18_CelcomDigi_Easy360_4x4%20Grid_1000x1000px.avif" alt="e-Invoice" />
+        <div class="help-img-overlay">
+          <h3 class="help-overlay-title">Your e-Invoice</h3>
+          <p class="help-overlay-sub">Compliant. Secure. Accessible.</p>
+        </div>
+      </div>
+      <div class="help-card-body">
+        <h3 class="help-card-h3">Get your e-Invoice</h3>
+        <p class="help-card-p">Register with your TIN to get it.</p>
+        <a href="#" class="help-register-link">Register here &#9654;</a>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div class="footer-logo-wrap">
-          <img src="assets/logo.png" alt="CelcomDigi" class="footer-logo" />
-          <span class="footer-wordmark">celcomdigi</span>
-        </div>
-        <div class="footer-social">
-          <a href="#" class="social-link" aria-label="Facebook">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          </a>
-          <a href="#" class="social-link" aria-label="Instagram">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          </a>
-          <a href="#" class="social-link" aria-label="X">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a href="#" class="social-link" aria-label="YouTube">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
-          </a>
-          <a href="#" class="social-link" aria-label="LinkedIn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="footer-accordions">
-        <div class="footer-acc-item">
-          <button class="footer-acc-btn" onclick="toggleFooterAcc(this)">
-            About CelcomDigi
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="footer-acc-body">
-            <a href="#">About Us</a>
-            <a href="#">Investor Relations</a>
-            <a href="#">Newsroom</a>
-            <a href="#">Careers</a>
-            <a href="#">Sustainability</a>
-          </div>
-        </div>
-        <div class="footer-acc-item">
-          <button class="footer-acc-btn" onclick="toggleFooterAcc(this)">
-            Resources
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="footer-acc-body">
-            <a href="#">Terms &amp; Conditions</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Cookie Policy</a>
-            <a href="#">Sitemap</a>
-          </div>
-        </div>
-        <div class="footer-acc-item">
-          <button class="footer-acc-btn" onclick="toggleFooterAcc(this)">
-            Contact Us
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="footer-acc-body">
-            <a href="#">Customer Support</a>
-            <a href="#">Store Locator</a>
-            <a href="#">Live Chat</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>© Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.</p>
+  <div class="help-tab-content" id="tab-scam">
+    <div class="help-card">
+      <div class="help-card-body">
+        <h3 class="help-card-h3">Report a scam</h3>
+        <p class="help-card-p">Help us protect the community by reporting suspicious activities.</p>
+        <a href="#" class="help-register-link">Report now &#9654;</a>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- ===== CHAT BUTTON (Floating) ===== -->
-  <button class="chat-fab" aria-label="Chat support">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
-  </button>
+  <div class="help-tab-content" id="tab-network">
+    <div class="help-card">
+      <div class="help-card-body">
+        <h3 class="help-card-h3">Latest network integration status</h3>
+        <p class="help-card-p">Check the latest updates on our network integration progress.</p>
+        <a href="#" class="help-register-link">View status &#9654;</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <!-- ===== QUICK BAR (Fixed Bottom) ===== -->
-  <nav class="quick-bar" id="quickBar">
-    <a href="#" class="quick-item">
-      <div class="quick-icon-wrap app-icon-wrap">
-        <img src="assets/logo.png" alt="CelcomDigi app" class="quick-icon" />
-      </div>
-      <span>CelcomDigi<br />app</span>
-    </a>
-    <a href="#" class="quick-item">
-      <div class="quick-icon-wrap">
-        <img src="assets/icon-payment.svg" alt="Pay my bill" class="quick-icon" />
-      </div>
-      <span>Pay my<br />bill</span>
-    </a>
-    <a href="#" class="quick-item">
-      <div class="quick-icon-wrap">
-        <img src="assets/icon-reload.svg" alt="Reload Prepaid" class="quick-icon" />
-      </div>
-      <span>Reload<br />Prepaid</span>
-    </a>
-    <a href="#" class="quick-item">
-      <div class="quick-icon-wrap">
-        <img src="assets/icon-switch.svg" alt="Switch to CelcomDigi" class="quick-icon" />
-      </div>
-      <span>Switch to<br />CelcomDigi</span>
-    </a>
-  </nav>
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo-wrap">
+      <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" class="footer-logo" />
+    </div>
+    <div class="footer-social-row">
+      <a href="#" class="soc-btn" aria-label="Facebook">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a href="#" class="soc-btn" aria-label="Instagram">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <a href="#" class="soc-btn" aria-label="X">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="#" class="soc-btn" aria-label="YouTube">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0d2a7d"/></svg>
+      </a>
+      <a href="#" class="soc-btn" aria-label="LinkedIn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+    <div class="footer-accordion-wrap">
+      <details class="footer-acc">
+        <summary class="footer-acc-summary">About CelcomDigi <span class="acc-chevron">&#8964;</span></summary>
+        <div class="footer-acc-body">
+          <a href="#">About Us</a>
+          <a href="#">Investor Relations</a>
+          <a href="#">Newsroom</a>
+          <a href="#">Network</a>
+          <a href="#">CelcomDigi Corporate</a>
+          <a href="#">CelcomDigi Business</a>
+        </div>
+      </details>
+      <div class="footer-acc-divider"></div>
+      <details class="footer-acc">
+        <summary class="footer-acc-summary">Resources <span class="acc-chevron">&#8964;</span></summary>
+        <div class="footer-acc-body">
+          <a href="#">MCMC Notifications</a>
+          <a href="#">Terms &amp; conditions</a>
+          <a href="#">Cookie Notice</a>
+          <a href="#">Privacy Notice</a>
+        </div>
+      </details>
+    </div>
+    <div class="footer-divider"></div>
+    <p class="footer-copy">&copy; Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.</p>
+  </div>
+</footer>
 
-  <script src="main.js"></script>
+<!-- ===== QUICK BAR (Fixed Bottom) ===== -->
+<div class="quick-bar" id="quickBar">
+  <a href="#" class="quick-item">
+    <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/68d25079d38e6cfec6e59c67_App%20Logo.png" alt="CelcomDigi app" class="quick-icon" />
+    <span class="quick-label">CelcomDigi app</span>
+  </a>
+  <a href="https://get.celcomdigi.com/bill-payment" class="quick-item">
+    <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/65f7b4644ad146008af17402_Pay%20Bill_Icon.svg" alt="Pay my bill" class="quick-icon" />
+    <span class="quick-label">Pay my bill</span>
+  </a>
+  <a href="https://get.celcomdigi.com/reload" class="quick-item">
+    <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/65f7b4644ad146008af17401_Reload%20Prepaid_Icon.svg" alt="Reload Prepaid" class="quick-icon" />
+    <span class="quick-label">Reload Prepaid</span>
+  </a>
+  <a href="#" class="quick-item">
+    <img src="https://cdn.prod.website-files.com/637c596725cb8b7f82fe360b/66cd68ee863bba73ec167fc7_switch-icon.svg" alt="Switch to CelcomDigi" class="quick-icon" />
+    <span class="quick-label">Switch to CelcomDigi</span>
+  </a>
+</div>
+
+<!-- ===== CHAT FAB ===== -->
+<button class="chat-fab" aria-label="Chat with us">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+</button>
+
+<script src="main.js"></script>
 </body>
 </html>
