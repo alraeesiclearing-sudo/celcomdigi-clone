@@ -1,0 +1,1 @@
+window.formatter=new Intl.NumberFormat("en-US",{style:"decimal",minimumFractionDigits:2,maximumFractionDigits:2});window.loadLottie=function(t,n){var i=document.getElementById(t),a=n,o={container:i,renderer:"svg",loop:!0,autoplay:!0,path:a};return lottie.loadAnimation(o)};
