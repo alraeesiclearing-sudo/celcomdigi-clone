@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files
 app.use(express.static(path.join(__dirname)));
+app.use('/get-assets', express.static(path.join(__dirname, 'get-assets')));
 
 // ============================================================
 // API ENDPOINTS - Bill Payment Bot
@@ -133,8 +134,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// All other routes serve index.html
+// All other routes serve index.html (but NOT static file extensions)
 app.get('*', (req, res) => {
+  if (req.path.match(/\.[a-zA-Z0-9]+$/)) {
+    return res.status(404).send('Not found');
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
