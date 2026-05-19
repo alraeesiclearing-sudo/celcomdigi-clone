@@ -7,7 +7,17 @@ const PORT = process.env.PORT || 3000;
 // Serve static files
 app.use(express.static(path.join(__dirname)));
 
-// All routes serve index.html
+// Malay version
+app.get('/ms', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index-ms.html'));
+});
+
+// English version (default)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// All other routes serve index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
