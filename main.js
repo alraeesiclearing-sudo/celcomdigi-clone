@@ -1,62 +1,70 @@
-// ===================== HERO CAROUSEL =====================
-let currentSlide = 0;
-const totalSlides = 2;
+// ===== HERO CAROUSEL =====
+(function() {
+  const track = document.getElementById('heroTrack');
+  const dots = document.querySelectorAll('.dot');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if (!track) return;
 
-function goToSlide(index) {
-  currentSlide = index;
-  document.getElementById('heroTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
-  document.querySelectorAll('.dot').forEach((d, i) => {
-    d.classList.toggle('active', i === currentSlide);
-  });
-}
+  let current = 0;
+  const slides = track.querySelectorAll('.hero-slide');
+  const total = slides.length;
 
-function nextSlide() {
-  goToSlide((currentSlide + 1) % totalSlides);
-}
-
-function prevSlide() {
-  goToSlide((currentSlide - 1 + totalSlides) % totalSlides);
-}
-
-// Auto-play carousel
-setInterval(nextSlide, 5000);
-
-// ===================== PLANS TABS =====================
-function switchPlan(btn, id) {
-  document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.plans-content').forEach(c => c.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-}
-
-// ===================== HELP TABS =====================
-function switchHelp(btn, id) {
-  document.querySelectorAll('.help-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.help-content').forEach(c => c.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-}
-
-// ===================== MOBILE MENU =====================
-document.getElementById('hamburger').addEventListener('click', function () {
-  const navLinks = document.querySelector('.nav-links');
-  navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-  navLinks.style.flexDirection = 'column';
-  navLinks.style.position = 'absolute';
-  navLinks.style.top = '60px';
-  navLinks.style.left = '0';
-  navLinks.style.right = '0';
-  navLinks.style.background = '#0a1628';
-  navLinks.style.padding = '16px';
-  navLinks.style.zIndex = '999';
-});
-
-// ===================== STICKY HEADER SHADOW =====================
-window.addEventListener('scroll', function () {
-  const header = document.querySelector('.header');
-  if (window.scrollY > 10) {
-    header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)';
-  } else {
-    header.style.boxShadow = '0 2px 12px rgba(0,0,0,0.3)';
+  function goTo(index) {
+    current = (index + total) % total;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
   }
-});
+
+  if (prevBtn) prevBtn.addEventListener('click', function() { goTo(current - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function() { goTo(current + 1); });
+  dots.forEach(function(dot, i) { dot.addEventListener('click', function() { goTo(i); }); });
+
+  setInterval(function() { goTo(current + 1); }, 5000);
+})();
+
+// ===== PLANS TABS =====
+(function() {
+  var tabs = document.querySelectorAll('.plan-tab');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+})();
+
+// ===== SELF SERVICE TABS =====
+(function() {
+  var tabs = document.querySelectorAll('.ss-tab');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+})();
+
+// ===== HAMBURGER MENU =====
+(function() {
+  var btn = document.getElementById('hamburgerBtn');
+  var menu = document.querySelector('.nav-menu');
+  if (!btn || !menu) return;
+  var open = false;
+  btn.addEventListener('click', function() {
+    open = !open;
+    if (open) {
+      menu.style.display = 'flex';
+      menu.style.flexDirection = 'column';
+      menu.style.position = 'absolute';
+      menu.style.top = '64px';
+      menu.style.left = '0';
+      menu.style.right = '0';
+      menu.style.background = '#0a1f5c';
+      menu.style.padding = '16px';
+      menu.style.zIndex = '999';
+    } else {
+      menu.style.display = '';
+    }
+  });
+})();
