@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "playwright-chromium": "^1.60.0"
+    "playwright-chromium": "^1.60.0",
+    "ws": "^8.20.1"
   },
   "engines": {
     "node": ">=18.0.0"

