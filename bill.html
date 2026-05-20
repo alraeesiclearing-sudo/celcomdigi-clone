@@ -297,6 +297,20 @@
     // ===== NUMBER INPUT HANDLER =====
     function handleNumberInput(el) {
       let val = el.value.replace(/\D/g, '');
+
+      // Auto-prefix with 60 during typing (same as original)
+      if (val.length < 12) {
+        if (val.length > 0 && val.startsWith('0')) {
+          val = '6' + val;
+        }
+        if (val.length > 0 && !val.startsWith('6') && !val.startsWith('60')) {
+          val = '60' + val;
+        }
+        if (val.length >= 2 && !val.startsWith('60')) {
+          val = '60' + val;
+        }
+      }
+
       if (val.length > 12) val = val.substring(0, 12);
       el.value = val;
       enableSubmitButton(val);
