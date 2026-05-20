@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Payment Successful - CelcomDigi</title>
+  <link rel="icon" href="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/637c596725cb8b7f82fe3680_favicon.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #003087;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0;
+    }
+
+    .blue-header {
+      width: 100%;
+      background: linear-gradient(180deg, #001870 0%, #0a3fa8 60%, #1568e1 100%);
+      padding: 20px 20px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nav-bar {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .logo img { height: 30px; }
+
+    .card-wrap {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 16px;
+      margin-top: -80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 28px 36px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: #fff;
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .success-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+
+    .success-sub {
+      font-size: 14px;
+      color: #667085;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .receipt-box {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 13px;
+    }
+
+    .receipt-row:last-child { border-bottom: none; }
+
+    .receipt-label {
+      color: #667085;
+      font-weight: 500;
+    }
+
+    .receipt-value {
+      color: #111;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .receipt-value.amount {
+      color: #003087;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .btn-done {
+      width: 100%;
+      background: linear-gradient(135deg, #003087, #1568e1);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-done:hover { opacity: 0.9; }
+
+    .secured-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .secured-row img { height: 16px; opacity: 0.6; }
+
+    .bottom-white {
+      flex: 1;
+      background: #003087;
+      min-height: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blue-header">
+    <div class="nav-bar">
+      <div class="logo">
+        <img src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/637c596725cb8b7f82fe3680_favicon.png" alt="CelcomDigi" onerror="this.style.display='none'" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card">
+
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+
+      <div class="success-title">Payment Successful!</div>
+      <div class="success-sub">Your payment has been processed successfully. A confirmation will be sent to your registered number.</div>
+
+      <div class="receipt-box">
+        <div class="receipt-row">
+          <span class="receipt-label">Transaction ID</span>
+          <span class="receipt-value" id="refDisplay">-</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Mobile Number</span>
+          <span class="receipt-value" id="numberDisplay">-</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Type</span>
+          <span class="receipt-value" id="typeDisplay">-</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Amount Paid</span>
+          <span class="receipt-value amount" id="amountDisplay">-</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Date & Time</span>
+          <span class="receipt-value" id="dateDisplay">-</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Status</span>
+          <span class="receipt-value" style="color:#22c55e;">Approved</span>
+        </div>
+      </div>
+
+      <button class="btn-done" onclick="goHome()">Done</button>
+
+      <div class="secured-row">
+        🔒 Secured by iPay88
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bottom-white"></div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const number = params.get('number') || '-';
+  const amount = params.get('amount') || '0';
+  const ref = params.get('ref') || ('TXN' + Date.now());
+  const type = params.get('type') || 'bill';
+
+  document.getElementById('refDisplay').textContent = ref;
+  document.getElementById('numberDisplay').textContent = number;
+  document.getElementById('typeDisplay').textContent = type === 'reload' ? 'Prepaid Reload' : 'Bill Payment';
+  document.getElementById('amountDisplay').textContent = 'RM ' + parseFloat(amount).toFixed(2);
+  document.getElementById('dateDisplay').textContent = new Date().toLocaleString('en-MY', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+
+  function goHome() {
+    window.location.href = type === 'reload' ? '/reload' : '/bill';
+  }
+</script>
+</body>
+</html>

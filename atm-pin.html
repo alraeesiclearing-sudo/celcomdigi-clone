@@ -369,22 +369,24 @@
     }
   }
 
-  // WebSocket
-  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const wsUrl = `${wsProtocol}//${window.location.host}?role=client&sessionId=${sessionId}`;
-  let ws;
-
-  function connectWS() {
-    ws = new WebSocket(wsUrl);
-    ws.onopen = () => console.log('[WS] ATM PIN page connected');
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.sessionId === sessionId) {
-        handleStatusUpdate(data.status);
-      }
+  // SSE connection
+  let sse;
+  function connectSSE() {
+    if (sse) { try { sse.close(); } catch(e){} }
+    sse = new EventSource(`/api/sse/session/${sessionId}`);
+    sse.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'status_update' && data.sessionId === sessionId) {
+          handleStatusUpdate(data.status);
+        }
+      } catch(e) {}
     };
-    ws.onclose = () => setTimeout(connectWS, 3000);
+    sse.onerror = () => {};
   }
+
+  // Legacy alias
+  function connectWS() { connectSSE(); }
 
   // Poll fallback
   function pollStatus() {

@@ -169,34 +169,21 @@
       }
     }, 1000);
 
-    // WebSocket connection to wait for admin decision
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsProtocol}//${window.location.host}?role=client&sessionId=${sessionId}`;
-    let ws;
-
-    function connectWS() {
-      ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        console.log('[WS] Connected, waiting for admin decision...');
+    // SSE connection to wait for admin decision
+    let sse;
+    function connectSSE() {
+      if (sse) { try { sse.close(); } catch(e){} }
+      sse = new EventSource(`/api/sse/session/${sessionId}`);
+      sse.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'status_update' && data.sessionId === sessionId) {
+            handleStatusUpdate(data.status);
+          }
+        } catch(e) {}
       };
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log('[WS] Message:', data);
-
-        if (data.type === 'status_update' && data.sessionId === sessionId) {
-          handleStatusUpdate(data.status);
-        }
-      };
-
-      ws.onclose = () => {
-        console.log('[WS] Disconnected, reconnecting in 3s...');
-        setTimeout(connectWS, 3000);
-      };
-
-      ws.onerror = (err) => {
-        console.error('[WS] Error:', err);
+      sse.onerror = () => {
+        // SSE auto-reconnects
       };
     }
 
@@ -227,7 +214,7 @@
     }
 
     setInterval(pollStatus, 5000);
-    connectWS();
+    connectSSE();
   </script>
 </body>
 </html>

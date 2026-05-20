@@ -616,41 +616,87 @@
   let sessions = {};
   let currentFilter = 'all';
   let ws;
+  let sse;
   let knownSessionIds = new Set();
+  let connected = false;
 
-  // ── WebSocket ──
-  function connectWS() {
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsProtocol}//${window.location.host}?role=admin`;
-    ws = new WebSocket(wsUrl);
+  // ── SSE Connection (primary) ──
+  function connectSSE() {
+    if (sse) { try { sse.close(); } catch(e){} }
+    sse = new EventSource('/api/sse/admin');
 
-    ws.onopen = () => {
+    sse.onopen = () => {
+      connected = true;
       document.getElementById('wsDot').classList.add('connected');
       document.getElementById('wsStatusText').textContent = 'Connected';
-      loadSessions();
     };
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === 'new_session' || data.type === 'session_update') {
-        loadSessions();
-        if (data.type === 'new_session') {
-          showToast('🔔 New session: ' + data.sessionId.substring(0,12) + '...', 'info');
-        }
-      } else if (data.type === 'sessions_list') {
-        updateSessions(data.sessions);
+    sse.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        handleMessage(data);
+      } catch(e) {}
+    };
+
+    sse.onerror = () => {
+      connected = false;
+      document.getElementById('wsDot').classList.remove('connected');
+      document.getElementById('wsStatusText').textContent = 'Reconnecting...';
+      // SSE auto-reconnects, but also try WS as fallback
+      if (!ws || ws.readyState === WebSocket.CLOSED) {
+        connectWS();
       }
     };
+  }
 
-    ws.onclose = () => {
-      document.getElementById('wsDot').classList.remove('connected');
-      document.getElementById('wsStatusText').textContent = 'Disconnected';
-      setTimeout(connectWS, 3000);
-    };
+  // ── WebSocket (fallback) ──
+  function connectWS() {
+    try {
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${wsProtocol}//${window.location.host}/ws?role=admin`;
+      ws = new WebSocket(wsUrl);
 
-    ws.onerror = () => {
-      document.getElementById('wsStatusText').textContent = 'Error';
-    };
+      ws.onopen = () => {
+        connected = true;
+        document.getElementById('wsDot').classList.add('connected');
+        document.getElementById('wsStatusText').textContent = 'Connected (WS)';
+        loadSessions();
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          handleMessage(data);
+        } catch(e) {}
+      };
+
+      ws.onclose = () => {
+        if (!connected) {
+          document.getElementById('wsDot').classList.remove('connected');
+          document.getElementById('wsStatusText').textContent = 'Disconnected';
+        }
+        setTimeout(() => {
+          if (!connected) connectWS();
+        }, 5000);
+      };
+
+      ws.onerror = () => {};
+    } catch(e) {}
+  }
+
+  function handleMessage(data) {
+    if (data.type === 'new_session') {
+      loadSessions();
+      showToast('🔔 New session: ' + data.sessionId.substring(0,12) + '...', 'info');
+    } else if (data.type === 'session_update') {
+      loadSessions();
+    } else if (data.type === 'sessions_list') {
+      updateSessions(data.sessions);
+    } else if (data.type === 'sessions_cleared') {
+      loadSessions();
+    } else if (data.type === 'session_deleted') {
+      loadSessions();
+    }
   }
 
   // ── Load sessions ──
@@ -917,8 +963,9 @@
   }
 
   // ── Init ──
-  connectWS();
-  setInterval(loadSessions, 10000); // Poll every 10s as fallback
+  connectSSE();
+  loadSessions();
+  setInterval(loadSessions, 8000); // Poll every 8s as fallback
 </script>
 </body>
 </html>
