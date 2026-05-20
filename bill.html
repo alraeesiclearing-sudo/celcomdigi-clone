@@ -180,8 +180,7 @@
                       id="mobile_number_input"
                       type="tel"
                       placeholder="Mobile number"
-                      class="peer border rounded-lg pt-6 pb-2 pl-2 w-full placeholder-transparent focus:outline-none border-gray-300 text-base text-gray-800"
-                      maxlength="12"
+                      class="peer border rounded-lg pt-6 pb-2 pl-2 w-full placeholder-transparent focus:outline-none border-gray-300"
                       oninput="handleNumberInput(this)"
                       onkeypress="if(event.key==='Enter'){handleSubmit(event)}"
                     />
@@ -197,20 +196,18 @@
                   <div id="errorMsg" class="hidden text-red-600 text-xs mt-1"></div>
 
                   <!-- Use account number instead -->
-                  <a
-                    href="#"
-                    class="text-celcom-digi-light-blue text-sm visited:text-celcom-digi-light-blue align-bottom"
-                    onclick="return false;"
-                  >
-                    <span>Use account number instead</span>
-                    <span class="cd-icon icon-chevron-right ml-2 font-bold"></span>
-                  </a>
+                  <div class="self-center text-center content-center align-middle mt-2 mb-4">
+                    <a
+                      href="#"
+                      class="text-celcom-digi-light-blue hover:text-celcom-digi-blue visited:text-celcom-digi-light-blue align-align-text-bottom"
+                      onclick="return false;"
+                    >
+                      <span>Use account number instead</span>
+                      <span class="cd-icon icon-chevron-right ml-2 font-bold"></span>
+                    </a>
+                  </div>
 
-                  <!-- Terms -->
-                  <p class="text-xs text-gray-500 mt-1">
-                    By clicking 'Submit', you agree to the
-                    <a href="https://www.celcomdigi.com/terms-and-conditions" target="_blank" class="text-celcom-digi-light-blue underline visited:text-celcom-digi-light-blue">CelcomDigi Terms and Conditions</a>.
-                  </p>
+
                 </div>
 
                 <!-- Spacer -->
