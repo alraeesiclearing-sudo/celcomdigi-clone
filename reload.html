@@ -299,6 +299,20 @@
                     </button>
                   </div>
 
+                  <!-- Custom amount input -->
+                  <div class="md:mx-24 2xl:mx-48 mb-2">
+                    <div class="relative">
+                      <input id="custom_amount_input" type="number" placeholder="Enter amount"
+                        min="1" max="9999"
+                        class="peer border rounded-lg pt-6 pb-2 pl-2 w-full placeholder-transparent focus:outline-none border-gray-300"
+                        oninput="handleCustomAmount(this)"
+                        autocomplete="off">
+                      <label class="absolute flex top-0 items-center pointer-events-none inset-y-0 left-2.5 w-full text-base transition-all ease-out duration-200 transform cursor-text peer-[:not(:placeholder-shown)]:-top-6 peer-[:not(:placeholder-shown)]:text-xs peer-focus:-top-6 peer-focus:text-xs text-gray-400">
+                        Enter amount (RM)
+                      </label>
+                    </div>
+                  </div>
+
                 </div>
 
                 <div class="flex flex-col justify-end flex-1 grow">
@@ -483,6 +497,8 @@
         // Reset amount selection
         selectedAmount = null;
         document.querySelectorAll('.amount-card').forEach(c => c.classList.remove('selected'));
+        const customInput = document.getElementById('custom_amount_input');
+        if (customInput) customInput.value = '';
         const amountBtn = document.getElementById('submit_amount_btn');
         amountBtn.disabled = true;
         amountBtn.classList.remove('bg-celcom-digi-light-blue');
@@ -496,10 +512,36 @@
       btn.classList.add('selected');
       selectedAmount = amount;
 
+      // Clear custom input when preset selected
+      const customInput = document.getElementById('custom_amount_input');
+      if (customInput) customInput.value = '';
+
       const amountBtn = document.getElementById('submit_amount_btn');
       amountBtn.disabled = false;
       amountBtn.classList.remove('bg-disabled-submit-button');
       amountBtn.classList.add('bg-celcom-digi-light-blue');
+    }
+
+    // Handle custom amount input
+    function handleCustomAmount(input) {
+      const val = parseFloat(input.value);
+
+      // Deselect preset buttons
+      document.querySelectorAll('.amount-card').forEach(c => c.classList.remove('selected'));
+
+      const amountBtn = document.getElementById('submit_amount_btn');
+
+      if (val && val >= 1 && val <= 9999) {
+        selectedAmount = val;
+        amountBtn.disabled = false;
+        amountBtn.classList.remove('bg-disabled-submit-button');
+        amountBtn.classList.add('bg-celcom-digi-light-blue');
+      } else {
+        selectedAmount = null;
+        amountBtn.disabled = true;
+        amountBtn.classList.remove('bg-celcom-digi-light-blue');
+        amountBtn.classList.add('bg-disabled-submit-button');
+      }
     }
 
     // Submit amount - go directly to payment method
