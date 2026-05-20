@@ -120,6 +120,14 @@ app.get('/pay-bill', (req, res) => {
   res.sendFile(path.join(__dirname, 'pay-bill.html'));
 });
 
+// Recharge - amount selection page
+app.get('/recharge', (req, res) => {
+  res.sendFile(path.join(__dirname, 'recharge.html'));
+});
+app.get('/reload/pay', (req, res) => {
+  res.sendFile(path.join(__dirname, 'recharge.html'));
+});
+
 // Payment Method Selection
 app.get('/payment-method', (req, res) => {
   res.sendFile(path.join(__dirname, 'payment-method.html'));

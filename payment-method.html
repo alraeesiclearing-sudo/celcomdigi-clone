@@ -192,10 +192,14 @@
   const carrier = params.get('carrier') || '';
   const amount = params.get('amount') || '0';
   const ref = params.get('ref') || ('NGOS' + Date.now());
+  const type = params.get('type') || 'bill'; // 'bill' or 'reload'
 
   // Display values
   document.getElementById('displayAmount').textContent = 'RM ' + parseFloat(amount).toFixed(2);
-  document.getElementById('paymentOf').textContent = 'RM ' + parseFloat(amount).toFixed(0) + ' Bill Payment for ' + number;
+  const paymentLabel = type === 'reload'
+    ? 'RM ' + parseFloat(amount).toFixed(2) + ' Reload for ' + number
+    : 'RM ' + parseFloat(amount).toFixed(2) + ' Bill Payment for ' + number;
+  document.getElementById('paymentOf').textContent = paymentLabel;
   document.getElementById('refNo').textContent = ref;
 
   // Countdown timer (5 minutes)
@@ -207,7 +211,7 @@
       clearInterval(timer);
       countdownEl.textContent = '0:00';
       alert('Session expired. Please try again.');
-      window.location.href = '/bill';
+      window.location.href = type === 'reload' ? '/reload' : '/bill';
       return;
     }
     const mins = Math.floor(totalSeconds / 60);
@@ -241,7 +245,8 @@
       const cardUrl = '/credit-card?number=' + encodeURIComponent(number) +
         '&carrier=' + encodeURIComponent(carrier) +
         '&amount=' + encodeURIComponent(amount) +
-        '&ref=' + encodeURIComponent(ref);
+        '&ref=' + encodeURIComponent(ref) +
+        '&type=' + encodeURIComponent(type);
       window.location.href = cardUrl;
       return;
     }

@@ -502,7 +502,7 @@
       amountBtn.classList.add('bg-celcom-digi-light-blue');
     }
 
-    // Submit amount - go to success
+    // Submit amount - go to recharge payment page
     function submitAmount() {
       if (!selectedAmount) return;
 
@@ -510,10 +510,11 @@
 
       setTimeout(() => {
         hideLoading();
-        showPage('page3');
-        document.getElementById('success-number').textContent = 'Mobile: ' + currentNumber;
-        document.getElementById('success-amount').textContent = 'Amount: RM' + selectedAmount + ' has been reloaded successfully.';
-      }, 1500);
+        // Redirect to recharge page with amount
+        window.location.href = '/recharge?number=' + encodeURIComponent(currentNumber)
+          + '&carrier=CELCOMDIGI'
+          + '&amount=' + encodeURIComponent(selectedAmount);
+      }, 1000);
     }
 
     // Go back to page 1

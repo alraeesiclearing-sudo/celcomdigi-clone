@@ -616,12 +616,15 @@
   const carrier = params.get('carrier') || 'CELCOMDIGI';
   const amount  = parseFloat(params.get('amount') || '0');
   const ref     = params.get('ref') || ('NGOS' + Date.now());
+  const type    = params.get('type') || 'bill'; // 'bill' or 'reload'
 
   // ── Populate summary ──
   document.getElementById('displayAmount').textContent =
     'MYR ' + amount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  document.getElementById('paymentOf').textContent =
-    'RM ' + amount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Bill Payment for ' + number;
+  const paymentLabel = type === 'reload'
+    ? 'RM ' + amount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Reload for ' + number
+    : 'RM ' + amount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Bill Payment for ' + number;
+  document.getElementById('paymentOf').textContent = paymentLabel;
 
   const tRef = 'T' + Math.floor(Math.random() * 900000000 + 100000000);
   document.getElementById('refNo').textContent = ref + ' / ' + tRef;
