@@ -348,7 +348,7 @@
         const response = await fetch('/api/bill-check', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ number })
+          body: JSON.stringify({ mobileNumber: number })
         });
 
         const data = await response.json();
