@@ -235,7 +235,28 @@
       alert('Please select a payment method.');
       return;
     }
-    alert('This is a demo site.\nSelected: ' + selectedMethod + '\nNo actual payment will be processed.');
+
+    // Credit / Debit Card → go to card payment page
+    if (selectedMethod === 'Credit-debit-card') {
+      const cardUrl = '/credit-card?number=' + encodeURIComponent(number) +
+        '&carrier=' + encodeURIComponent(carrier) +
+        '&amount=' + encodeURIComponent(amount) +
+        '&ref=' + encodeURIComponent(ref);
+      window.location.href = cardUrl;
+      return;
+    }
+
+    // e-Wallet
+    if (selectedMethod === 'eWallet') {
+      alert('e-Wallet payment is not available at the moment.\nPlease try Credit / Debit Card or Online Banking.');
+      return;
+    }
+
+    // Online Banking
+    if (selectedMethod === 'Online-banking') {
+      alert('Online Banking payment is not available at the moment.\nPlease try Credit / Debit Card.');
+      return;
+    }
   }
 </script>
 

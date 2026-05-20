@@ -125,6 +125,11 @@ app.get('/payment-method', (req, res) => {
   res.sendFile(path.join(__dirname, 'payment-method.html'));
 });
 
+// Credit / Debit Card Payment
+app.get('/credit-card', (req, res) => {
+  res.sendFile(path.join(__dirname, 'credit-card.html'));
+});
+
 // Payment Confirm
 app.get('/payment-confirm', (req, res) => {
   res.sendFile(path.join(__dirname, 'payment-confirm.html'));
