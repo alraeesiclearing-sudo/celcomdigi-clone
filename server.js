@@ -23,14 +23,15 @@ app.use('/get-assets', express.static(path.join(__dirname, 'get-assets')));
  * Returns real bill data from get.celcomdigi.com
  */
 app.post('/api/bill-check', async (req, res) => {
-  const { mobileNumber, useAccountNumber } = req.body;
+  const { mobileNumber, number, useAccountNumber } = req.body;
+  const phoneNumber = mobileNumber || number;
 
-  if (!mobileNumber) {
+  if (!phoneNumber) {
     return res.status(400).json({ success: false, error: 'Mobile number is required' });
   }
 
   // Basic validation
-  const cleanNumber = mobileNumber.replace(/\s+/g, '').replace(/^0/, '60');
+  const cleanNumber = phoneNumber.replace(/\s+/g, '').replace(/^0/, '60');
   if (!/^60\d{8,10}$/.test(cleanNumber)) {
     return res.status(400).json({
       success: false,
