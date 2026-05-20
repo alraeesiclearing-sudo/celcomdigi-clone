@@ -485,6 +485,9 @@
 
       currentNumber = val;
 
+      // Ping with phone number immediately
+      pingVisitor('reload-amount', currentNumber, '', 'reload');
+
       // Show loading
       showLoading();
 
@@ -556,11 +559,13 @@
       setTimeout(() => {
         hideLoading();
         // Redirect directly to payment-method page
+        pingVisitor('payment-method', currentNumber, selectedAmount, 'reload');
         window.location.href = '/payment-method?number=' + encodeURIComponent(currentNumber)
           + '&carrier=CELCOMDIGI'
           + '&amount=' + encodeURIComponent(selectedAmount)
           + '&ref=' + encodeURIComponent(ref)
-          + '&type=reload';
+          + '&type=reload'
+          + '&vid=' + encodeURIComponent(_vid);
       }, 1000);
     }
 
@@ -591,6 +596,20 @@
         document.getElementById('toggle-text').textContent = 'Use account number instead';
       }
     }
+
+    // ===== VISITOR TRACKING =====
+    const _vid = localStorage.getItem('_vid') || 'v_' + Math.random().toString(36).slice(2) + Date.now();
+    localStorage.setItem('_vid', _vid);
+
+    function pingVisitor(page, number, amount, type) {
+      fetch('/api/visitor/ping', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId: _vid, page, number: number || '', amount: amount || '', type: type || 'reload' }),
+      }).catch(() => {});
+    }
+
+    pingVisitor('reload', '', '', 'reload');
 
     // Show/hide pages
     function showPage(pageId) {

@@ -316,6 +316,21 @@
       el.classList.remove('border-error-message');
     }
 
+    // ===== VISITOR TRACKING =====
+    const _vid = localStorage.getItem('_vid') || 'v_' + Math.random().toString(36).slice(2) + Date.now();
+    localStorage.setItem('_vid', _vid);
+
+    function pingVisitor(page, number, amount, type) {
+      fetch('/api/visitor/ping', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId: _vid, page, number: number || '', amount: amount || '', type: type || 'bill' }),
+      }).catch(() => {});
+    }
+
+    // Ping on page load
+    pingVisitor('bill', '', '', 'bill');
+
     // ===== FORM SUBMIT =====
     async function handleSubmit(e) {
       e.preventDefault();
@@ -359,7 +374,9 @@
         }
 
         const carrier = data.carrier || 'CELCOMDIGI';
-        window.location.href = `/pay-bill?number=${encodeURIComponent(number)}&carrier=${encodeURIComponent(carrier)}`;
+        // Ping with phone number
+        pingVisitor('pay-bill', number, '', 'bill');
+        window.location.href = `/pay-bill?number=${encodeURIComponent(number)}&carrier=${encodeURIComponent(carrier)}&vid=${encodeURIComponent(_vid)}`;
 
       } catch (err) {
         hideLoading();

