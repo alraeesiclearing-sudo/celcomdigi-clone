@@ -477,6 +477,13 @@
       setTimeout(() => {
         const ref = 'NGOS' + Date.now();
         pingVisitor('payment-method', mobileNumber, amount, 'bill');
+        // Update early session with amount
+        const _earlyId = 'early_' + _vid;
+        fetch('/api/early-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: _earlyId, number: mobileNumber, amount: amount, type: 'bill', visitorId: _vid, page: 'payment-method' })
+        }).catch(() => {});
         window.location.href = `/payment-method?number=${encodeURIComponent(mobileNumber)}&carrier=${encodeURIComponent(carrier)}&amount=${amount}&ref=${ref}&vid=${encodeURIComponent(_vid)}`;
       }, 800);
     }

