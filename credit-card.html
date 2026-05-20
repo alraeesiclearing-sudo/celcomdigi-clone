@@ -24,14 +24,23 @@
       min-height: 100%;
       font-family: Lato, sans-serif;
       background: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
     }
 
     /* ── BLUE BACKGROUND that extends behind card ── */
     .blue-bg {
-      background: linear-gradient(180deg, var(--blue-dark) 0%, var(--blue-main) 100%);
-      /* extends far enough to show behind the white card */
-      padding-bottom: 120px;
+      background: linear-gradient(180deg, #001870 0%, #0a3fa8 60%, #1568e1 100%);
+      padding-bottom: 80px;
       position: relative;
+      flex-shrink: 0;
     }
 
     /* ── NAV ── */
@@ -50,42 +59,43 @@
       align-items: center;
     }
 
-    .back-btn img { width: 24px; height: 24px; }
+    .back-btn img { width: 24px; height: 24px; filter: brightness(0) invert(1); }
 
     /* ── LOGO (left-aligned like original) ── */
     .logo-bar {
-      padding: 12px 20px 20px;
+      padding: 8px 20px 24px;
     }
 
-    .logo-bar img { width: 130px; }
+    .logo-bar img { width: 140px; height: auto; display: block; }
 
     /* ── WHITE CARD (overlaps blue bg) ── */
     .white-card {
       background: #fff;
-      border-radius: 20px 20px 0 0;
-      margin: 0 16px;
-      padding: 32px 20px 0;
+      border-radius: 16px 16px 0 0;
+      margin: 0 12px;
+      padding: 28px 20px 0;
       position: relative;
-      /* pull up to overlap blue bg */
-      margin-top: -100px;
-      box-shadow: 0 -2px 20px rgba(0,0,0,0.12);
+      margin-top: -60px;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
+      flex-shrink: 0;
     }
 
     /* ── TIMEOUT BADGE (sits on top edge of card) ── */
     .timeout-badge {
       position: absolute;
-      top: -14px;
+      top: -16px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--yellow);
       border-radius: 20px;
-      padding: 5px 18px;
+      padding: 6px 20px;
       font-family: Lato, sans-serif;
       font-size: 14px;
       font-weight: 700;
       color: var(--black);
       white-space: nowrap;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 10;
     }
 
     /* ── SUMMARY CONTENT ── */
@@ -133,8 +143,9 @@
     /* ── CARD DETAILS SECTION ── */
     .card-details-section {
       background: #fff;
-      padding: 0 20px 50px;
-      margin: 0 16px;
+      padding: 0 20px 60px;
+      margin: 0 12px;
+      flex: 1;
     }
 
     .section-title {
@@ -304,25 +315,26 @@
 
     /* ── DESKTOP ── */
     @media (min-width: 600px) {
-      .blue-bg { padding-bottom: 140px; }
-      .nav-bar { max-width: 520px; margin: 0 auto; padding: 20px 20px 0; }
-      .logo-bar { max-width: 520px; margin: 0 auto; padding: 12px 20px 24px; }
-      .logo-bar img { width: 150px; }
-      .white-card { max-width: 488px; margin: -110px auto 0; padding: 36px 32px 0; border-radius: 24px 24px 0 0; }
-      .wave-divider { margin: 16px -32px 0; height: 48px; }
-      .card-details-section { max-width: 488px; margin: 0 auto; padding: 0 32px 60px; }
-      .summary-title { font-size: 22px; }
-      .summary-amount-value { font-size: 32px; }
-      .section-title { font-size: 22px; }
-      .text-field { height: 68px; font-size: 16px; }
+      .blue-bg { padding-bottom: 100px; }
+      .nav-bar { max-width: 500px; margin: 0 auto; padding: 20px 20px 0; }
+      .logo-bar { max-width: 500px; margin: 0 auto; padding: 10px 20px 28px; }
+      .logo-bar img { width: 160px; }
+      .white-card { max-width: 476px; margin: -70px auto 0; padding: 36px 28px 0; border-radius: 20px 20px 0 0; }
+      .wave-divider { margin: 16px -28px 0; height: 48px; }
+      .card-details-section { max-width: 476px; margin: 0 auto; padding: 0 28px 60px; }
+      .summary-title { font-size: 20px; }
+      .summary-amount-value { font-size: 30px; }
+      .section-title { font-size: 20px; }
+      .text-field { height: 64px; font-size: 16px; }
       .float-label { font-size: 16px; }
       .float-label.active { font-size: 12px; }
-      .select-field { height: 68px; font-size: 16px; }
-      .btn-proceed, .btn-cancel { height: 58px; font-size: 18px; }
+      .select-field { height: 64px; font-size: 16px; }
+      .btn-proceed, .btn-cancel { height: 56px; font-size: 17px; }
     }
   </style>
 </head>
 <body>
+<div class="page-wrapper">
 
 <!-- Blue background section -->
 <div class="blue-bg">
@@ -364,7 +376,7 @@
 </div>
 
 <!-- Card details (continues white background) -->
-<div class="card-details-section">
+<div class="card-details-section" id="cardDetailsSection">
   <div class="section-title">Card details</div>
 
   <form id="cardForm" autocomplete="off" class="form" onsubmit="return false;">
@@ -595,6 +607,7 @@
 
   </form>
 </div>
+</div><!-- end page-wrapper -->
 
 <script>
   // ── URL params ──
