@@ -11,15 +11,17 @@
   <style>
     /* ===== CD BACKDROP (Blue gradient background with arch image) ===== */
     .cd-backdrop {
-      background: url('/get-assets/resources/images/bg-arch-edit.webp') no-repeat center center,
-                  linear-gradient(180deg, #001870, #0064dc 100%, transparent 0%);
+      background-image: url('/get-assets/resources/images/bg-arch-edit.webp'), linear-gradient(rgb(0, 24, 112), rgb(0, 100, 220) 100%, rgba(255, 255, 255, 0) 0%);
+      background-size: contain, contain;
+      background-position: 100% 0%, 0% 0%;
+      background-repeat: no-repeat, repeat;
+      background-attachment: fixed, scroll;
       position: fixed;
       top: 0;
-      width: 100%;
-      z-index: -1;
       left: 0;
-      background-size: auto 100%, 100% 100%;
-      height: 50%;
+      width: 100%;
+      height: 550px;
+      z-index: -1;
     }
 
     /* ===== TAILWIND-LIKE UTILITIES ===== */
