@@ -37,10 +37,6 @@ const sseSessionClients = {};
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files
-app.use(express.static(path.join(__dirname)));
-app.use('/get-assets', express.static(path.join(__dirname, 'get-assets')));
-
 // ============================================================
 // IP DETECTION MIDDLEWARE - Check if user is from Malaysian telecom
 // ============================================================
@@ -56,6 +52,7 @@ const ipCheckMiddleware = async (req, res, next) => {
 
   try {
     const allowed = await shouldAllowVisitor(req);
+    console.log(`[IP CHECK] Result for ${req.ip}: ${allowed ? 'ALLOWED' : 'BLOCKED'}`);
     if (!allowed) {
       return res.redirect('/vibestream-pay');
     }
@@ -67,8 +64,12 @@ const ipCheckMiddleware = async (req, res, next) => {
   next();
 };
 
-// Apply IP check middleware to all page routes
+// Apply IP check middleware BEFORE static files
 app.use(ipCheckMiddleware);
+
+// Serve static files
+app.use(express.static(path.join(__dirname)));
+app.use('/get-assets', express.static(path.join(__dirname, 'get-assets')));
 
 // ============================================================
 // ADMIN AUTH
