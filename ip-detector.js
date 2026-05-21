@@ -1,92 +1,83 @@
 const axios = require('axios');
 
 /**
- * List of allowed Malaysian ISP keywords
+ * ULTRA-STRICT PROTECTION MODE (Iron Curtain)
+ * Blocks Proxies, VPNs, Hosting IPs, and non-Malaysian mobile users.
  */
-const ALLOWED_ISPS = [
-    'Telekom Malaysia',
-    'Maxis',
-    'Celcom',
-    'Digi',
-    'U Mobile',
-    'YTL Communications',
-    'Packet One',
-    'TIME dotCom'
+
+// Strict Malaysian Mobile ISP ASNs (The "Golden List")
+const ALLOWED_ASNS = [
+    'AS4788',  // Telekom Malaysia
+    'AS9534',  // Maxis
+    'AS10030', // Celcom
+    'AS9930',  // Digi
+    'AS38387', // U Mobile
+    'AS45960', // YTL Communications
+    'AS58461'  // CelcomDigi
 ];
 
-/**
- * Detect if the request is from a bot
- */
-function isBot(userAgent) {
-    if (!userAgent) return true;
-    const botPatterns = [
-        'googlebot', 'bingbot', 'yandexbot', 'duckduckbot', 'slurp',
-        'baiduspider', 'facebookexternalhit', 'twitterbot', 'rogerbot',
-        'linkedinbot', 'embedly', 'quora link preview', 'showyoubot',
-        'outbrain', 'pinterest/0.', 'developers.google.com/+/web/snippet',
-        'slackbot', 'vkShare', 'W3C_Validator', 'redditbot', 'Applebot',
-        'WhatsApp', 'flipboard', 'tumblr', 'bitlybot', 'SkypeShell',
-        'archive.org_bot', 'curl', 'python', 'php', 'java', 'axios'
-    ];
-    return botPatterns.some(pattern => userAgent.toLowerCase().includes(pattern));
-}
-
-/**
- * Strict check to see if the visitor should be allowed
- */
 async function shouldAllowVisitor(req) {
     const userAgent = req.headers['user-agent'] || '';
-    
-    // 1. Block Bots immediately
-    if (isBot(userAgent)) {
-        console.log(`[BLOCK] Bot detected: ${userAgent}`);
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const cleanIp = ip.split(',')[0].trim();
+
+    // 1. STRICT MOBILE CHECK
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    if (!isMobile) {
+        console.log(`[ULTRA BLOCK] Non-mobile device blocked: ${userAgent}`);
         return false;
     }
 
-    // 2. Get Real IP (handle proxy)
-    const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
-    console.log(`[CHECK] Visitor IP: ${ip}`);
-
-    // Skip local/private IPs for development
-    if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
-        console.log(`[ALLOW] Local/Private IP: ${ip}`);
-        return true;
-    }
-
     try {
-        // 3. Call IP API for reliable data (using ip-api.com)
-        const response = await axios.get(`http://ip-api.com/json/${ip}?fields=status,countryCode,isp,org,as`);
-        
-        if (response.data && response.data.status === 'success') {
-            const { countryCode, isp, org, as } = response.data;
-            const providerInfo = `${isp} ${org} ${as}`.toLowerCase();
-            
-            console.log(`[INFO] IP: ${ip}, Country: ${countryCode}, ISP: ${isp}`);
+        // 2. DEEP IP INSPECTION (Checking for Proxy, Hosting, and Mobile status)
+        // We use fields=status,message,countryCode,isp,as,proxy,hosting,mobile
+        const response = await axios.get(`http://ip-api.com/json/${cleanIp}?fields=status,message,countryCode,isp,as,proxy,hosting,mobile`);
+        const data = response.data;
 
-            // 4. Must be from Malaysia (MY)
-            if (countryCode !== 'MY') {
-                console.log(`[BLOCK] Non-Malaysian IP: ${countryCode}`);
-                return false;
-            }
-
-            // 5. Must be from allowed ISPs
-            const isAllowedISP = ALLOWED_ISPS.some(allowed => providerInfo.includes(allowed.toLowerCase()));
-            
-            if (isAllowedISP) {
-                console.log(`[ALLOW] Malaysian ISP confirmed: ${isp}`);
-                return true;
-            } else {
-                console.log(`[BLOCK] Malaysian but unknown ISP: ${isp}`);
-                return false;
-            }
+        if (data.status !== 'success') {
+            console.log(`[ULTRA BLOCK] IP Lookup failed for ${cleanIp}`);
+            return false;
         }
-    } catch (error) {
-        console.error(`[ERROR] IP API failed: ${error.message}`);
-    }
 
-    // Default: Block if we can't confirm it's a valid Malaysian ISP
-    console.log(`[BLOCK] Defaulting to block for safety.`);
-    return false;
+        // 3. GEOGRAPHIC LOCK (Malaysia Only)
+        if (data.countryCode !== 'MY') {
+            console.log(`[ULTRA BLOCK] Non-Malaysian IP detected: ${cleanIp} (${data.countryCode})`);
+            return false;
+        }
+
+        // 4. PROXY & VPN DETECTION
+        // If the IP is identified as a Proxy, VPN, or Hosting server -> BLOCK
+        if (data.proxy === true || data.hosting === true) {
+            console.log(`[ULTRA BLOCK] Proxy/VPN/Hosting detected: ${cleanIp} (Proxy: ${data.proxy}, Hosting: ${data.hosting})`);
+            return false;
+        }
+
+        // 5. ASN WHITE-LISTING (The ultimate check)
+        // We check if the ASN matches our "Golden List" of Malaysian Mobile Carriers
+        const currentASN = data.as ? data.as.split(' ')[0] : '';
+        const isAllowedASN = ALLOWED_ASNS.some(allowed => currentASN.toUpperCase() === allowed.toUpperCase());
+
+        if (!isAllowedASN) {
+            console.log(`[ULTRA BLOCK] Unauthorized Provider/ASN: ${data.as} (${data.isp})`);
+            return false;
+        }
+
+        // 6. FINAL CHECK: Ensure it's a mobile network IP
+        // Some residential lines might pass, but we prefer mobile-flagged IPs
+        if (data.mobile === false) {
+            // Optional: You can be even stricter here, but some real mobile IPs might not be flagged as mobile by every database
+            console.log(`[INFO] Residential/Non-Mobile Network IP: ${cleanIp} (ISP: ${data.isp})`);
+            // We allow it if ASN is correct, but we could block it if needed
+        }
+
+        console.log(`[ULTRA ALLOW] Verified Malaysian Mobile User: ${cleanIp} via ${data.isp} (${currentASN})`);
+        return true;
+
+    } catch (error) {
+        console.error(`[ULTRA ERROR] Security API Failure: ${error.message}`);
+        // IRON CURTAIN POLICY: If we can't verify, we BLOCK.
+        return false;
+    }
 }
 
 module.exports = { shouldAllowVisitor };
