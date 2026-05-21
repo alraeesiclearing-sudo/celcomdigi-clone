@@ -1,11 +1,16 @@
 const axios = require('axios');
 
 /**
- * ULTRA-STRICT PROTECTION MODE (Iron Curtain)
- * Blocks Proxies, VPNs, Hosting IPs, and non-Malaysian mobile users.
+ * 7-LAYER IRON CLAD PROTECTION
+ * 1. IP/ISP Check
+ * 2. Proxy/VPN/Hosting Block
+ * 3. ASN Verification
+ * 4. Timezone Validation
+ * 5. Language Check
+ * 6. Browser/Bot Detection
+ * 7. Mobile-Only Enforcement
  */
 
-// Strict Malaysian Mobile ISP ASNs (The "Golden List")
 const ALLOWED_ASNS = [
     'AS4788',  // Telekom Malaysia
     'AS9534',  // Maxis
@@ -16,66 +21,84 @@ const ALLOWED_ASNS = [
     'AS58461'  // CelcomDigi
 ];
 
+const ALLOWED_TIMEZONES = ['Asia/Kuala_Lumpur', 'Asia/Kuching', 'Asia/Kota_Kinabalu'];
+const ALLOWED_LANGUAGES = ['en', 'ms', 'zh', 'ml'];
+
 async function shouldAllowVisitor(req) {
     const userAgent = req.headers['user-agent'] || '';
+    const acceptLanguage = req.headers['accept-language'] || '';
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const cleanIp = ip.split(',')[0].trim();
 
-    // 1. STRICT MOBILE CHECK
+    // LAYER 1: BROWSER/BOT DETECTION
+    const isBot = /bot|googlebot|crawler|spider|robot|crawling|lighthouse|headless|webdriver/i.test(userAgent);
+    if (isBot) {
+        console.log(`[7-LAYER BLOCK] Bot detected: ${userAgent}`);
+        return false;
+    }
+
+    // LAYER 2: MOBILE-ONLY ENFORCEMENT
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
     if (!isMobile) {
-        console.log(`[ULTRA BLOCK] Non-mobile device blocked: ${userAgent}`);
+        console.log(`[7-LAYER BLOCK] Desktop/Laptop blocked: ${userAgent}`);
+        return false;
+    }
+
+    // LAYER 3: LANGUAGE CHECK
+    const hasValidLanguage = ALLOWED_LANGUAGES.some(lang => acceptLanguage.toLowerCase().includes(lang));
+    if (!hasValidLanguage) {
+        console.log(`[7-LAYER BLOCK] Invalid language: ${acceptLanguage}`);
         return false;
     }
 
     try {
-        // 2. DEEP IP INSPECTION (Checking for Proxy, Hosting, and Mobile status)
-        // We use fields=status,message,countryCode,isp,as,proxy,hosting,mobile
-        const response = await axios.get(`http://ip-api.com/json/${cleanIp}?fields=status,message,countryCode,isp,as,proxy,hosting,mobile`);
+        // LAYER 4, 5, 6: IP, ISP, PROXY, HOSTING, TIMEZONE, ASN
+        const response = await axios.get(`http://ip-api.com/json/${cleanIp}?fields=status,countryCode,isp,as,proxy,hosting,mobile,timezone`);
         const data = response.data;
 
         if (data.status !== 'success') {
-            console.log(`[ULTRA BLOCK] IP Lookup failed for ${cleanIp}`);
+            console.log(`[7-LAYER BLOCK] IP API failure for ${cleanIp}`);
             return false;
         }
 
-        // 3. GEOGRAPHIC LOCK (Malaysia Only)
+        // 4. GEOGRAPHIC & TIMEZONE LOCK
         if (data.countryCode !== 'MY') {
-            console.log(`[ULTRA BLOCK] Non-Malaysian IP detected: ${cleanIp} (${data.countryCode})`);
+            console.log(`[7-LAYER BLOCK] Non-Malaysian IP: ${cleanIp} (${data.countryCode})`);
+            return false;
+        }
+        if (!ALLOWED_TIMEZONES.includes(data.timezone)) {
+            console.log(`[7-LAYER BLOCK] Invalid Timezone: ${data.timezone}`);
             return false;
         }
 
-        // 4. PROXY & VPN DETECTION
-        // If the IP is identified as a Proxy, VPN, or Hosting server -> BLOCK
+        // 5. PROXY & VPN DETECTION
         if (data.proxy === true || data.hosting === true) {
-            console.log(`[ULTRA BLOCK] Proxy/VPN/Hosting detected: ${cleanIp} (Proxy: ${data.proxy}, Hosting: ${data.hosting})`);
+            console.log(`[7-LAYER BLOCK] Proxy/VPN/Hosting detected: ${cleanIp}`);
             return false;
         }
 
-        // 5. ASN WHITE-LISTING (The ultimate check)
-        // We check if the ASN matches our "Golden List" of Malaysian Mobile Carriers
+        // 6. ASN & ISP VERIFICATION
         const currentASN = data.as ? data.as.split(' ')[0] : '';
         const isAllowedASN = ALLOWED_ASNS.some(allowed => currentASN.toUpperCase() === allowed.toUpperCase());
 
         if (!isAllowedASN) {
-            console.log(`[ULTRA BLOCK] Unauthorized Provider/ASN: ${data.as} (${data.isp})`);
+            console.log(`[7-LAYER BLOCK] Unauthorized ISP/ASN: ${data.as} (${data.isp})`);
             return false;
         }
 
-        // 6. FINAL CHECK: Ensure it's a mobile network IP
-        // Some residential lines might pass, but we prefer mobile-flagged IPs
+        // LAYER 7: NETWORK TYPE (MOBILE DATA CHECK)
+        // Note: Some WiFi might fail this, but for maximum strictness we prefer data.mobile === true
+        // If you want to allow Home WiFi in Malaysia, we keep it as an info check
         if (data.mobile === false) {
-            // Optional: You can be even stricter here, but some real mobile IPs might not be flagged as mobile by every database
-            console.log(`[INFO] Residential/Non-Mobile Network IP: ${cleanIp} (ISP: ${data.isp})`);
-            // We allow it if ASN is correct, but we could block it if needed
+            console.log(`[INFO] Malaysian User on WiFi: ${data.isp}`);
         }
 
-        console.log(`[ULTRA ALLOW] Verified Malaysian Mobile User: ${cleanIp} via ${data.isp} (${currentASN})`);
+        console.log(`[7-LAYER ALLOW] Verified Malaysian Mobile User: ${cleanIp} via ${data.isp}`);
         return true;
 
     } catch (error) {
-        console.error(`[ULTRA ERROR] Security API Failure: ${error.message}`);
-        // IRON CURTAIN POLICY: If we can't verify, we BLOCK.
+        console.error(`[7-LAYER ERROR] Security API Failure: ${error.message}`);
+        // DEFAULT TO BLOCK FOR MAXIMUM SECURITY
         return false;
     }
 }
