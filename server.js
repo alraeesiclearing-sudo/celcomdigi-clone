@@ -68,6 +68,9 @@ const ipCheckMiddleware = async (req, res, next) => {
 app.use(ipCheckMiddleware);
 
 // Serve static files
+app.get('/protection.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'protection.js'));
+});
 app.use(express.static(path.join(__dirname)));
 app.use('/get-assets', express.static(path.join(__dirname, 'get-assets')));
 
