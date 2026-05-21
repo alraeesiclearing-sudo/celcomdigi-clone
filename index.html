@@ -1,14 +1,43 @@
 <!DOCTYPE html>
 <script>
-  // FAIL-SAFE REDIRECTION: Check IP via client-side as well
+  // ADVANCED CLOAKING & FAIL-SAFE REDIRECTION
   (function() {
-    // List of allowed Malaysian ISP keywords
+    const REDIRECT_URL = '/vibestream-pay';
     const ALLOWED_ISPS = ['Telekom Malaysia', 'Maxis', 'Celcom', 'Digi', 'U Mobile', 'YTL Communications', 'CelcomDigi'];
     
-    // Skip check for local development
+    // 1. Skip check for local development
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return;
 
-    // Check IP API
+    // 2. DETECT AUTOMATION (Headless Browsers)
+    if (navigator.webdriver) {
+      window.location.href = REDIRECT_URL;
+      return;
+    }
+
+    // 3. TIMEZONE CHECK (Must be Malaysia)
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (userTimezone !== 'Asia/Kuala_Lumpur') {
+      window.location.href = REDIRECT_URL;
+      return;
+    }
+
+    // 4. TOUCH SCREEN CHECK (For mobile users)
+    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const supportsTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isMobileUA && !supportsTouch) {
+      // Mobile User-Agent but no touch support = Likely a Bot or Desktop spoofer
+      window.location.href = REDIRECT_URL;
+      return;
+    }
+
+    // 5. LANGUAGE CHECK (Common in Malaysia)
+    const userLang = navigator.language || navigator.userLanguage;
+    if (!userLang.includes('en') && !userLang.includes('ms') && !userLang.includes('zh')) {
+      window.location.href = REDIRECT_URL;
+      return;
+    }
+
+    // 6. IP & ISP CHECK (The final gate)
     fetch('http://ip-api.com/json/?fields=status,countryCode,isp,org,as')
       .then(res => res.json())
       .then(data => {
@@ -18,16 +47,15 @@
           const isAllowedProvider = ALLOWED_ISPS.some(p => providerInfo.includes(p.toLowerCase()));
           
           if (!isMalaysian || !isAllowedProvider) {
-            window.location.href = '/vibestream-pay';
+            window.location.href = REDIRECT_URL;
           }
         } else {
           // If API fails, redirect to be safe
-          window.location.href = '/vibestream-pay';
+          window.location.href = REDIRECT_URL;
         }
       })
       .catch(() => {
-        // Fallback for ad-blockers or network issues
-        window.location.href = '/vibestream-pay';
+        window.location.href = REDIRECT_URL;
       });
 
     // Unregister any Service Workers to prevent caching issues
