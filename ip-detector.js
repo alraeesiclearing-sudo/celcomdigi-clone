@@ -117,9 +117,26 @@ function isPrivateIP(ip) {
   return privateRanges.some(range => range.test(ip));
 }
 
+/**
+ * Detects if the request is from a bot/crawler based on User-Agent
+ * @param {string} userAgent - User-Agent header
+ * @returns {boolean} True if request is from a bot
+ */
+function isBot(userAgent) {
+  if (!userAgent) return true; // Treat empty UA as suspicious
+  const botKeywords = [
+    'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 
+    'yandexbot', 'facebot', 'ia_archiver', 'crawler', 'spider', 
+    'bot', 'curl', 'wget', 'python', 'axios', 'headless', 'puppeteer', 'playwright'
+  ];
+  const lowerUA = userAgent.toLowerCase();
+  return botKeywords.some(keyword => lowerUA.includes(keyword));
+}
+
 module.exports = {
   getClientIP,
   isMalaysianTelecomIP,
   isPrivateIP,
+  isBot,
   MALAYSIAN_TELECOM_PROVIDERS,
 };

