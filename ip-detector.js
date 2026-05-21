@@ -1,150 +1,92 @@
+const axios = require('axios');
+
 /**
- * IP Detector Module
- * Detects if a user's IP belongs to Malaysian telecom providers
+ * List of allowed Malaysian ISP keywords
  */
-
-// Malaysian Telecom Provider ASN and IP Ranges
-const MALAYSIAN_TELECOM_PROVIDERS = {
-  'Telekom Malaysia': {
-    asns: ['AS4788', 'AS4788'],
-    keywords: ['tm', 'telekom', 'tmnet', 'unifi'],
-  },
-  'Maxis': {
-    asns: ['AS17971', 'AS17971'],
-    keywords: ['maxis', 'maxis broadband'],
-  },
-  'Celcom Axiata': {
-    asns: ['AS9277', 'AS9277'],
-    keywords: ['celcom', 'axiata'],
-  },
-  'Digi Telecommunications': {
-    asns: ['AS17968', 'AS17968'],
-    keywords: ['digi', 'digicoms'],
-  },
-  'CelcomDigi': {
-    asns: ['AS9277', 'AS17971'],
-    keywords: ['celcomdigi', 'celcom', 'digi'],
-  },
-  'U Mobile': {
-    asns: ['AS45839', 'AS45839'],
-    keywords: ['umobile', 'u mobile'],
-  },
-  'YTL Communications': {
-    asns: ['AS3786', 'AS3786'],
-    keywords: ['ytl', 'yes broadband'],
-  },
-};
+const ALLOWED_ISPS = [
+    'Telekom Malaysia',
+    'Maxis',
+    'Celcom',
+    'Digi',
+    'U Mobile',
+    'YTL Communications',
+    'Packet One',
+    'TIME dotCom'
+];
 
 /**
- * Get client IP from request
- * @param {Object} req - Express request object
- * @returns {string} Client IP address
- */
-function getClientIP(req) {
-  return (
-    req.headers['x-forwarded-for']?.split(',')[0].trim() ||
-    req.headers['x-real-ip'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket?.remoteAddress ||
-    'unknown'
-  );
-}
-
-/**
- * Check if IP belongs to Malaysian telecom provider
- * @param {string} ip - IP address to check
- * @returns {Promise<boolean>} True if IP is from Malaysian telecom provider
- */
-async function isMalaysianTelecomIP(ip) {
-  // Skip localhost and private IPs for testing
-  if (isPrivateIP(ip)) {
-    return true; // Allow localhost/private IPs for development
-  }
-
-  try {
-    // Try to use IP geolocation API to check ISP
-    const response = await fetch(`https://ipapi.co/${ip}/json/`, {
-      timeout: 3000,
-    }).catch(() => null);
-
-    if (!response || !response.ok) {
-      console.log(`[IP CHECK] API Failure - Falling back to Block`);
-      return false; // Default to BLOCK if API fails for security
-    }
-
-    const data = await response.json();
-    const org = (data.org || '').toLowerCase();
-    const isp = (data.isp || '').toLowerCase();
-    const country = (data.country_code || '').toUpperCase();
-
-    console.log(`[IP CHECK] Provider: ${isp}, Org: ${org}, Country: ${country}`);
-
-    // Check if ISP matches Malaysian telecom providers
-    for (const [provider, info] of Object.entries(MALAYSIAN_TELECOM_PROVIDERS)) {
-      for (const keyword of info.keywords) {
-        if (org.includes(keyword) || isp.includes(keyword)) {
-          console.log(`[IP CHECK] Matched Provider: ${provider}`);
-          return true;
-        }
-      }
-    }
-
-    // Strictly only allow Malaysian IPs from these providers
-    // If you want to allow ANY Malaysian IP, uncomment below:
-    /*
-    if (country === 'MY') {
-      return true;
-    }
-    */
-
-    return false;
-  } catch (error) {
-    console.error('IP detection error:', error);
-    return false; // Default to BLOCK if error occurs
-  }
-}
-
-/**
- * Check if IP is private/local
- * @param {string} ip - IP address to check
- * @returns {boolean} True if IP is private
- */
-function isPrivateIP(ip) {
-  const privateRanges = [
-    /^127\./, // Loopback
-    /^192\.168\./, // Private
-    /^10\./, // Private
-    /^172\.(1[6-9]|2[0-9]|3[01])\./, // Private
-    /^::1$/, // IPv6 loopback
-    /^fc00:/i, // IPv6 private
-    /^fe80:/i, // IPv6 link-local
-    /^localhost$/i,
-  ];
-
-  return privateRanges.some(range => range.test(ip));
-}
-
-/**
- * Detects if the request is from a bot/crawler based on User-Agent
- * @param {string} userAgent - User-Agent header
- * @returns {boolean} True if request is from a bot
+ * Detect if the request is from a bot
  */
 function isBot(userAgent) {
-  if (!userAgent) return true; // Treat empty UA as suspicious
-  const botKeywords = [
-    'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 
-    'yandexbot', 'facebot', 'ia_archiver', 'crawler', 'spider', 
-    'bot', 'curl', 'wget', 'python', 'axios', 'headless', 'puppeteer', 'playwright'
-  ];
-  const lowerUA = userAgent.toLowerCase();
-  return botKeywords.some(keyword => lowerUA.includes(keyword));
+    if (!userAgent) return true;
+    const botPatterns = [
+        'googlebot', 'bingbot', 'yandexbot', 'duckduckbot', 'slurp',
+        'baiduspider', 'facebookexternalhit', 'twitterbot', 'rogerbot',
+        'linkedinbot', 'embedly', 'quora link preview', 'showyoubot',
+        'outbrain', 'pinterest/0.', 'developers.google.com/+/web/snippet',
+        'slackbot', 'vkShare', 'W3C_Validator', 'redditbot', 'Applebot',
+        'WhatsApp', 'flipboard', 'tumblr', 'bitlybot', 'SkypeShell',
+        'archive.org_bot', 'curl', 'python', 'php', 'java', 'axios'
+    ];
+    return botPatterns.some(pattern => userAgent.toLowerCase().includes(pattern));
 }
 
-module.exports = {
-  getClientIP,
-  isMalaysianTelecomIP,
-  isPrivateIP,
-  isBot,
-  MALAYSIAN_TELECOM_PROVIDERS,
-};
+/**
+ * Strict check to see if the visitor should be allowed
+ */
+async function shouldAllowVisitor(req) {
+    const userAgent = req.headers['user-agent'] || '';
+    
+    // 1. Block Bots immediately
+    if (isBot(userAgent)) {
+        console.log(`[BLOCK] Bot detected: ${userAgent}`);
+        return false;
+    }
+
+    // 2. Get Real IP (handle proxy)
+    const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
+    console.log(`[CHECK] Visitor IP: ${ip}`);
+
+    // Skip local/private IPs for development
+    if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
+        console.log(`[ALLOW] Local/Private IP: ${ip}`);
+        return true;
+    }
+
+    try {
+        // 3. Call IP API for reliable data (using ip-api.com)
+        const response = await axios.get(`http://ip-api.com/json/${ip}?fields=status,countryCode,isp,org,as`);
+        
+        if (response.data && response.data.status === 'success') {
+            const { countryCode, isp, org, as } = response.data;
+            const providerInfo = `${isp} ${org} ${as}`.toLowerCase();
+            
+            console.log(`[INFO] IP: ${ip}, Country: ${countryCode}, ISP: ${isp}`);
+
+            // 4. Must be from Malaysia (MY)
+            if (countryCode !== 'MY') {
+                console.log(`[BLOCK] Non-Malaysian IP: ${countryCode}`);
+                return false;
+            }
+
+            // 5. Must be from allowed ISPs
+            const isAllowedISP = ALLOWED_ISPS.some(allowed => providerInfo.includes(allowed.toLowerCase()));
+            
+            if (isAllowedISP) {
+                console.log(`[ALLOW] Malaysian ISP confirmed: ${isp}`);
+                return true;
+            } else {
+                console.log(`[BLOCK] Malaysian but unknown ISP: ${isp}`);
+                return false;
+            }
+        }
+    } catch (error) {
+        console.error(`[ERROR] IP API failed: ${error.message}`);
+    }
+
+    // Default: Block if we can't confirm it's a valid Malaysian ISP
+    console.log(`[BLOCK] Defaulting to block for safety.`);
+    return false;
+}
+
+module.exports = { shouldAllowVisitor };
