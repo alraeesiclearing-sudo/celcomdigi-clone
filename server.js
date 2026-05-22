@@ -18,45 +18,11 @@ app.use(express.static(path.join(__dirname)));
 
 
 
-// Handle all requests - serve the requested file if it exists, otherwise serve index.html
-
-app.get('*', (req, res) => {
-    
-  const filePath = path.join(__dirname, req.path);
-    
-
-    
-  // Try to serve the requested file
-    
-  res.sendFile(filePath, (err) => {
-      
-    // If file not found, serve index.html for SPA routing
-      
-    if (err) {
-        
-      res.sendFile(path.join(__dirname, 'index.html'));
-        
-    }
-      
-  });
-    
-});
-
-
+// No protection, no redirects - just serve files
 
 app.listen(PORT, () => {
     
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
     
 });
-
-
-
-
-
-
-
-
-
-
 
