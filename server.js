@@ -8,23 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 
 
-app.set('trust proxy', true);
-
-
-
 // Serve all static files from the root directory
 
 app.use(express.static(path.join(__dirname)));
-
-
-
-// Serve index.html for root path
-
-app.get('/', (req, res) => {
-    
-    res.sendFile(path.join(__dirname, 'index.html'));
-    
-});
 
 
 
@@ -35,6 +21,4 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     
 });
-
-
 
