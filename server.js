@@ -18,11 +18,23 @@ app.use(express.static(path.join(__dirname)));
 
 
 
-// No protection, no redirects - just serve files
+// Serve index.html for root path
+
+app.get('/', (req, res) => {
+    
+    res.sendFile(path.join(__dirname, 'index.html'));
+    
+});
+
+
+
+// Start server
 
 app.listen(PORT, () => {
     
     console.log(`Server is running on port ${PORT}`);
     
 });
+
+
 
