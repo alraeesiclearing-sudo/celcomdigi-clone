@@ -12,25 +12,35 @@ app.set('trust proxy', true);
 
 
 
-// Serve static files
+// Serve all static files from the root directory
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
 
 
-// Default route - serve index.html
+// Handle all requests - serve the requested file if it exists, otherwise serve index.html
 
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
     
-  res.sendFile(path.join(__dirname, 'index.html'));
+  const filePath = path.join(__dirname, req.path);
+    
+
+    
+  // Try to serve the requested file
+    
+  res.sendFile(filePath, (err) => {
+      
+    // If file not found, serve index.html for SPA routing
+      
+    if (err) {
+        
+      res.sendFile(path.join(__dirname, 'index.html'));
+        
+    }
+      
+  });
     
 });
-
-
-
-// Serve all other files normally
-
-app.use(express.static(__dirname));
 
 
 
@@ -39,6 +49,14 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
     
 });
+
+
+
+
+
+
+
+
 
 
 
